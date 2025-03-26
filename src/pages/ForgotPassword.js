@@ -1,6 +1,6 @@
 // src/pages/ForgotPassword.js
 import React, { useState } from 'react';
-import styles from './ForgotPassword.module.css';
+import styles from '../styles/ForgotPassword.module.css';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
