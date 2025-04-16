@@ -1,4 +1,5 @@
-import styles from "./Login.module.scss";
+// src/pages/Login/index.tsx
+import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -14,12 +15,31 @@ const Login = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h2>Login</h2>
-      <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-      <input placeholder="Senha" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Entrar</button>
-      <p onClick={() => navigate("/forgot-password")}>Esqueceu a senha?</p>
+    <div className={styles.background}>
+      <div className={styles.card}>
+        <h2>Login</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Senha"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
+        <button className={styles.loginButton} onClick={handleLogin}>
+          Entrar
+        </button>
+        <button
+          className={styles.linkButton}
+          onClick={() => navigate("/forgot-password")}
+        >
+          Esqueceu a senha?
+        </button>
+      </div>
     </div>
   );
 };

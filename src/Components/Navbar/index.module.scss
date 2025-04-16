@@ -1,0 +1,71 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2d2d2d;
+  padding: 1rem 1.5rem;
+  color: white;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -220px;
+  width: 220px;
+  height: 100vh;
+  background-color: #1f1f1f;
+  color: white;
+  padding: 2rem 1rem;
+  transition: left 0.3s ease-in-out;
+  z-index: 15;
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      padding: 1rem 0;
+      cursor: pointer;
+
+      &:hover {
+        color: #00aced;
+      }
+    }
+  }
+}
+
+.open {
+  left: 0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 9;
+}

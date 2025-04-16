@@ -1,4 +1,4 @@
-import styles from "./ForgotPassword.module.scss";
+import styles from "./index.module.scss";
 import { useState } from "react";
 
 const ForgotPassword = () => {
