@@ -42,6 +42,7 @@ const Navbar = () => {
         <ul>
           <li onClick={() => { navigate("/home"); closeMenu(); }}>🏠 Home</li>
           <li onClick={() => { navigate("/profile"); closeMenu(); }}>👤 Perfil</li>
+          <li onClick={() => { navigate("/components"); closeMenu(); }}>🧩 Componentes</li> {/* novo item */}
           <li onClick={() => { handleLogout(); closeMenu(); }}>🚪 Sair</li>
         </ul>
       </aside>
