@@ -1,7 +1,33 @@
 .footer {
-  background-color: #f1f1f1;
-  color: #555;
-  padding: 1rem;
-  text-align: center;
-  margin-top: auto;
+  background-color: #222;
+  color: #fff;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+
+.centerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;  // Garante centralização real
+  gap: 1.5rem;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 0.8rem;
+
+  a {
+    color: #fff;
+    font-size: 1.3rem;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #f0c14b;
+    }
+  }
 }

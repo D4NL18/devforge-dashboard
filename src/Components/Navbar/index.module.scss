@@ -72,3 +72,15 @@
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 9;
 }
+
+.logoTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo {
+  height: 70px;
+  width: auto;
+  display: block;
+}

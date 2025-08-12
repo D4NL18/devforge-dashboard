@@ -1,0 +1,37 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  background-color: #f2f2f2;
+  padding: 1rem;
+
+  h1 {
+    font-size: 1.8rem;
+    color: #ff9800;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #555;
+  }
+}
+
+
+.backButton {
+  background-color: #3f51b5;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.backButton:hover {
+  background-color: #303f9f;
+}
