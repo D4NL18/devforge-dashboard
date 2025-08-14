@@ -52,7 +52,7 @@ const Navbar = () => {
       <aside className={clsx(styles.sidebar, { [styles.open]: menuOpen })}>
         <ul>
           <li onClick={() => { navigate("/home"); closeMenu(); }}>🏠 Home</li>
-          <li onClick={() => { navigate("/profile"); closeMenu(); }}>👤 Perfil</li>
+          <li onClick={() => { navigate("/not-implemented"); closeMenu(); }}>👤 Perfil</li>
           <li onClick={() => { navigate("/components"); closeMenu(); }}>🧩 Componentes</li>
           <li onClick={() => { handleLogout(); closeMenu(); }}>🚪 Sair</li>
         </ul>

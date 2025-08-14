@@ -10,7 +10,7 @@ const ForgotPassword = () => {
     if (email) {
       // Integrar API de recuperação de senha
       alert(`Se existir, enviaremos um link de recuperação para: ${email}`);
-      navigate("/");
+      navigate("/reset-password");
     }
   };
 
