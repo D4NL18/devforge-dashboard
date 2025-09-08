@@ -3,6 +3,7 @@ import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Input from "Components/Input";
+import Searchbar from "Components/Searchbar";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,24 +20,23 @@ const Login = () => {
     <div className={styles.background}>
       <div className={styles.card}>
         <h2>Login</h2>
-        {/* <input
+        <Input
           type="email"
           placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
-        /> */}
-        <Input 
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)} 
-          />
-        <Input 
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Input
           type="password"
           placeholder="Senha"
           value={password}
-          onChange={e => setPassword(e.target.value)}
-          />
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Searchbar
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <button className={styles.loginButton} onClick={handleLogin}>
           Entrar
         </button>
