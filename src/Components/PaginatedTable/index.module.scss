@@ -1,7 +1,9 @@
 @import "../../resources/colors.scss";
 
 .tableContainer {
-  max-width: 800px;
+  min-width: 500px;
+  max-width: 900px;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -74,3 +76,19 @@
     color: #333;
   }
 }
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+
+  svg {
+    pointer-events: none;
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
