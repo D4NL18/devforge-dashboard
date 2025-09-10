@@ -4,6 +4,7 @@ import Footer from "../../Components/Footer";
 
 import PaginatedTable from "../../Components/PaginatedTable";
 import Button from "Components/Button";
+import CRUDButtons from "Components/CRUD_Buttons";
 
 const ComponentsPage = () => {
 
@@ -34,6 +35,7 @@ const ComponentsPage = () => {
         <Button text="Exemplo 1" size="small" onClick={() => console.log("clicked")} bgColor="black" color="#FFFFFF" />
         <Button text="Exemplo 2" size="medium" onClick={() => console.log("clicked")} bgColor="#FFF" color="#000" />
         <Button text="Exemplo 3" size="large" onClick={() => console.log("clicked")} bgColor="black" color="#FFFFFF" />
+          <CRUDButtons />
       <Footer />
     </div>
   );
