@@ -12,4 +12,19 @@
   justify-content: center;
   padding: 2rem;
   background-color: #ecf0f1;
+
+  button {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #2980b9;
+  }
 }
+
