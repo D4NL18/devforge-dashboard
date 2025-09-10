@@ -3,6 +3,7 @@ import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 
 import PaginatedTable from "../../Components/PaginatedTable";
+import CardInfo from "Components/CardInfo";
 
 const ComponentsPage = () => {
 
@@ -30,6 +31,7 @@ const ComponentsPage = () => {
             rowsPerPage={4}
           />
         </section>
+        <CardInfo title="Exemple:" value="R$ 12345,67" />
       <Footer />
     </div>
   );
