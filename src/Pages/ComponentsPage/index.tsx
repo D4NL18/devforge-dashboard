@@ -12,6 +12,8 @@ import RangeInput from "Components/RangeInput";
 const ComponentsPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rangeMin, setRangeMin] = useState(0);
+  const [rangeMax, setRangeMax] = useState(0);
   const navigate = useNavigate();
   return (
     <div className={styles.container}>
@@ -49,7 +51,20 @@ const ComponentsPage = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <RangeInput />
+        <RangeInput
+          valueMin={rangeMin}
+          valueMax={rangeMax}
+          onChangeMin={(e) => {
+            const numericValue = +e.target.value;
+            console.log("Novo valor Mínimo:", numericValue);
+            setRangeMin(numericValue);
+          }}
+          onChangeMax={(e) => {
+            const numericValue = +e.target.value;
+            console.log("Novo valor Máximo:", numericValue);
+            setRangeMax(numericValue);
+          }}
+        />
       </section>
       <Footer />
     </div>
