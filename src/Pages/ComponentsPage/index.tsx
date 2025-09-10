@@ -7,6 +7,7 @@ import Input from "Components/Input";
 import Searchbar from "Components/Searchbar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import RangeInput from "Components/RangeInput";
 
 const ComponentsPage = () => {
   const [email, setEmail] = useState("");
@@ -48,6 +49,7 @@ const ComponentsPage = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        <RangeInput />
       </section>
       <Footer />
     </div>
