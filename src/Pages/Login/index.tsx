@@ -20,22 +20,17 @@ const Login = () => {
     <div className={styles.background}>
       <div className={styles.card}>
         <h2>Login</h2>
-        <Input
+        <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Input
+        <input
           type="password"
           placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-        />
-        <Searchbar
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
         />
         <button className={styles.loginButton} onClick={handleLogin}>
           Entrar
