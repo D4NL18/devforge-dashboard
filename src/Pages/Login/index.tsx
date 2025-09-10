@@ -2,8 +2,6 @@
 import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Input from "Components/Input";
-import Searchbar from "Components/Searchbar";
 
 const Login = () => {
   const [email, setEmail] = useState("");
