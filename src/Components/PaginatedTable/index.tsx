@@ -37,11 +37,11 @@ function PaginatedTable<T>({
   );
 
   const handlePrevious = () => {
-    if (currentPage > 0) setCurrentPage(p => p - 1);
+    if (currentPage > 0) setCurrentPage((p) => p - 1);
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages - 1) setCurrentPage(p => p + 1);
+    if (currentPage < totalPages - 1) setCurrentPage((p) => p + 1);
   };
 
   return (
@@ -50,51 +50,67 @@ function PaginatedTable<T>({
         <table className={styles.table}>
           <thead>
             <tr>
-              {columns.map(col => (
+              {columns.map((col) => (
                 <th key={String(col.key)}>{col.label}</th>
               ))}
-              {edit && <th>Ações</th>}
-              {del && <th></th>}
-              {inOut && <th>Tipo</th>}
+
+              {/* Ordem fixa: In/Out → Edit → Delete */}
+              {inOut && <th>InOut</th>}
+              {edit && <th>Editar</th>}
+              {del && <th>Excluir</th>}
             </tr>
           </thead>
           <tbody>
             {paginatedData.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + (edit ? 1 : 0) + (del ? 1 : 0) + (inOut ? 1 : 0)} className={styles.empty}>
+                <td
+                  colSpan={
+                    columns.length +
+                    (inOut ? 1 : 0) +
+                    (edit ? 1 : 0) +
+                    (del ? 1 : 0)
+                  }
+                  className={styles.empty}
+                >
                   Nenhum dado encontrado.
                 </td>
               </tr>
             ) : (
               paginatedData.map((item, idx) => (
                 <tr key={idx}>
-                  {columns.map(col => (
+                  {columns.map((col) => (
                     <td key={String(col.key)}>{String(item[col.key])}</td>
                   ))}
 
+                  {inOut && (
+                    <td className={styles.iconCell}>
+                      {String((item as any).type) === "in" ? (
+                        <ArrowUp size={18} color="green" />
+                      ) : (
+                        <ArrowDown size={18} color="red" />
+                      )}
+                    </td>
+                  )}
+
                   {edit && (
-                    <td>
-                      <button onClick={() => onEdit?.(item)} className={styles.iconButton}>
+                    <td className={styles.iconCell}>
+                      <button
+                        onClick={() => onEdit?.(item)}
+                        className={styles.iconButton}
+                      >
                         <Pencil size={18} />
                       </button>
                     </td>
                   )}
 
                   {del && (
-                    <td>
-                      <button onClick={() => onDelete?.(item)} className={styles.iconButton}>
+                    <td className={styles.iconCell}>
+                      <button
+                        onClick={() => onDelete?.(item)}
+                        className={styles.iconButton}
+                      >
                         <Trash2 size={18} />
                       </button>
-                    </td>
-                  )}
-
-                  {inOut && (
-                    <td>
-                      {String((item as any).type) === "in" ? (
-                        <ArrowUp size={18} color="green" />
-                      ) : (
-                        <ArrowDown size={18} color="red" />
-                      )}
                     </td>
                   )}
                 </tr>
@@ -109,7 +125,9 @@ function PaginatedTable<T>({
           <button onClick={handlePrevious} disabled={currentPage === 0}>
             ◀
           </button>
-          <span>Página {currentPage + 1} de {totalPages}</span>
+          <span>
+            Página {currentPage + 1} de {totalPages}
+          </span>
           <button onClick={handleNext} disabled={currentPage === totalPages - 1}>
             ▶
           </button>
@@ -118,6 +136,5 @@ function PaginatedTable<T>({
     </div>
   );
 }
-
 
 export default PaginatedTable;
