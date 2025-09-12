@@ -61,8 +61,10 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.2rem;
     color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.25rem;
 
     &:disabled {
@@ -77,6 +79,7 @@
     color: #fff;
     text-align: center;
     min-width: 140px;
+    margin-top: 13px;
   }
 }
 

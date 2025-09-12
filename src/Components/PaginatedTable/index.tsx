@@ -1,6 +1,6 @@
 import styles from "./index.module.scss";
 import { useState } from "react";
-import { Pencil, Trash2, ArrowDown, ArrowUp } from "lucide-react";
+import { Pencil, Trash2, ArrowDown, ArrowUp, ChevronLeft, ChevronRight } from "lucide-react";
 
 type Column<T> = {
   key: keyof T;
@@ -123,13 +123,13 @@ function PaginatedTable<T>({
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button onClick={handlePrevious} disabled={currentPage === 0}>
-            ◀
+            <ChevronLeft size={20} />
           </button>
           <span>
             Página {currentPage + 1} de {totalPages}
           </span>
           <button onClick={handleNext} disabled={currentPage === totalPages - 1}>
-            ▶
+            <ChevronRight size={20} />
           </button>
         </div>
       )}
