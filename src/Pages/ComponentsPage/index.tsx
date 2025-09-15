@@ -30,8 +30,8 @@ const ComponentsPage = () => {
             ]}
             rowsPerPage={4}
           />
+        <CardInfo title="Exemple:" value="R$ 12345,67" hasWarning />
         </section>
-        <CardInfo title="Exemple:" value="R$ 12345,67" />
       <Footer />
     </div>
   );
