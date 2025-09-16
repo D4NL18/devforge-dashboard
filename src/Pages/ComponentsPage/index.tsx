@@ -9,6 +9,7 @@ type User = {
   name: string;
   email: string;
   type: "in" | "out";
+  bold?: boolean;
 };
 
 const ComponentsPage = () => {
@@ -21,15 +22,15 @@ const ComponentsPage = () => {
         columns={[
           { key: "id", label: "ID" },
           { key: "name", label: "Nome" },
-          { key: "email", label: "Email" }
+          { key: "email", label: "Email" },
         ]}
         data={[
-          { id: 1, name: "Alice", email: "alice@email.com" },
+          { id: 1, name: "Alice", email: "alice@email.com", bold: true },
           { id: 2, name: "Bob", email: "bob@email.com" },
           { id: 3, name: "Carol", email: "carol@email.com" },
           { id: 4, name: "Dan", email: "dan@email.com" },
           { id: 5, name: "Eve", email: "eve@email.com" },
-          { id: 6, name: "Frank", email: "frank@email.com" }
+          { id: 6, name: "Frank", email: "frank@email.com", bold: true },
         ]}
         rowsPerPage={4}
       />
@@ -37,15 +38,15 @@ const ComponentsPage = () => {
         columns={[
           { key: "id", label: "ID" },
           { key: "name", label: "Nome" },
-          { key: "email", label: "Email" }
+          { key: "email", label: "Email" },
         ]}
         data={[
           { id: 1, name: "Alice", email: "alice@email.com", type: "in" },
-          { id: 2, name: "Bob", email: "bob@email.com", type: "out" },
+          { id: 2, name: "Bob", email: "bob@email.com", type: "out", bold: true },
           { id: 3, name: "Carol", email: "carol@email.com", type: "in" },
           { id: 4, name: "Dan", email: "dan@email.com", type: "out" },
-          { id: 5, name: "Eve", email: "eve@email.com", type: "in" },
-          { id: 6, name: "Frank", email: "frank@email.com", type: "out" }
+          { id: 5, name: "Eve", email: "eve@email.com", type: "in", bold: true },
+          { id: 6, name: "Frank", email: "frank@email.com", type: "out" },
         ]}
         rowsPerPage={4}
         edit

@@ -1,32 +1,44 @@
 import styles from "./index.module.scss";
 import { useState } from "react";
-import { Pencil, Trash2, ArrowDown, ArrowUp, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 type Column<T> = {
   key: keyof T;
   label: string;
 };
 
-type TableProps<T> = {
+type TableRowBase = {
+  bold?: boolean;
+  type?: "in" | "out";
+};
+
+type TableProps<T extends TableRowBase> = {
   columns: Column<T>[];
   data: T[];
   rowsPerPage?: number;
   edit?: boolean;
-  onEdit?: (item: T) => void;
+  onEdit?: (row: T) => void;
   delete?: boolean;
-  onDelete?: (item: T) => void;
+  onDelete?: (row: T) => void;
   inOut?: boolean;
 };
 
-function PaginatedTable<T>({
+function PaginatedTable<T extends TableRowBase>({
   columns,
   data,
   rowsPerPage = 10,
-  edit = false,
+  edit,
   onEdit,
-  delete: del = false,
+  delete: enableDelete,
   onDelete,
-  inOut = false,
+  inOut,
 }: TableProps<T>) {
   const [currentPage, setCurrentPage] = useState(0);
   const totalPages = Math.ceil(data.length / rowsPerPage);
@@ -53,61 +65,51 @@ function PaginatedTable<T>({
               {columns.map((col) => (
                 <th key={String(col.key)}>{col.label}</th>
               ))}
-
-              {/* Ordem fixa: In/Out → Edit → Delete */}
-              {inOut && <th>InOut</th>}
+              {inOut && <th>Entrada/Saída</th>}
               {edit && <th>Editar</th>}
-              {del && <th>Excluir</th>}
+              {enableDelete && <th>Excluir</th>}
             </tr>
           </thead>
           <tbody>
             {paginatedData.length === 0 ? (
               <tr>
-                <td
-                  colSpan={
-                    columns.length +
-                    (inOut ? 1 : 0) +
-                    (edit ? 1 : 0) +
-                    (del ? 1 : 0)
-                  }
-                  className={styles.empty}
-                >
+                <td colSpan={columns.length} className={styles.empty}>
                   Nenhum dado encontrado.
                 </td>
               </tr>
             ) : (
               paginatedData.map((item, idx) => (
-                <tr key={idx}>
+                <tr
+                  key={idx}
+                  className={item.bold ? styles.boldRow : styles.regularRow}
+                >
                   {columns.map((col) => (
                     <td key={String(col.key)}>{String(item[col.key])}</td>
                   ))}
-
                   {inOut && (
-                    <td className={styles.iconCell}>
-                      {String((item as any).type) === "in" ? (
-                        <ArrowUp size={18} color="green" />
+                    <td>
+                      {item.type === "in" ? (
+                        <ArrowUpCircle size={20} className={styles.in} />
                       ) : (
-                        <ArrowDown size={18} color="red" />
+                        <ArrowDownCircle size={20} className={styles.out} />
                       )}
                     </td>
                   )}
-
                   {edit && (
-                    <td className={styles.iconCell}>
+                    <td>
                       <button
-                        onClick={() => onEdit?.(item)}
                         className={styles.iconButton}
+                        onClick={() => onEdit?.(item)}
                       >
                         <Pencil size={18} />
                       </button>
                     </td>
                   )}
-
-                  {del && (
-                    <td className={styles.iconCell}>
+                  {enableDelete && (
+                    <td>
                       <button
-                        onClick={() => onDelete?.(item)}
                         className={styles.iconButton}
+                        onClick={() => onDelete?.(item)}
                       >
                         <Trash2 size={18} />
                       </button>
@@ -128,7 +130,10 @@ function PaginatedTable<T>({
           <span>
             Página {currentPage + 1} de {totalPages}
           </span>
-          <button onClick={handleNext} disabled={currentPage === totalPages - 1}>
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages - 1}
+          >
             <ChevronRight size={20} />
           </button>
         </div>
