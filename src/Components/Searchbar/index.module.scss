@@ -1,0 +1,29 @@
+.searchbarContainer {
+  display: flex;
+  border: 1px solid black;
+  border-radius: 6px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+
+  input {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 0;
+    width: calc(100% - 4rem);
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .icon {
+    font-size: 2rem;
+    align-self: center;
+    color: #888;
+  }
+
+  &:hover {
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.35);
+  }
+
+  
+}

@@ -5,13 +5,17 @@ import Footer from "../../Components/Footer";
 import PaginatedTable from "../../Components/PaginatedTable";
 import Button from "Components/Button";
 import CRUDButtons from "Components/CRUD_Buttons";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const ComponentsPage = () => {
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   return (
     <div className={styles.container}>
       <Navbar />
-        <h2>📦 Componentes</h2>
+      <h2>📦 Componentes</h2>
 
         <section>
           <h3>Tabela de Usuários</h3>
