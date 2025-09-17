@@ -3,11 +3,13 @@ import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 
 import PaginatedTable from "../../Components/PaginatedTable";
-import Input from "Components/Input";
-import Searchbar from "Components/Searchbar";
-import { useState } from "react";
+import Button from "Components/Button";
+import CRUDButtons from "Components/CRUD_Buttons";
 import { useNavigate } from "react-router-dom";
 import RangeInput from "Components/RangeInput";
+import { useState } from "react";
+import Input from "Components/Input";
+import Searchbar from "Components/Searchbar";
 
 const ComponentsPage = () => {
   const [email, setEmail] = useState("");
