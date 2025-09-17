@@ -12,6 +12,14 @@ import Input from "Components/Input";
 import Searchbar from "Components/Searchbar";
 import CardInfo from "Components/CardInfo";
 
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  type: "in" | "out";
+  bold?: boolean;
+};
+
 const ComponentsPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,8 +30,43 @@ const ComponentsPage = () => {
     <div className={styles.container}>
       <Navbar />
       <h2>📦 Componentes</h2>
-
-       
+      <PaginatedTable
+        columns={[
+          { key: "id", label: "ID" },
+          { key: "name", label: "Nome" },
+          { key: "email", label: "Email" },
+        ]}
+        data={[
+          { id: 1, name: "Alice", email: "alice@email.com", bold: true },
+          { id: 2, name: "Bob", email: "bob@email.com" },
+          { id: 3, name: "Carol", email: "carol@email.com" },
+          { id: 4, name: "Dan", email: "dan@email.com" },
+          { id: 5, name: "Eve", email: "eve@email.com" },
+          { id: 6, name: "Frank", email: "frank@email.com", bold: true },
+        ]}
+        rowsPerPage={4}
+      />
+      <PaginatedTable<User>
+        columns={[
+          { key: "id", label: "ID" },
+          { key: "name", label: "Nome" },
+          { key: "email", label: "Email" },
+        ]}
+        data={[
+          { id: 1, name: "Alice", email: "alice@email.com", type: "in" },
+          { id: 2, name: "Bob", email: "bob@email.com", type: "out", bold: true },
+          { id: 3, name: "Carol", email: "carol@email.com", type: "in" },
+          { id: 4, name: "Dan", email: "dan@email.com", type: "out" },
+          { id: 5, name: "Eve", email: "eve@email.com", type: "in", bold: true },
+          { id: 6, name: "Frank", email: "frank@email.com", type: "out" },
+        ]}
+        rowsPerPage={4}
+        edit
+        onEdit={(user) => alert(`Editar usuário: ${user.name}`)}
+        delete
+        onDelete={(user) => alert(`Excluir usuário: ${user.name}`)}
+        inOut
+      />
       <Footer />
     </div>
   );
