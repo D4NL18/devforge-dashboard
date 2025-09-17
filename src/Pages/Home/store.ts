@@ -13,6 +13,10 @@ export class Store {
 		this.counter += 1;
 	}
 
+	public decrement() {
+		this.counter -= 1;
+	}
+
 	public restartCounter() {
 		this.counter = 0;
 	}
