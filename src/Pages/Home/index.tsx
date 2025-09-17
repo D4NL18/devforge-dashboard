@@ -12,6 +12,7 @@ const Home = observer(() => {
       <Navbar />
       <main className={styles.content}>
         <h1>Bem-vindo ao Dashboard</h1>
+          Clique: {store.counter}
         <button onClick={() => store.increment()}>
           Clique: {store.counter}
         </button>
