@@ -3,14 +3,9 @@ import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 
 import PaginatedTable from "../../Components/PaginatedTable";
-<<<<<<< HEAD
-import Input from "Components/Input";
-import Searchbar from "Components/Searchbar";
+import Button from "Components/Button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-=======
-import Button from "Components/Button";
->>>>>>> ec437df1a223376b6f4d4fccc845afb4ab1a8261
 
 const ComponentsPage = () => {
   const [email, setEmail] = useState("");
@@ -21,40 +16,6 @@ const ComponentsPage = () => {
       <Navbar />
       <h2>📦 Componentes</h2>
 
-<<<<<<< HEAD
-      <section>
-        <h3>Tabela de Usuários</h3>
-        <PaginatedTable
-          columns={[
-            { key: "id", label: "ID" },
-            { key: "name", label: "Nome" },
-            { key: "email", label: "Email" },
-          ]}
-          data={[
-            { id: 1, name: "Alice", email: "alice@email.com" },
-            { id: 2, name: "Bob", email: "bob@email.com" },
-            { id: 3, name: "Carol", email: "carol@email.com" },
-            { id: 4, name: "Dan", email: "dan@email.com" },
-            { id: 5, name: "Eve", email: "eve@email.com" },
-            { id: 6, name: "Frank", email: "frank@email.com" },
-          ]}
-          rowsPerPage={4}
-        />
-      </section>
-      <section className={styles.section}>
-        <Input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Searchbar
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </section>
-=======
         <section>
           <h3>Tabela de Usuários</h3>
           <PaginatedTable
@@ -77,7 +38,6 @@ const ComponentsPage = () => {
         <Button text="Exemplo 1" size="small" onClick={() => console.log("clicked")} bgColor="black" color="#FFFFFF" />
         <Button text="Exemplo 2" size="medium" onClick={() => console.log("clicked")} bgColor="#FFF" color="#000" />
         <Button text="Exemplo 3" size="large" onClick={() => console.log("clicked")} bgColor="black" color="#FFFFFF" />
->>>>>>> ec437df1a223376b6f4d4fccc845afb4ab1a8261
       <Footer />
     </div>
   );
