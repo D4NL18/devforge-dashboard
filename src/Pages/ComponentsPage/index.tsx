@@ -11,6 +11,7 @@ import { useState } from "react";
 import Input from "Components/Input";
 import Searchbar from "Components/Searchbar";
 import CardInfo from "Components/CardInfo";
+import Select from "Components/Select";
 
 type User = {
   id: number;
@@ -19,6 +20,27 @@ type User = {
   type: "in" | "out";
   bold?: boolean;
 };
+
+let options = [
+  "Option 1",
+  "Option 2",
+  "Option 3",
+  "Option 4",
+  "Option 5",
+  "Option 6",
+  "Option 7",
+  "Option 8",
+  "Option 9",
+  "Option 10 Option 10 Option 10 Option 10 Option 10 Option 10",
+  "Option 11",
+  "Option 12",
+  "Option 13",
+  "Option 14",
+  "Option 15",
+  "Option 16",
+  "Option 17",
+  "Option 18",
+];
 
 const ComponentsPage = () => {
   const [email, setEmail] = useState("");
@@ -30,6 +52,15 @@ const ComponentsPage = () => {
     <div className={styles.container}>
       <Navbar />
       <h2>📦 Componentes</h2>
+      <Select
+        options={options}
+        hasSearch
+        multiple
+        selectAll
+        onSubmit={(values) => console.log("Selecionados:", values)}
+      />
+      {/* <Select options={options}/> */}
+
       <PaginatedTable
         columns={[
           { key: "id", label: "ID" },
@@ -54,10 +85,22 @@ const ComponentsPage = () => {
         ]}
         data={[
           { id: 1, name: "Alice", email: "alice@email.com", type: "in" },
-          { id: 2, name: "Bob", email: "bob@email.com", type: "out", bold: true },
+          {
+            id: 2,
+            name: "Bob",
+            email: "bob@email.com",
+            type: "out",
+            bold: true,
+          },
           { id: 3, name: "Carol", email: "carol@email.com", type: "in" },
           { id: 4, name: "Dan", email: "dan@email.com", type: "out" },
-          { id: 5, name: "Eve", email: "eve@email.com", type: "in", bold: true },
+          {
+            id: 5,
+            name: "Eve",
+            email: "eve@email.com",
+            type: "in",
+            bold: true,
+          },
           { id: 6, name: "Frank", email: "frank@email.com", type: "out" },
         ]}
         rowsPerPage={4}
@@ -67,6 +110,7 @@ const ComponentsPage = () => {
         onDelete={(user) => alert(`Excluir usuário: ${user.name}`)}
         inOut
       />
+
       <Footer />
     </div>
   );
