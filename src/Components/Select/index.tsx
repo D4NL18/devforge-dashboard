@@ -8,7 +8,6 @@ type SelectProps = {
   placeholder?: string;
   hasSearch?: boolean;
   options: string[];
-  value?: string;
   multiple?: boolean;
   selectAll?: boolean;
   onSubmit?: (values: string[]) => void;
@@ -17,7 +16,6 @@ type SelectProps = {
 const Select = ({
   placeholder,
   options,
-  value,
   hasSearch,
   multiple,
   selectAll,
@@ -42,7 +40,9 @@ const Select = ({
           : [...prev, option]
       );
     } else {
-      setSelected([option]);
+      setSelected(
+        (prev) => (prev.includes(option) ? [] : [option])
+      );
     }
   }
 
@@ -58,6 +58,20 @@ const Select = ({
     setIsOpen(false);
   }
 
+  function getPlaceholderText() {
+    if (!multiple && selected.length) {
+      return selected[0];
+    } else if (multiple && selected.length) {
+      return `${selected.length} option(s) selected`;
+    } else if (placeholder) {
+      return placeholder;
+    } else if (!multiple) {
+      return "Select an option";
+    } else {
+      return "Select options";
+    }
+  }
+
   return (
     <details
       className={styles.select}
@@ -65,7 +79,7 @@ const Select = ({
       onToggle={(e) => setIsOpen(e.currentTarget.open)}
     >
       <summary>
-        {value || placeholder || "Select an option"}
+        {getPlaceholderText()}
         <FaChevronDown className={styles.arrowIcon} />
       </summary>
       <form onSubmit={(e) => handleSubmit(e)}>
@@ -101,7 +115,9 @@ const Select = ({
                 id={`option-${index}`}
                 checked={selected.includes(option)}
                 disabled={
-                  (!multiple && selected.length > 0 && !selected.includes(option)) ||
+                  (!multiple &&
+                    selected.length > 0 &&
+                    !selected.includes(option)) ||
                   selectAllChecked
                 }
                 onChange={() => handleCheckboxChange(option)}

@@ -57,6 +57,7 @@ const ComponentsPage = () => {
         hasSearch
         multiple
         selectAll
+        // placeholder="Placeholder teste"
         onSubmit={(values) => console.log("Selecionados:", values)}
       />
       {/* <Select options={options}/> */}
