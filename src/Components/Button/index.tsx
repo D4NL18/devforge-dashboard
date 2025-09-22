@@ -5,10 +5,11 @@ interface ButtonProps {
     bgColor?: string;
     color?: string;
     size: "small" | "medium" | "large";
-    onClick: () => void;
+    type?: "button" | "submit" | "reset";
+    onClick?: () => void;
 }
 
-export default function Button({text, bgColor, color, size, onClick}: ButtonProps) {
+export default function Button({text, bgColor, color, size, onClick, type}: ButtonProps) {
     return (
         <button
             className={styles.buttonComponent}
@@ -20,6 +21,7 @@ export default function Button({text, bgColor, color, size, onClick}: ButtonProp
                 border: (!bgColor || bgColor === "transparent" || bgColor === "#FFFFFF" || bgColor === "#FFF" || bgColor === "white") ? "1px solid #000000" : "none",
             }} 
             onClick={onClick}
+            type={type ? type : "button"}
             >
             <span>{text}</span>
         </button>

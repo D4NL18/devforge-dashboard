@@ -6,12 +6,14 @@ import Home from "../src/Pages/Home";
 import ComponentsPage from "../src/Pages/ComponentsPage";
 import NotImplemented from "../src/Pages/NotImplemented";
 import NotFound from "../src/Pages/NotFound";
+import CustomerRegistration from "Pages/CustomerRegistration";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/customer-register" element={<CustomerRegistration />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/home" element={<Home />} />
