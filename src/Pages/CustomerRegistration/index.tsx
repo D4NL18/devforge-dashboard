@@ -3,6 +3,7 @@ import styles from "./index.module.scss";
 import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
 import { Customer } from "types/customer.interface";
+import { Address } from "types/address";
 
 export default function CustomerRegistration() {
   const [fullName, setFullName] = useState("");
@@ -21,12 +22,7 @@ export default function CustomerRegistration() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const newCustomer: Customer = {
-      fullName,
-      email,
-      phone,
-      document,
-      birthDate: new Date(birthDate),
+    const address: Address = {
       cep,
       city,
       state,
@@ -34,6 +30,15 @@ export default function CustomerRegistration() {
       street,
       number,
       complement,
+    }
+
+    const newCustomer: Customer = {
+      fullName,
+      email,
+      phone,
+      document,
+      birthDate: new Date(birthDate),
+      address
     };
 
     console.log("Cliente cadastrado:", newCustomer);
