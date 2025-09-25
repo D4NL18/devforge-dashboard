@@ -92,13 +92,20 @@ export default function Chart({
   }
 
   return (
-    <div style={{ width: "100%", height: 400 }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        maxWidth: "800px",
+      }}
+    >
       {title && (
-        <h2 style={{ textAlign: "center", justifyContent: "center", marginBottom: "1rem" }}>{title}</h2>
+        <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>{title}</h2>
       )}
-      <ResponsiveContainer width="70%" height="100%">
+      <ResponsiveContainer width="100%" height={300}>
         {chartContent}
       </ResponsiveContainer>
     </div>
-  );
+    );
 }

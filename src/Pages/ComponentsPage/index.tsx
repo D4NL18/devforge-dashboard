@@ -128,13 +128,40 @@ const ComponentsPage = () => {
         onDelete={(user) => alert(`Excluir usuário: ${user.name}`)}
         inOut
       />
-      <Chart
-        type="bar"
-        data={sampleChartData}
-        dataKey="value"
-        nameKey="name"
-        title="Vendas Mensais (Barra)"
-      />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr", // 2 colunas
+          gap: "2rem",
+          marginBottom: "2rem",
+        }}
+      >
+        <Chart
+          type="bar"
+          data={sampleChartData}
+          dataKey="value"
+          nameKey="name"
+          title="Vendas Mensais (Barra)"
+        />
+        <Chart
+          type="pie"
+          data={pieChartData}
+          dataKey="value"
+          nameKey="name"
+          title="Uso de Navegadores (Pizza)"
+        />
+      </div>
+
+      {/* linha única */}
+      <div style={{ marginBottom: "2rem" }}>
+        <Chart
+          type="line"
+          data={sampleChartData}
+          dataKey="value"
+          nameKey="name"
+          title="Tendência de Vendas (Linha)"
+        />
+      </div>
       <Footer />
     </div>
   );
