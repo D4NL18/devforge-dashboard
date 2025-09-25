@@ -5,6 +5,7 @@ import CRUDButtons from "Components/CRUD_Buttons";
 import { Address } from "types/address";
 import { User } from "types/user.interface";
 import Select from "Components/Select";
+import AddressForm from "Components/AddressForm";
 
 export default function UserRegistration() {
   const [fullName, setFullName] = useState("");
@@ -15,17 +16,18 @@ export default function UserRegistration() {
   const [birthDate, setBirthDate] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [cep, setCep] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
-  const [street, setStreet] = useState("");
-  const [number, setNumber] = useState("");
-  const [complement, setComplement] = useState("");
   const [role, setRole] = useState<"admin" | "user">("user");
-
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [address, setAddress] = useState<Address>({
+    cep: "",
+    city: "",
+    state: "",
+    country: "",
+    street: "",
+    number: "",
+    complement: "",
+  });
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -34,16 +36,6 @@ export default function UserRegistration() {
       console.log("Formulário inválido");
       return;
     }
-
-    const address: Address = {
-      cep,
-      city,
-      state,
-      country,
-      street,
-      number,
-      complement,
-    };
 
     const newUser: User = {
       fullName,
@@ -61,9 +53,8 @@ export default function UserRegistration() {
   }
 
   function validatePassword(value: string) {
-
-    if(!value) {
-        return
+    if (!value) {
+      return;
     }
 
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -177,63 +168,7 @@ export default function UserRegistration() {
           />
         </div>
       </section>
-
-      <section>
-        <h2>Endereço</h2>
-        <div className={styles.inputContainer}>
-          <Input
-            type="text"
-            placeholder="CEP"
-            value={cep}
-            onChange={(e) => setCep(e.target.value)}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Cidade"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Estado"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="País"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Rua"
-            value={street}
-            onChange={(e) => setStreet(e.target.value)}
-            required
-          />
-        </div>
-        <div className={styles.numberComplementContainer}>
-          <Input
-            type="text"
-            placeholder="Número"
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Complemento"
-            value={complement}
-            onChange={(e) => setComplement(e.target.value)}
-            required
-          />
-        </div>
-      </section>
+      <AddressForm onChange={setAddress} />
 
       <div className={styles.buttonContainer}>
         <CRUDButtons onCancel={() => console.log("Cancelado")} />

@@ -4,6 +4,7 @@ import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
 import { Customer } from "types/customer.interface";
 import { Address } from "types/address";
+import AddressForm from "Components/AddressForm";
 
 export default function CustomerRegistration() {
   const [fullName, setFullName] = useState("");
@@ -11,26 +12,18 @@ export default function CustomerRegistration() {
   const [phone, setPhone] = useState("");
   const [document, setDocument] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [cep, setCep] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
-  const [street, setStreet] = useState("");
-  const [number, setNumber] = useState("");
-  const [complement, setComplement] = useState("");
+  const [address, setAddress] = useState<Address>({
+    cep: "",
+    city: "",
+    state: "",
+    country: "",
+    street: "",
+    number: "",
+    complement: "",
+  });
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
-    const address: Address = {
-      cep,
-      city,
-      state,
-      country,
-      street,
-      number,
-      complement,
-    }
 
     const newCustomer: Customer = {
       fullName,
@@ -38,7 +31,7 @@ export default function CustomerRegistration() {
       phone,
       document,
       birthDate: new Date(birthDate),
-      address
+      address,
     };
 
     console.log("Cliente cadastrado:", newCustomer);
@@ -97,79 +90,9 @@ export default function CustomerRegistration() {
           />
         </div>
       </section>
-      <section>
-        <h2>Endereço</h2>
-        <div className={styles.inputContainer}>
-          <Input
-            type="text"
-            placeholder="CEP"
-            value={cep}
-            onChange={(e) => {
-              setCep(e.target.value);
-            }}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Cidade"
-            value={city}
-            onChange={(e) => {
-              setCity(e.target.value);
-            }}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Estado"
-            value={state}
-            onChange={(e) => {
-              setState(e.target.value);
-            }}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="País"
-            value={country}
-            onChange={(e) => {
-              setCountry(e.target.value);
-            }}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Rua"
-            value={street}
-            onChange={(e) => {
-              setStreet(e.target.value);
-            }}
-            required
-          />
-        </div>
-        <div className={styles.numberComplementContainer}>
-          <Input
-            type="text"
-            placeholder="Número"
-            value={number}
-            onChange={(e) => {
-              setNumber(e.target.value);
-            }}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Complemento"
-            value={complement}
-            onChange={(e) => {
-              setComplement(e.target.value);
-            }}
-            required
-          />
-        </div>
-      </section>
+      <AddressForm onChange={setAddress} />
       <div className={styles.buttonContainer}>
-        <CRUDButtons
-          onCancel={() => console.log("Cancelado")}/>
+        <CRUDButtons onCancel={() => console.log("Cancelado")} />
       </div>
     </form>
   );
