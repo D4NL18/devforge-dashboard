@@ -2,7 +2,7 @@ import Input from "Components/Input";
 import styles from "./index.module.scss";
 import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
-import { Address } from "types/address";
+import { Address } from "types/address.interface";
 import { User } from "types/user.interface";
 import Select from "Components/Select";
 import AddressForm from "Components/AddressForm";

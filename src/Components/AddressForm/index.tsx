@@ -1,6 +1,6 @@
 import Input from "Components/Input";
 import styles from "./index.module.scss";
-import { Address } from "types/address";
+import { Address } from "types/address.interface";
 import { useState, useEffect } from "react";
 
 interface AddressFormProps {
