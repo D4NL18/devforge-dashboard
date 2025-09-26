@@ -25,7 +25,7 @@
         
     }
 
-    form {
+    .form {
         background-color: white;
         width: 250px;
         position: absolute;
@@ -131,7 +131,7 @@
                 }
             }
 
-            input[type="submit"] {
+            .button{
                 width: 80%;
                 align-self: center;
                 background-color: $background-color;
@@ -175,12 +175,12 @@
                 transform: rotate(180deg);
             }
         }
-        form {
+        .form {
             max-height: 300px;
         }
     }
     &[close] {
-        form {
+        .form {
             max-height: 0px;
         }
     }
