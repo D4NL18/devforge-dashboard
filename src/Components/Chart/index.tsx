@@ -34,9 +34,20 @@ export default function Chart({
   nameKey,
   title,
   showLegend = true,
-  colors = ["#3b82f6", "#22c55e", "#ef4444", "#f59e0b"],
+  colors = ["#6C72D3", "#233662", "#C8A2C8", "#63B3ED"],
 }: ChartProps) {
   let chartContent: React.ReactElement;
+
+  const legendConfig = (
+    <Legend
+      wrapperStyle={{
+        marginTop: "20px",
+        fontSize: "20px",
+        color: "white",
+      }}
+      formatter={(value) => <span style={{ color: "white" }}>{value}</span>}
+    />
+  );
 
   switch (type) {
     case "bar":
@@ -46,7 +57,7 @@ export default function Chart({
           <XAxis dataKey={nameKey || "name"} />
           <YAxis />
           <Tooltip />
-          {showLegend && <Legend />}
+          {showLegend && legendConfig}
           <Bar dataKey={dataKey} fill={colors[0]} />
         </BarChart>
       );
@@ -59,8 +70,8 @@ export default function Chart({
           <XAxis dataKey={nameKey || "name"} />
           <YAxis />
           <Tooltip />
-          {showLegend && <Legend />}
-          <Line type="monotone" dataKey={dataKey} stroke={colors[0]} />
+          {showLegend && legendConfig}
+          <Line type="monotone" dataKey={dataKey} stroke={colors[2]} />
         </LineChart>
       );
       break;
@@ -69,7 +80,7 @@ export default function Chart({
       chartContent = (
         <PieChart>
           <Tooltip />
-          {showLegend && <Legend />}
+          {showLegend && legendConfig}
           <Pie
             data={data}
             dataKey={dataKey}
@@ -107,5 +118,5 @@ export default function Chart({
         {chartContent}
       </ResponsiveContainer>
     </div>
-    );
+  );
 }
