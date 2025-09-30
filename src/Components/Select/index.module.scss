@@ -2,7 +2,6 @@
 
 .select {
     display: flex;
-    max-width: 350px;
     background-color: white;
     border: 1px solid black;
     border-radius: 8px;
@@ -25,12 +24,12 @@
         
     }
 
-    form {
+    .form {
         background-color: white;
-        width: 250px;
+        width: 90%;
         position: absolute;
         top: 48px;
-        left: 50px;
+        left: 2%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -131,7 +130,7 @@
                 }
             }
 
-            input[type="submit"] {
+            .button{
                 width: 80%;
                 align-self: center;
                 background-color: $background-color;
@@ -175,12 +174,12 @@
                 transform: rotate(180deg);
             }
         }
-        form {
+        .form {
             max-height: 300px;
         }
     }
     &[close] {
-        form {
+        .form {
             max-height: 0px;
         }
     }

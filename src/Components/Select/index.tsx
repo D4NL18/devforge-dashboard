@@ -1,17 +1,27 @@
-import Input from "Components/Input";
 import styles from "./index.module.scss";
 import { CiSearch } from "react-icons/ci";
 import { FaChevronDown } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-type SelectProps = {
+type BaseProps = {
   placeholder?: string;
   hasSearch?: boolean;
   options: string[];
-  multiple?: boolean;
   selectAll?: boolean;
   onSubmit?: (values: string[]) => void;
 };
+
+type SingleSelectProps = BaseProps & {
+  multiple?: false;
+  defaultValue?: number;
+};
+
+type MultiSelectProps = BaseProps & {
+  multiple: true;
+  defaultValue?: number[];
+};
+
+type SelectProps = SingleSelectProps | MultiSelectProps;
 
 const Select = ({
   placeholder,
@@ -20,11 +30,28 @@ const Select = ({
   multiple,
   selectAll,
   onSubmit,
+  defaultValue,
 }: SelectProps) => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
+
+  useEffect(() => {
+    if (defaultValue !== undefined) {
+      if (multiple) {
+        const arr = (defaultValue as number[])
+          .filter((i) => i >= 0 && i < options.length)
+          .map((i) => options[i]);
+        setSelected(arr);
+      } else {
+        const i = defaultValue as number;
+        if (i >= 0 && i < options.length) {
+          setSelected([options[i]]);
+        }
+      }
+    }
+  }, [defaultValue, multiple, options]);
 
   const filteredOptions = options.filter((option) =>
     option.toLowerCase().includes(search.toLowerCase())
@@ -40,9 +67,7 @@ const Select = ({
           : [...prev, option]
       );
     } else {
-      setSelected(
-        (prev) => (prev.includes(option) ? [] : [option])
-      );
+      setSelected((prev) => (prev.includes(option) ? [] : [option]));
     }
   }
 
@@ -54,6 +79,12 @@ const Select = ({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (selected.length === 0) {
+      alert("Selecione pelo menos uma opção!");
+      return;
+    }
+
     onSubmit?.(selected);
     setIsOpen(false);
   }
@@ -82,7 +113,7 @@ const Select = ({
         {getPlaceholderText()}
         <FaChevronDown className={styles.arrowIcon} />
       </summary>
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <div className={styles.form}>
         <div
           className={styles.inputContainer}
           style={{ display: hasSearch ? "flex" : "none" }}
@@ -125,9 +156,15 @@ const Select = ({
               <label>{option}</label>
             </li>
           ))}
-          <input type="submit" value="Submit" />
+          <button
+            className={styles.button}
+            type="button"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         </div>
-      </form>
+      </div>
     </details>
   );
 };

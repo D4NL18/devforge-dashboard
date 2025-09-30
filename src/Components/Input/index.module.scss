@@ -5,12 +5,16 @@
   border-radius: 6px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   width: 100%;
-  decoration
-
+  box-sizing: border-box;
+  background-color: white;
+  color: #333;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
 
   &[type=number]::-webkit-outer-spin-button,
   &[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
+    margin: 0;
   }
 
   &:hover {
@@ -23,3 +27,57 @@
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
   }
 }
+
+.dateInputWrapper {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+
+
+  .placeholderText {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 0.85rem;
+    transform: translateY(-50%);
+    color: #888;
+    pointer-events: none; 
+    font-size: 1rem;
+  }
+  
+  .calendarIcon {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    color: #555;
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
+  }
+
+  .input[type='date'] {
+    padding-right: 2.5rem;
+    cursor: pointer;
+    
+    &::-webkit-calendar-picker-indicator {
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+  }
+
+  &.noValue {
+    .placeholderText {
+      display: block;
+    }
+    .input[type='date'] {
+      color: transparent;
+    }
+  }
+}
+
