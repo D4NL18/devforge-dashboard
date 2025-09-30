@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
 import { Customer } from "types/customer.interface";
-import { Address } from "types/address";
+import { Address } from "types/address.interface";
 import AddressForm from "Components/AddressForm";
 
 export default function CustomerRegistration() {
