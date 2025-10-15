@@ -22,6 +22,7 @@ export default function ProjectRegistration() {
     null
   );
   const [description, setDescription] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
 
   const [complexity, setComplexity] = useState<"Alta" | "Média" | "Baixa" | "">(
     ""
@@ -104,7 +105,7 @@ export default function ProjectRegistration() {
 
   const payload = {
     name: projectName,
-    status: "Em andamento",
+    status: status,
     startDate: new Date(startDate),
     endDate: new Date(endDate),
     description,
@@ -116,7 +117,7 @@ export default function ProjectRegistration() {
     totalPrice: totalValue,
     installmentCount:
       installments === "À vista" ? 1 : Number(installments.replace("x", "")),
-    statusBudget: "Em aberto",
+    statusBudget: status,
     notes: description,
     paymentMethodId: paymentMethod.id,
   };
@@ -207,6 +208,14 @@ export default function ProjectRegistration() {
               const selected =
                 customers.find((c) => c.name === value[0]) || null;
               setCustomer(selected);
+            }}
+          />
+
+          <Select
+            placeholder="Status"
+            options={["Em andamento", "Concluído", "Pausado", "Cancelado"]}
+            onSubmit={(value) => {
+              setStatus(value[0]);
             }}
           />
         </div>
