@@ -17,9 +17,13 @@ export default function ProjectRegistration() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [customer, setCustomer] = useState<Customer | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
+    null
+  );
   const [complexity, setComplexity] = useState<Project["complexity"] | "">("");
-  const [installments, setInstallments] = useState<Project["installments"] | "">("");
+  const [installments, setInstallments] = useState<
+    Project["installments"] | ""
+  >("");
   const [priority, setPriority] = useState<Project["priority"] | "">("");
   const [estimate, setEstimate] = useState("");
   const [totalValue, setTotalValue] = useState(0);
@@ -32,21 +36,27 @@ export default function ProjectRegistration() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [customersRes, projectTypesRes, paymentMethodsRes] = await Promise.all([
-          fetch(`${api}/clients`, { cache: "no-store" }),
-          fetch(`${api}/project-type/get-all-project-types`, { cache: "no-store" }),
-          fetch(`${api}/paymentMethods/get-all-payment-methods`, { cache: "no-store" }),
-        ]);
+        const [customersRes, projectTypesRes, paymentMethodsRes] =
+          await Promise.all([
+            fetch(`${api}/clients`, { cache: "no-store" }),
+            fetch(`${api}/project-type/get-all-project-types`, {
+              cache: "no-store",
+            }),
+            fetch(`${api}/paymentMethods/get-all-payment-methods`, {
+              cache: "no-store",
+            }),
+          ]);
 
         if (!customersRes.ok || !projectTypesRes.ok || !paymentMethodsRes.ok) {
           throw new Error("Erro ao carregar dados do servidor");
         }
 
-        const [customersData, projectTypesData, paymentMethodsData] = await Promise.all([
-          customersRes.json(),
-          projectTypesRes.json(),
-          paymentMethodsRes.json(),
-        ]);
+        const [customersData, projectTypesData, paymentMethodsData] =
+          await Promise.all([
+            customersRes.json(),
+            projectTypesRes.json(),
+            paymentMethodsRes.json(),
+          ]);
 
         console.log(customersData);
 
@@ -61,10 +71,17 @@ export default function ProjectRegistration() {
     fetchData();
   }, [api]);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!projectType || !customer || !paymentMethod || !complexity || !installments || !priority) {
+    if (
+      !projectType ||
+      !customer ||
+      !paymentMethod ||
+      !complexity ||
+      !installments ||
+      !priority
+    ) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
@@ -84,7 +101,43 @@ export default function ProjectRegistration() {
       description,
     };
 
-    console.log("Projeto cadastrado:", newProject);
+    try {
+      const response = await fetch(`${api}/project`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProject),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Erro ao cadastrar projeto:", errorData);
+        alert(
+          `Erro ao cadastrar projeto: ${
+            errorData.message || response.statusText
+          }`
+        );
+        return;
+      }
+
+      alert("Projeto cadastrado com sucesso!");
+      setProjectName("");
+      setProjectType({ description: "" });
+      setStartDate("");
+      setEndDate("");
+      setCustomer(null);
+      setPaymentMethod({ name: "" });
+      setComplexity("");
+      setInstallments("");
+      setPriority("");
+      setEstimate("");
+      setTotalValue(0);
+      setDescription("");
+    } catch (err) {
+      console.error("Erro ao enviar requisição:", err);
+      alert("Erro ao cadastrar projeto.");
+    }
   }
 
   return (
@@ -106,7 +159,8 @@ export default function ProjectRegistration() {
             placeholder="Tipo de Projeto"
             options={projectTypes.map((t) => t.description)}
             onSubmit={(value) => {
-              const selected = projectTypes.find((t) => t.description === value[0]) || null;
+              const selected =
+                projectTypes.find((t) => t.description === value[0]) || null;
               setProjectType(selected);
             }}
           />
@@ -131,7 +185,8 @@ export default function ProjectRegistration() {
             placeholder="Cliente"
             options={customers.map((c) => c.fullName)}
             onSubmit={(value) => {
-              const selected = customers.find((c) => c.fullName === value[0]) || null;
+              const selected =
+                customers.find((c) => c.fullName === value[0]) || null;
               setCustomer(selected);
             }}
           />
@@ -145,7 +200,8 @@ export default function ProjectRegistration() {
             placeholder="Forma de Pagamento"
             options={paymentMethods.map((p) => p.name)}
             onSubmit={(value) => {
-              const selected = paymentMethods.find((p) => p.name === value[0]) || null;
+              const selected =
+                paymentMethods.find((p) => p.name === value[0]) || null;
               setPaymentMethod(selected);
             }}
           />
@@ -153,13 +209,30 @@ export default function ProjectRegistration() {
           <Select
             placeholder="Complexidade"
             options={["Alta", "Média", "Baixa"]}
-            onSubmit={(value) => setComplexity(value[0] as Project["complexity"])}
+            onSubmit={(value) =>
+              setComplexity(value[0] as Project["complexity"])
+            }
           />
 
           <Select
             placeholder="Parcelas"
-            options={["À vista", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x", "11x", "12x"]}
-            onSubmit={(value) => setInstallments(value[0] as Project["installments"])}
+            options={[
+              "À vista",
+              "2x",
+              "3x",
+              "4x",
+              "5x",
+              "6x",
+              "7x",
+              "8x",
+              "9x",
+              "10x",
+              "11x",
+              "12x",
+            ]}
+            onSubmit={(value) =>
+              setInstallments(value[0] as Project["installments"])
+            }
           />
 
           <Select
