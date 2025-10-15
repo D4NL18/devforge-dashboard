@@ -1,104 +1,84 @@
 import Input from "Components/Input";
 import Select from "Components/Select";
 import styles from "./index.module.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
 import { Customer } from "types/customer.interface";
-import { LuBadgeDollarSign } from "react-icons/lu";
 import { Project } from "types/project.interface";
-
-const customers: Customer[] = [
-  {
-    fullName: "Ana Souza",
-    email: "ana.souza@example.com",
-    phone: "11999999999",
-    document: "123.456.789-00",
-    birthDate: new Date("1990-05-14"),
-    address: {
-      cep: "01001-000",
-      city: "São Paulo",
-      state: "SP",
-      country: "Brasil",
-      street: "Rua das Flores",
-      number: "100",
-    },
-  },
-  {
-    fullName: "Carlos Lima",
-    email: "carlos.lima@example.com",
-    phone: "21988887777",
-    document: "987.654.321-00",
-    birthDate: new Date("1985-09-21"),
-    address: {
-      cep: "20010-000",
-      city: "Rio de Janeiro",
-      state: "RJ",
-      country: "Brasil",
-      street: "Av. Atlântica",
-      number: "500",
-    },
-  },
-  {
-    fullName: "Mariana Oliveira",
-    email: "mariana.oliveira@example.com",
-    phone: "31977776666",
-    document: "456.789.123-00",
-    birthDate: new Date("1993-11-02"),
-    address: {
-      cep: "30140-000",
-      city: "Belo Horizonte",
-      state: "MG",
-      country: "Brasil",
-      street: "Rua da Liberdade",
-      number: "250",
-    },
-  },
-];
+import { ProjectType } from "types/projectType.interface";
+import { PaymentMethod } from "types/paymentMethod.interface";
+import { LuBadgeDollarSign } from "react-icons/lu";
 
 export default function ProjectRegistration() {
-  const [projectName, setProjectName] = useState<string>("");
-  const [category, setCategory] = useState<Project["category"] | "">("");
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  const api = process.env.API_URL;
 
-  const [paymentMethod, setPaymentMethod] = useState<
-    Project["paymentMethod"] | ""
-  >("");
+  const [projectName, setProjectName] = useState("");
+  const [projectType, setProjectType] = useState<ProjectType | null>(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [complexity, setComplexity] = useState<Project["complexity"] | "">("");
-  const [installments, setInstallments] = useState<
-    Project["installments"] | ""
-  >("");
+  const [installments, setInstallments] = useState<Project["installments"] | "">("");
   const [priority, setPriority] = useState<Project["priority"] | "">("");
-  const [estimate, setEstimate] = useState<string>("");
-  const [totalValue, setTotalValue] = useState<number>(0);
-  const [description, setDescription] = useState<string>("");
+  const [estimate, setEstimate] = useState("");
+  const [totalValue, setTotalValue] = useState(0);
+  const [description, setDescription] = useState("");
+
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [projectTypes, setProjectTypes] = useState<ProjectType[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [customersRes, projectTypesRes, paymentMethodsRes] = await Promise.all([
+          fetch(`${api}/clients`, { cache: "no-store" }),
+          fetch(`${api}/project-type/get-all-project-types`, { cache: "no-store" }),
+          fetch(`${api}/paymentMethods/get-all-payment-methods`, { cache: "no-store" }),
+        ]);
+
+        if (!customersRes.ok || !projectTypesRes.ok || !paymentMethodsRes.ok) {
+          throw new Error("Erro ao carregar dados do servidor");
+        }
+
+        const [customersData, projectTypesData, paymentMethodsData] = await Promise.all([
+          customersRes.json(),
+          projectTypesRes.json(),
+          paymentMethodsRes.json(),
+        ]);
+
+        console.log(customersData);
+
+        setCustomers(customersData);
+        setProjectTypes(projectTypesData);
+        setPaymentMethods(paymentMethodsData);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchData();
+  }, [api]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (
-      !category ||
-      !customer ||
-      !paymentMethod ||
-      !complexity ||
-      !installments ||
-      !priority
-    ) {
+    if (!projectType || !customer || !paymentMethod || !complexity || !installments || !priority) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
     const newProject: Project = {
       projectName,
-      category: category as Project["category"],
+      projectType,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       customer,
-      paymentMethod: paymentMethod as Project["paymentMethod"],
-      complexity: complexity as Project["complexity"],
-      installments: installments as Project["installments"],
-      priority: priority as Project["priority"],
+      paymentMethod,
+      complexity,
+      installments,
+      priority,
       estimate,
       totalValue,
       description,
@@ -121,11 +101,16 @@ export default function ProjectRegistration() {
             onChange={(e) => setProjectName(e.target.value)}
             required
           />
+
           <Select
-            placeholder="Categoria"
-            options={["Landing Page", "Mobile", "Dashboard"]}
-            onSubmit={(value) => setCategory(value[0] as Project["category"])}
+            placeholder="Tipo de Projeto"
+            options={projectTypes.map((t) => t.description)}
+            onSubmit={(value) => {
+              const selected = projectTypes.find((t) => t.description === value[0]) || null;
+              setProjectType(selected);
+            }}
           />
+
           <Input
             type="date"
             placeholder="Data de Início"
@@ -133,6 +118,7 @@ export default function ProjectRegistration() {
             onChange={(e) => setStartDate(e.target.value)}
             required
           />
+
           <Input
             type="date"
             placeholder="Data de Término"
@@ -140,13 +126,13 @@ export default function ProjectRegistration() {
             onChange={(e) => setEndDate(e.target.value)}
             required
           />
+
           <Select
             placeholder="Cliente"
             options={customers.map((c) => c.fullName)}
             onSubmit={(value) => {
-              const selectedCustomer =
-                customers.find((c) => c.fullName === value[0]) || null;
-              setCustomer(selectedCustomer);
+              const selected = customers.find((c) => c.fullName === value[0]) || null;
+              setCustomer(selected);
             }}
           />
         </div>
@@ -157,43 +143,31 @@ export default function ProjectRegistration() {
         <div className={styles.inputContainer}>
           <Select
             placeholder="Forma de Pagamento"
-            options={["Cartão de Crédito", "Cartão de Débito", "Boleto", "PIX"]}
-            onSubmit={(value) =>
-              setPaymentMethod(value[0] as Project["paymentMethod"])
-            }
+            options={paymentMethods.map((p) => p.name)}
+            onSubmit={(value) => {
+              const selected = paymentMethods.find((p) => p.name === value[0]) || null;
+              setPaymentMethod(selected);
+            }}
           />
+
           <Select
             placeholder="Complexidade"
             options={["Alta", "Média", "Baixa"]}
-            onSubmit={(value) =>
-              setComplexity(value[0] as Project["complexity"])
-            }
+            onSubmit={(value) => setComplexity(value[0] as Project["complexity"])}
           />
+
           <Select
             placeholder="Parcelas"
-            options={[
-              "À vista",
-              "2x",
-              "3x",
-              "4x",
-              "5x",
-              "6x",
-              "7x",
-              "8x",
-              "9x",
-              "10x",
-              "11x",
-              "12x",
-            ]}
-            onSubmit={(value) =>
-              setInstallments(value[0] as Project["installments"])
-            }
+            options={["À vista", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x", "11x", "12x"]}
+            onSubmit={(value) => setInstallments(value[0] as Project["installments"])}
           />
+
           <Select
             placeholder="Prioridade"
             options={["Alta", "Média", "Baixa"]}
             onSubmit={(value) => setPriority(value[0] as Project["priority"])}
           />
+
           <Input
             type="text"
             placeholder="Estimativa"
@@ -201,6 +175,7 @@ export default function ProjectRegistration() {
             onChange={(e) => setEstimate(e.target.value)}
             required
           />
+
           <div className={styles.ValueInputContainer}>
             <Input
               type="number"

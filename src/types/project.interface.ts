@@ -1,12 +1,14 @@
 import { Customer } from "./customer.interface";
+import { PaymentMethod } from "./paymentMethod.interface";
+import { ProjectType } from "./projectType.interface";
 
 export interface Project {
   projectName: string;
-  category: "Landing Page" | "Mobile" | "Dashboard";
+  projectType: ProjectType;
   startDate: Date;
   endDate: Date;
   customer: Customer;
-  paymentMethod: "Cartão de Crédito" | "Cartão de Débito" | "Boleto" | "PIX";
+  paymentMethod: PaymentMethod
   complexity: "Alta" | "Média" | "Baixa";
   installments:
     | "À vista"
