@@ -8,7 +8,7 @@ import Select from "Components/Select";
 import AddressForm from "Components/AddressForm";
 
 export default function UserRegistration() {
-  const api = process.env.API_URL;
+  const api = process.env.REACT_APP_API_URL;
 
   const [fullName, setFullName] = useState("");
   const [userName, setUserName] = useState("");
@@ -39,38 +39,44 @@ export default function UserRegistration() {
       return;
     }
 
-    const newUser: User = {
+    const payload = {
       fullName,
       userName,
       email,
       phone,
       cpf,
       birthDate: new Date(birthDate),
-      address,
       password,
       role,
+      cep: address.cep,
+      city: address.city,
+      state: address.state,
+      country: address.country,
+      street: address.street,
+      number: address.number,
+      complement: address.complement,
     };
 
     try {
       const response = await fetch(`${api}/users`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUser),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
+
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Erro ao cadastrar user:", errorData);
+        console.error("Erro ao cadastrar usuário:", errorData);
         alert(
-          `Erro ao cadastrar projeto: ${
+          `Erro ao cadastrar usuário: ${
             errorData.message || response.statusText
           }`
         );
         return;
       }
-      console.log("Usuário cadastrado:", newUser);
+
       alert("Usuário cadastrado com sucesso!");
+
       setFullName("");
       setUserName("");
       setEmail("");
