@@ -8,6 +8,8 @@ import Select from "Components/Select";
 import AddressForm from "Components/AddressForm";
 
 export default function UserRegistration() {
+  const api = process.env.API_URL;
+
   const [fullName, setFullName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -29,7 +31,7 @@ export default function UserRegistration() {
     complement: "",
   });
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     if (passwordError || confirmPasswordError) {
@@ -48,6 +50,48 @@ export default function UserRegistration() {
       password,
       role,
     };
+
+    try {
+      const response = await fetch(`${api}/user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Erro ao cadastrar projeto:", errorData);
+        alert(
+          `Erro ao cadastrar projeto: ${
+            errorData.message || response.statusText
+          }`
+        );
+        return;
+      }
+      alert("Usuário cadastrado com sucesso!");
+      setFullName("");
+      setUserName("");
+      setEmail("");
+      setPhone("");
+      setCpf("");
+      setBirthDate("");
+      setPassword("");
+      setConfirmPassword("");
+      setRole("user");
+      setAddress({
+        cep: "",
+        city: "",
+        state: "",
+        country: "",
+        street: "",
+        number: "",
+        complement: "",
+      });
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error);
+      alert("Erro ao cadastrar usuário.");
+    }
 
     console.log("Usuário cadastrado:", newUser);
   }
