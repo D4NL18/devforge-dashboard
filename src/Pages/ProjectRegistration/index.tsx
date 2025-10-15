@@ -8,26 +8,42 @@ import { Project } from "types/project.interface";
 import { ProjectType } from "types/projectType.interface";
 import { PaymentMethod } from "types/paymentMethod.interface";
 import { LuBadgeDollarSign } from "react-icons/lu";
+import { ProjectBudget } from "types/projectBudget.interface";
 
 export default function ProjectRegistration() {
-  const api = process.env.API_URL;
+  const api = process.env.REACT_APP_API_URL;
 
-  const [projectName, setProjectName] = useState("");
+  const [projectName, setProjectName] = useState<string>("");
   const [projectType, setProjectType] = useState<ProjectType | null>(null);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
     null
   );
-  const [complexity, setComplexity] = useState<Project["complexity"] | "">("");
+  const [description, setDescription] = useState<string>("");
+
+  const [complexity, setComplexity] = useState<"Alta" | "Média" | "Baixa" | "">(
+    ""
+  );
   const [installments, setInstallments] = useState<
-    Project["installments"] | ""
+    | "À vista"
+    | "2x"
+    | "3x"
+    | "4x"
+    | "5x"
+    | "6x"
+    | "7x"
+    | "8x"
+    | "9x"
+    | "10x"
+    | "11x"
+    | "12x"
+    | ""
   >("");
-  const [priority, setPriority] = useState<Project["priority"] | "">("");
-  const [estimate, setEstimate] = useState("");
-  const [totalValue, setTotalValue] = useState(0);
-  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState<"Alta" | "Média" | "Baixa" | "">("");
+  const [estimate, setEstimate] = useState<string>("");
+  const [totalValue, setTotalValue] = useState<number>(0);
 
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [projectTypes, setProjectTypes] = useState<ProjectType[]>([]);
@@ -38,11 +54,11 @@ export default function ProjectRegistration() {
       try {
         const [customersRes, projectTypesRes, paymentMethodsRes] =
           await Promise.all([
-            fetch(`${api}/clients`, { cache: "no-store" }),
+            fetch(`${api}/client`, { cache: "no-store" }),
             fetch(`${api}/project-type/get-all-project-types`, {
               cache: "no-store",
             }),
-            fetch(`${api}/paymentMethods/get-all-payment-methods`, {
+            fetch(`${api}/payment-method/get-all-payment-methods`, {
               cache: "no-store",
             }),
           ]);
@@ -58,11 +74,9 @@ export default function ProjectRegistration() {
             paymentMethodsRes.json(),
           ]);
 
-        console.log(customersData);
-
-        setCustomers(customersData);
-        setProjectTypes(projectTypesData);
-        setPaymentMethods(paymentMethodsData);
+        setCustomers(customersData.datas);
+        setProjectTypes(projectTypesData.datas);
+        setPaymentMethods(paymentMethodsData.datas);
       } catch (err) {
         console.error(err);
       }
@@ -72,73 +86,78 @@ export default function ProjectRegistration() {
   }, [api]);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (
-      !projectType ||
-      !customer ||
-      !paymentMethod ||
-      !complexity ||
-      !installments ||
-      !priority
-    ) {
-      alert("Preencha todos os campos obrigatórios.");
+  if (
+    !projectType ||
+    !customer ||
+    !paymentMethod ||
+    !complexity ||
+    !installments ||
+    !priority ||
+    !estimate ||
+    !totalValue
+  ) {
+    alert("Preencha todos os campos obrigatórios.");
+    return;
+  }
+
+  const payload = {
+    name: projectName,
+    status: "Em andamento",
+    startDate: new Date(startDate),
+    endDate: new Date(endDate),
+    description,
+    projectTypeId: projectType.id,
+    clientId: customer.id,
+    priority,
+    estimation: new Date(estimate),
+    complexity,
+    totalPrice: totalValue,
+    installmentCount:
+      installments === "À vista" ? 1 : Number(installments.replace("x", "")),
+    statusBudget: "Em aberto",
+    notes: description,
+    paymentMethodId: paymentMethod.id,
+  };
+
+  try {
+    const response = await fetch(`${api}/project`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Erro ao cadastrar projeto:", errorData);
+      alert(
+        `Erro ao cadastrar projeto: ${errorData.message || response.statusText}`
+      );
       return;
     }
 
-    const newProject: Project = {
-      projectName,
-      projectType,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
-      customer,
-      paymentMethod,
-      complexity,
-      installments,
-      priority,
-      estimate,
-      totalValue,
-      description,
-    };
+    alert("Projeto cadastrado com sucesso!");
 
-    try {
-      const response = await fetch(`${api}/project`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newProject),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Erro ao cadastrar projeto:", errorData);
-        alert(
-          `Erro ao cadastrar projeto: ${
-            errorData.message || response.statusText
-          }`
-        );
-        return;
-      }
-
-      alert("Projeto cadastrado com sucesso!");
-      setProjectName("");
-      setProjectType({ description: "" });
-      setStartDate("");
-      setEndDate("");
-      setCustomer(null);
-      setPaymentMethod({ name: "" });
-      setComplexity("");
-      setInstallments("");
-      setPriority("");
-      setEstimate("");
-      setTotalValue(0);
-      setDescription("");
-    } catch (err) {
-      console.error("Erro ao enviar requisição:", err);
-      alert("Erro ao cadastrar projeto.");
-    }
+    setProjectName("");
+    setProjectType(null);
+    setStartDate("");
+    setEndDate("");
+    setCustomer(null);
+    setPaymentMethod(null);
+    setComplexity("");
+    setInstallments("");
+    setPriority("");
+    setEstimate("");
+    setTotalValue(0);
+    setDescription("");
+  } catch (err) {
+    console.error("Erro ao enviar requisição:", err);
+    alert("Erro ao cadastrar projeto.");
   }
+}
 
   return (
     <form className={styles.projectForm} onSubmit={handleSubmit}>
@@ -183,10 +202,10 @@ export default function ProjectRegistration() {
 
           <Select
             placeholder="Cliente"
-            options={customers.map((c) => c.fullName)}
+            options={customers.map((c) => c.name)}
             onSubmit={(value) => {
               const selected =
-                customers.find((c) => c.fullName === value[0]) || null;
+                customers.find((c) => c.name === value[0]) || null;
               setCustomer(selected);
             }}
           />
@@ -210,7 +229,7 @@ export default function ProjectRegistration() {
             placeholder="Complexidade"
             options={["Alta", "Média", "Baixa"]}
             onSubmit={(value) =>
-              setComplexity(value[0] as Project["complexity"])
+              setComplexity(value[0] as "Alta" | "Média" | "Baixa")
             }
           />
 
@@ -231,19 +250,35 @@ export default function ProjectRegistration() {
               "12x",
             ]}
             onSubmit={(value) =>
-              setInstallments(value[0] as Project["installments"])
+              setInstallments(
+                value[0] as
+                  | "À vista"
+                  | "2x"
+                  | "3x"
+                  | "4x"
+                  | "5x"
+                  | "6x"
+                  | "7x"
+                  | "8x"
+                  | "9x"
+                  | "10x"
+                  | "11x"
+                  | "12x"
+              )
             }
           />
 
           <Select
             placeholder="Prioridade"
             options={["Alta", "Média", "Baixa"]}
-            onSubmit={(value) => setPriority(value[0] as Project["priority"])}
+            onSubmit={(value) =>
+              setPriority(value[0] as "Alta" | "Média" | "Baixa")
+            }
           />
 
           <Input
-            type="text"
-            placeholder="Estimativa"
+            type="date"
+            placeholder="Data da Estimativa"
             value={estimate}
             onChange={(e) => setEstimate(e.target.value)}
             required

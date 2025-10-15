@@ -7,7 +7,7 @@ import { Address } from "types/address.interface";
 import AddressForm from "Components/AddressForm";
 
 export default function CustomerRegistration() {
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [document, setDocument] = useState("");
@@ -26,12 +26,13 @@ export default function CustomerRegistration() {
     e.preventDefault();
 
     const newCustomer: Customer = {
-      fullName,
+      name,
       email,
       phone,
       document,
       birthDate: new Date(birthDate),
       address,
+      id: 0
     };
 
     console.log("Cliente cadastrado:", newCustomer);
@@ -46,9 +47,9 @@ export default function CustomerRegistration() {
           <Input
             type="text"
             placeholder="Nome Completo"
-            value={fullName}
+            value={name}
             onChange={(e) => {
-              setFullName(e.target.value);
+              setName(e.target.value);
             }}
             required
           />
