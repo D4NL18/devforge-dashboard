@@ -52,7 +52,7 @@ export default function UserRegistration() {
     };
 
     try {
-      const response = await fetch(`${api}/user`, {
+      const response = await fetch(`${api}/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export default function UserRegistration() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Erro ao cadastrar projeto:", errorData);
+        console.error("Erro ao cadastrar user:", errorData);
         alert(
           `Erro ao cadastrar projeto: ${
             errorData.message || response.statusText
@@ -69,6 +69,7 @@ export default function UserRegistration() {
         );
         return;
       }
+      console.log("Usuário cadastrado:", newUser);
       alert("Usuário cadastrado com sucesso!");
       setFullName("");
       setUserName("");
@@ -92,8 +93,6 @@ export default function UserRegistration() {
       console.error("Erro ao cadastrar usuário:", error);
       alert("Erro ao cadastrar usuário.");
     }
-
-    console.log("Usuário cadastrado:", newUser);
   }
 
   function validatePassword(value: string) {
