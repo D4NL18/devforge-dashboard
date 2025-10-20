@@ -1,6 +1,6 @@
 import { Address } from "./address.interface";
 
-export interface Customer {
+export interface Client {
   name: string;
   email: string;
   phone: string;

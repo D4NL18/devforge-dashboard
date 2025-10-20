@@ -1,164 +1,80 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { projectStore } from "./store";
 import Input from "Components/Input";
 import Select from "Components/Select";
-import styles from "./index.module.scss";
-import { useState, useEffect } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
-import { Customer } from "types/customer.interface";
-import { Project } from "types/project.interface";
-import { ProjectType } from "types/projectType.interface";
-import { PaymentMethod } from "types/paymentMethod.interface";
+import styles from "./index.module.scss";
 import { LuBadgeDollarSign } from "react-icons/lu";
-import { ProjectBudget } from "types/projectBudget.interface";
 
-export default function ProjectRegistration() {
-  const api = process.env.REACT_APP_API_URL;
+function ProjectRegistration() {
+  const {
+    clients,
+    projectTypes,
+    paymentMethods,
+    fetchData,
+    createProject,
+  } = projectStore;
 
-  const [projectName, setProjectName] = useState<string>("");
-  const [projectType, setProjectType] = useState<ProjectType | null>(null);
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-  const [customer, setCustomer] = useState<Customer | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
-    null
-  );
-  const [description, setDescription] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
-
-  const [complexity, setComplexity] = useState<"Alta" | "Média" | "Baixa" | "">(
-    ""
-  );
-  const [installments, setInstallments] = useState<
-    | "À vista"
-    | "2x"
-    | "3x"
-    | "4x"
-    | "5x"
-    | "6x"
-    | "7x"
-    | "8x"
-    | "9x"
-    | "10x"
-    | "11x"
-    | "12x"
-    | ""
-  >("");
+  const [projectName, setProjectName] = useState("");
+  const [projectType, setProjectType] = useState<any>(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [client, setClient] = useState<any>(null);
+  const [paymentMethod, setPaymentMethod] = useState<any>(null);
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("");
+  const [complexity, setComplexity] = useState<"Alta" | "Média" | "Baixa" | "">("");
+  const [installments, setInstallments] = useState<string>("");
   const [priority, setPriority] = useState<"Alta" | "Média" | "Baixa" | "">("");
-  const [estimate, setEstimate] = useState<string>("");
+  const [estimate, setEstimate] = useState("");
   const [totalValue, setTotalValue] = useState<number>(0);
 
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [projectTypes, setProjectTypes] = useState<ProjectType[]>([]);
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const [customersRes, projectTypesRes, paymentMethodsRes] =
-          await Promise.all([
-            fetch(`${api}/client`, { cache: "no-store" }),
-            fetch(`${api}/project-type/get-all-project-types`, {
-              cache: "no-store",
-            }),
-            fetch(`${api}/payment-method/get-all-payment-methods`, {
-              cache: "no-store",
-            }),
-          ]);
-
-        if (!customersRes.ok || !projectTypesRes.ok || !paymentMethodsRes.ok) {
-          throw new Error("Erro ao carregar dados do servidor");
-        }
-
-        const [customersData, projectTypesData, paymentMethodsData] =
-          await Promise.all([
-            customersRes.json(),
-            projectTypesRes.json(),
-            paymentMethodsRes.json(),
-          ]);
-
-        setCustomers(customersData.datas);
-        setProjectTypes(projectTypesData.datas);
-        setPaymentMethods(paymentMethodsData.datas);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
     fetchData();
-  }, [api]);
+  }, [fetchData]);
 
   async function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (
-    !projectType ||
-    !customer ||
-    !paymentMethod ||
-    !complexity ||
-    !installments ||
-    !priority ||
-    !estimate ||
-    !totalValue
-  ) {
-    alert("Preencha todos os campos obrigatórios.");
-    return;
-  }
-
-  const payload = {
-    name: projectName,
-    status: status,
-    startDate: new Date(startDate),
-    endDate: new Date(endDate),
-    description,
-    projectTypeId: projectType.id,
-    clientId: customer.id,
-    priority,
-    estimation: new Date(estimate),
-    complexity,
-    totalPrice: totalValue,
-    installmentCount:
-      installments === "À vista" ? 1 : Number(installments.replace("x", "")),
-    statusBudget: status,
-    notes: description,
-    paymentMethodId: paymentMethod.id,
-  };
-
-  try {
-    const response = await fetch(`${api}/project`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Erro ao cadastrar projeto:", errorData);
-      alert(
-        `Erro ao cadastrar projeto: ${errorData.message || response.statusText}`
-      );
+    if (
+      !projectType ||
+      !client ||
+      !paymentMethod ||
+      !complexity ||
+      !installments ||
+      !priority ||
+      !estimate ||
+      !totalValue
+    ) {
+      alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
-    alert("Projeto cadastrado com sucesso!");
+    const payload = {
+      name: projectName,
+      status,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+      description,
+      projectTypeId: projectType.id,
+      clientId: client.id,
+      priority,
+      estimation: new Date(estimate),
+      complexity,
+      totalPrice: totalValue,
+      installmentCount:
+        installments === "À vista" ? 1 : Number(installments.replace("x", "")),
+      statusBudget: status,
+      notes: description,
+      paymentMethodId: paymentMethod.id,
+    };
 
-    setProjectName("");
-    setProjectType(null);
-    setStartDate("");
-    setEndDate("");
-    setCustomer(null);
-    setPaymentMethod(null);
-    setComplexity("");
-    setInstallments("");
-    setPriority("");
-    setEstimate("");
-    setTotalValue(0);
-    setDescription("");
-  } catch (err) {
-    console.error("Erro ao enviar requisição:", err);
-    alert("Erro ao cadastrar projeto.");
+    await createProject(payload as any);
+    alert("Projeto cadastrado com sucesso!");
   }
-}
 
   return (
     <form className={styles.projectForm} onSubmit={handleSubmit}>
@@ -178,11 +94,9 @@ export default function ProjectRegistration() {
           <Select
             placeholder="Tipo de Projeto"
             options={projectTypes.map((t) => t.description)}
-            onSubmit={(value) => {
-              const selected =
-                projectTypes.find((t) => t.description === value[0]) || null;
-              setProjectType(selected);
-            }}
+            onSubmit={(value) =>
+              setProjectType(projectTypes.find((t) => t.description === value[0]) || null)
+            }
           />
 
           <Input
@@ -203,20 +117,16 @@ export default function ProjectRegistration() {
 
           <Select
             placeholder="Cliente"
-            options={customers.map((c) => c.name)}
-            onSubmit={(value) => {
-              const selected =
-                customers.find((c) => c.name === value[0]) || null;
-              setCustomer(selected);
-            }}
+            options={clients.map((c) => c.name)}
+            onSubmit={(value) =>
+              setClient(clients.find((c) => c.name === value[0]) || null)
+            }
           />
 
           <Select
             placeholder="Status"
             options={["Em andamento", "Concluído", "Pausado", "Cancelado"]}
-            onSubmit={(value) => {
-              setStatus(value[0]);
-            }}
+            onSubmit={(value) => setStatus(value[0])}
           />
         </div>
       </section>
@@ -227,19 +137,15 @@ export default function ProjectRegistration() {
           <Select
             placeholder="Forma de Pagamento"
             options={paymentMethods.map((p) => p.name)}
-            onSubmit={(value) => {
-              const selected =
-                paymentMethods.find((p) => p.name === value[0]) || null;
-              setPaymentMethod(selected);
-            }}
+            onSubmit={(value) =>
+              setPaymentMethod(paymentMethods.find((p) => p.name === value[0]) || null)
+            }
           />
 
           <Select
             placeholder="Complexidade"
             options={["Alta", "Média", "Baixa"]}
-            onSubmit={(value) =>
-              setComplexity(value[0] as "Alta" | "Média" | "Baixa")
-            }
+            onSubmit={(value) => setComplexity(value[0] as any)}
           />
 
           <Select
@@ -258,31 +164,13 @@ export default function ProjectRegistration() {
               "11x",
               "12x",
             ]}
-            onSubmit={(value) =>
-              setInstallments(
-                value[0] as
-                  | "À vista"
-                  | "2x"
-                  | "3x"
-                  | "4x"
-                  | "5x"
-                  | "6x"
-                  | "7x"
-                  | "8x"
-                  | "9x"
-                  | "10x"
-                  | "11x"
-                  | "12x"
-              )
-            }
+            onSubmit={(value) => setInstallments(value[0])}
           />
 
           <Select
             placeholder="Prioridade"
             options={["Alta", "Média", "Baixa"]}
-            onSubmit={(value) =>
-              setPriority(value[0] as "Alta" | "Média" | "Baixa")
-            }
+            onSubmit={(value) => setPriority(value[0] as any)}
           />
 
           <Input
@@ -325,3 +213,5 @@ export default function ProjectRegistration() {
     </form>
   );
 }
+
+export default observer(ProjectRegistration);

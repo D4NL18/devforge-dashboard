@@ -6,7 +6,7 @@ import Home from "../src/Pages/Home";
 import ComponentsPage from "../src/Pages/ComponentsPage";
 import NotImplemented from "../src/Pages/NotImplemented";
 import NotFound from "../src/Pages/NotFound";
-import CustomerRegistration from "Pages/CustomerRegistration";
+import ClientRegistration from "Pages/ClientRegistration";
 import UserRegistration from "Pages/UserRegistration";
 import TransactionRegistration from "Pages/TransactionRegistration";
 import ProjectRegistration from "Pages/ProjectRegistration";
@@ -16,7 +16,7 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/customer-register" element={<CustomerRegistration />} />
+        <Route path="/client-register" element={<ClientRegistration />} />
         <Route path="/user-register" element={<UserRegistration />} />
         <Route path="/transaction-register" element={<TransactionRegistration />} />
         <Route path="/project-register" element={<ProjectRegistration />} />

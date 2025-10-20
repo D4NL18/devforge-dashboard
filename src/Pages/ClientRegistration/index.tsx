@@ -2,11 +2,11 @@ import Input from "Components/Input";
 import styles from "./index.module.scss";
 import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
-import { Customer } from "types/customer.interface";
+import { Client } from "types/client.interface";
 import { Address } from "types/address.interface";
 import AddressForm from "Components/AddressForm";
 
-export default function CustomerRegistration() {
+export default function ClientRegistration() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -25,7 +25,7 @@ export default function CustomerRegistration() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const newCustomer: Customer = {
+    const newClient: Client = {
       name,
       email,
       phone,
@@ -35,11 +35,11 @@ export default function CustomerRegistration() {
       id: 0
     };
 
-    console.log("Cliente cadastrado:", newCustomer);
+    console.log("Cliente cadastrado:", newClient);
   }
 
   return (
-    <form className={styles.customerForm} onSubmit={handleSubmit}>
+    <form className={styles.clientForm} onSubmit={handleSubmit}>
       <h1>Cadastro de Cliente</h1>
       <section>
         <h2>Informações Pessoais e Profissionais</h2>
