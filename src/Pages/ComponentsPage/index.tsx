@@ -12,6 +12,7 @@ import Input from "Components/Input";
 import Searchbar from "Components/Searchbar";
 import CardInfo from "Components/CardInfo";
 import Select from "Components/Select";
+import Chart from "Components/Chart"
 
 type User = {
   id: number;
@@ -20,6 +21,22 @@ type User = {
   type: "in" | "out";
   bold?: boolean;
 };
+
+const sampleChartData = [
+  { name: "Jan", value: 400 },
+  { name: "Feb", value: 300 },
+  { name: "Mar", value: 500 },
+  { name: "Apr", value: 200 },
+  { name: "May", value: 350 },
+  { name: "Jun", value: 600 },
+];
+
+const pieChartData = [
+  { name: "Chrome", value: 65 },
+  { name: "Firefox", value: 20 },
+  { name: "Edge", value: 10 },
+  { name: "Outros", value: 5 },
+];
 
 let options = [
   "Option 1",
@@ -111,7 +128,40 @@ const ComponentsPage = () => {
         onDelete={(user) => alert(`Excluir usuário: ${user.name}`)}
         inOut
       />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr", // 2 colunas
+          gap: "2rem",
+          marginBottom: "2rem",
+        }}
+      >
+        <Chart
+          type="bar"
+          data={sampleChartData}
+          dataKey="value"
+          nameKey="name"
+          title="Vendas Mensais (Barra)"
+        />
+        <Chart
+          type="pie"
+          data={pieChartData}
+          dataKey="value"
+          nameKey="name"
+          title="Uso de Navegadores (Pizza)"
+        />
+      </div>
 
+      {/* linha única */}
+      <div style={{ marginBottom: "2rem" }}>
+        <Chart
+          type="line"
+          data={sampleChartData}
+          dataKey="value"
+          nameKey="name"
+          title="Tendência de Vendas (Linha)"
+        />
+      </div>
       <Footer />
     </div>
   );
