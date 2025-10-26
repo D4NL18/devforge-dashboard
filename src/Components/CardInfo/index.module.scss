@@ -10,6 +10,7 @@
     font-family: 'Inter';
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
     position: relative;
+    background-color: white;
 
     .title {
         font-size: 1.5rem;
@@ -31,5 +32,18 @@
         right: -1.5rem;
         font-size: 4rem;
         color: #ebc351;
+    }
+}
+
+@media (max-width: 1440px) {
+    .cardInfo {
+        width: 300px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 767px) {
+    .cardInfo {
+        width: 80%;
     }
 }
