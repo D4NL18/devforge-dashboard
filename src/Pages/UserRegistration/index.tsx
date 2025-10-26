@@ -3,13 +3,11 @@ import styles from "./index.module.scss";
 import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
 import { Address } from "types/address.interface";
-import { User } from "types/user.interface";
+import { userStore } from "./store";
 import Select from "Components/Select";
 import AddressForm from "Components/AddressForm";
 
 export default function UserRegistration() {
-  const api = process.env.REACT_APP_API_URL;
-
   const [fullName, setFullName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,7 +16,7 @@ export default function UserRegistration() {
   const [birthDate, setBirthDate] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState<"admin" | "user">("user");
+  const [role, setRole] = useState<"admin" | "user" | undefined>(undefined);
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [address, setAddress] = useState<Address>({
@@ -34,8 +32,12 @@ export default function UserRegistration() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!role) {
+      alert("Selecione uma permissão para o usuário.");
+      return;
+    }
     if (passwordError || confirmPasswordError) {
-      console.log("Formulário inválido");
+      alert("Formulário inválido");
       return;
     }
 
@@ -57,54 +59,39 @@ export default function UserRegistration() {
       complement: address.complement,
     };
 
-    try {
-      const response = await fetch(`${api}/users`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    const success = await userStore.createUser(payload);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Erro ao cadastrar usuário:", errorData);
-        alert(
-          `Erro ao cadastrar usuário: ${
-            errorData.message || response.statusText
-          }`
-        );
-        return;
-      }
-
+    if (success) {
       alert("Usuário cadastrado com sucesso!");
-
-      setFullName("");
-      setUserName("");
-      setEmail("");
-      setPhone("");
-      setCpf("");
-      setBirthDate("");
-      setPassword("");
-      setConfirmPassword("");
-      setRole("user");
-      setAddress({
-        cep: "",
-        city: "",
-        state: "",
-        country: "",
-        street: "",
-        number: "",
-        complement: "",
-      });
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
-      alert("Erro ao cadastrar usuário.");
+      resetForm();
+    } else {
+      alert(`Erro ao cadastrar usuário`);
     }
   }
 
+  function resetForm() {
+    setFullName("");
+    setUserName("");
+    setEmail("");
+    setPhone("");
+    setCpf("");
+    setBirthDate("");
+    setPassword("");
+    setConfirmPassword("");
+    setRole(undefined);
+    setAddress({
+      cep: "",
+      city: "",
+      state: "",
+      country: "",
+      street: "",
+      number: "",
+      complement: "",
+    });
+  }
+
   function validatePassword(value: string) {
-    if (!value) {
-      return;
-    }
+    if (!value) return;
 
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
@@ -209,7 +196,6 @@ export default function UserRegistration() {
 
           <Select
             placeholder="Permissão"
-            defaultValue={1}
             options={["Administrador", "Usuário"]}
             onSubmit={(value) =>
               setRole(value[0] === "Administrador" ? "admin" : "user")
@@ -217,6 +203,7 @@ export default function UserRegistration() {
           />
         </div>
       </section>
+
       <AddressForm onChange={setAddress} />
 
       <div className={styles.buttonContainer}>
