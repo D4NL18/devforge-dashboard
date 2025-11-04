@@ -25,6 +25,7 @@ type ChartProps = {
   title?: string;
   showLegend?: boolean;
   colors?: string[];
+  height?: number;
 };
 
 export default function Chart({
@@ -35,6 +36,7 @@ export default function Chart({
   title,
   showLegend = true,
   colors = ["#6C72D3", "#233662", "#C8A2C8", "#63B3ED"],
+  height = 300,
 }: ChartProps) {
   let chartContent: React.ReactElement;
 
@@ -87,7 +89,7 @@ export default function Chart({
             nameKey={nameKey || "name"}
             cx="50%"
             cy="50%"
-            outerRadius={120}
+            outerRadius={height * 0.4}
             label
           >
             {data.map((_, idx) => (
@@ -116,7 +118,7 @@ export default function Chart({
       {title && (
         <h2 style={{ textAlign: "center", marginBottom: "1rem", color: "white" }}>{title}</h2>
       )}
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={height}>
         {chartContent}
       </ResponsiveContainer>
     </div>

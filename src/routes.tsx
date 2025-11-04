@@ -11,6 +11,7 @@ import UserRegistration from "Pages/UserRegistration";
 import TransactionRegistration from "Pages/TransactionRegistration";
 import ProjectRegistration from "Pages/ProjectRegistration";
 import TransactionDashboard from "Pages/TransactionDashboard";
+import ClientsDashboard from "Pages/ClientsDashboard";
 
 const AppRoutes = () => {
   return (
@@ -18,6 +19,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/dashboard/transaction" element={<TransactionDashboard />} />
+        <Route path="/dashboard/clients" element={<ClientsDashboard />} />
         <Route path="/customer-register" element={<CustomerRegistration />} />
         <Route path="/user-register" element={<UserRegistration />} />
         <Route path="/transaction-register" element={<TransactionRegistration />} />

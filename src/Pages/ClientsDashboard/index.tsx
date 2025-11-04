@@ -3,8 +3,16 @@ import styles from "./index.module.scss";
 import Chart from "Components/Chart";
 import Searchbar from "Components/Searchbar";
 import RangeInput from "Components/RangeInput";
+import AddButton from "Components/AddButton";
+import { useState } from "react";
+import PaginatedTable, { TableRowBase } from "Components/PaginatedTable";
 
 export default function ClientsDashboard() {
+  const [valueMinAmmount, setValueMinAmmount] = useState(0);
+  const [valueMaxAmmount, setValueMaxAmmount] = useState(10000);
+  const [valueMinMonths, setValueMinMonths] = useState(0);
+  const [valueMaxMonths, setValueMaxMonths] = useState(10000);
+
   const years = [
     "2025",
     "2024",
@@ -27,8 +35,8 @@ export default function ClientsDashboard() {
   ];
 
   const delinquencyData = [
-    { name: "Late", value: 32 },
-    { name: "On time", value: 68 },
+    { name: "Em atraso", value: 32 },
+    { name: "Em dia", value: 68 },
   ];
 
   const churnRevenueData = [
@@ -76,9 +84,68 @@ export default function ClientsDashboard() {
     { name: "Dez", value: 2900 },
   ];
 
+  type ClientRow = TableRowBase & {
+    cliente: string;
+    tipoProjeto: string;
+    valorInadimplente: string;
+    atraso: number;
+  };
+
+  const clientsData: ClientRow[] = [
+    {
+      cliente: 'Project "TecnoParts"',
+      tipoProjeto: "Landing Page",
+      valorInadimplente: "R$ XX,XX",
+      atraso: 8,
+    },
+    {
+      cliente: "Instagram ADs",
+      tipoProjeto: "Dashboard",
+      valorInadimplente: "R$ XX,XX",
+      atraso: 8,
+    },
+    {
+      cliente: 'Project "TecnoParts"',
+      tipoProjeto: "Landing Page",
+      valorInadimplente: "R$ XX,XX",
+      atraso: 8,
+    },
+    {
+      cliente: "Instagram ADs",
+      tipoProjeto: "Dashboard",
+      valorInadimplente: "R$ XX,XX",
+      atraso: 8,
+    },
+    {
+      cliente: 'Project "TecnoParts"',
+      tipoProjeto: "Landing Page",
+      valorInadimplente: "R$ XX,XX",
+      atraso: 8,
+    },
+    {
+      cliente: "Instagram ADs",
+      tipoProjeto: "Dashboard",
+      valorInadimplente: "R$ XX,XX",
+      atraso: 8,
+    },
+    {
+      cliente: 'Project "TecnoParts"',
+      tipoProjeto: "Landing Page",
+      valorInadimplente: "R$ XX,XX",
+      atraso: 8,
+    },
+    {
+      cliente: "Instagram ADs",
+      tipoProjeto: "Dashboard",
+      valorInadimplente: "R$ XX,XX",
+      atraso: 8,
+    },
+  ];
+
   return (
     <div className={styles.clientsDashboardContainer}>
       <h1>Clientes</h1>
+
       <section className={styles.filtersSection}>
         <Select
           options={years}
@@ -86,8 +153,9 @@ export default function ClientsDashboard() {
           multiple
           hasSearch
           placeholder="Filtrar por: Ano"
-        ></Select>
+        />
       </section>
+
       <section className={styles.chartsSection}>
         <div className={styles.pieChartsContainer}>
           <Chart
@@ -96,25 +164,28 @@ export default function ClientsDashboard() {
             dataKey="value"
             nameKey="name"
             title="Diversificação de Clientes"
-          ></Chart>
+            height={400}
+          />
           <Chart
             type="pie"
             data={delinquencyData}
             dataKey="value"
             nameKey="name"
             title="Taxa de Inadimplência"
-          ></Chart>
+            height={400}
+          />
         </div>
+
         <div className={styles.lineBarChartsContainer}>
           <Chart
-            type="line"
+            type="bar"
             data={churnRevenueData}
             dataKey="value"
             nameKey="name"
             title="Churn de Receita (%)"
           />
           <Chart
-            type="bar"
+            type="line"
             data={cacData}
             dataKey="value"
             nameKey="name"
@@ -129,25 +200,47 @@ export default function ClientsDashboard() {
           />
         </div>
       </section>
+
       <section className={styles.tableSection}>
         <div className={styles.tableFiltersContainer}>
-          <Searchbar></Searchbar>
+          <Searchbar />
           <Select
-            placeholder="Filter by: Category"
-            options={["Marketing", "Projetos", "Equipamentos", "Impostos"]}
-          ></Select>
+            placeholder="Filtrar por: Tipo"
+            options={["Landing Page", "Dashboard", "Mobile App"]}
+          />
           <RangeInput
-            valueMin={valueMin}
-            valueMax={valueMax}
-            onChangeMin={(e) => setValueMin(Number(e.target.value))}
-            onChangeMax={(e) => setValueMax(Number(e.target.value))}
-          ></RangeInput>
-          <Select placeholder="Any" options={["In", "Out"]}></Select>
+            valueMin={valueMinAmmount}
+            valueMax={valueMaxAmmount}
+            onChangeMin={(e) => setValueMinAmmount(Number(e.target.value))}
+            onChangeMax={(e) => setValueMaxAmmount(Number(e.target.value))}
+          />
+          <RangeInput
+            valueMin={valueMinMonths}
+            valueMax={valueMaxMonths}
+            onChangeMin={(e) => setValueMinMonths(Number(e.target.value))}
+            onChangeMax={(e) => setValueMaxMonths(Number(e.target.value))}
+          />
           <div className={styles.addContainer}>
-            <AddButton onClick={() => console.log("clicked")}></AddButton>
+            <AddButton onClick={() => console.log("clicked")} />
           </div>
         </div>
-        <div className={styles.tableContentContainer}></div>
+
+        <div className={styles.tableContentContainer}>
+          <PaginatedTable
+            data={clientsData}
+            columns={[
+              { key: "cliente", label: "Cliente" },
+              { key: "tipoProjeto", label: "Tipo de Projeto" },
+              { key: "valorInadimplente", label: "Valor Inadimplente" },
+              { key: "atraso", label: "Atraso" },
+            ]}
+            rowsPerPage={8}
+            edit
+            delete
+            onEdit={(row) => console.log("Editar:", row)}
+            onDelete={(row) => console.log("Excluir:", row)}
+          />
+        </div>
       </section>
     </div>
   );
