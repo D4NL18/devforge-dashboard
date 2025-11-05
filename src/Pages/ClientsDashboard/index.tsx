@@ -203,23 +203,27 @@ export default function ClientsDashboard() {
 
       <section className={styles.tableSection}>
         <div className={styles.tableFiltersContainer}>
-          <Searchbar />
+          <Searchbar placeholder="Buscar por nome de cliente..." />
           <Select
             placeholder="Filtrar por: Tipo"
             options={["Landing Page", "Dashboard", "Mobile App"]}
           />
-          <RangeInput
-            valueMin={valueMinAmmount}
-            valueMax={valueMaxAmmount}
-            onChangeMin={(e) => setValueMinAmmount(Number(e.target.value))}
-            onChangeMax={(e) => setValueMaxAmmount(Number(e.target.value))}
-          />
-          <RangeInput
-            valueMin={valueMinMonths}
-            valueMax={valueMaxMonths}
-            onChangeMin={(e) => setValueMinMonths(Number(e.target.value))}
-            onChangeMax={(e) => setValueMaxMonths(Number(e.target.value))}
-          />
+          <div className={styles.rangeContainerClients}>
+            <RangeInput
+              valueMin={valueMinAmmount}
+              valueMax={valueMaxAmmount}
+              onChangeMin={(e) => setValueMinAmmount(Number(e.target.value))}
+              onChangeMax={(e) => setValueMaxAmmount(Number(e.target.value))}
+            />
+          </div>
+          <div className={styles.rangeContainerClients}>
+            <RangeInput
+              valueMin={valueMinMonths}
+              valueMax={valueMaxMonths}
+              onChangeMin={(e) => setValueMinMonths(Number(e.target.value))}
+              onChangeMax={(e) => setValueMaxMonths(Number(e.target.value))}
+            />
+          </div>
           <div className={styles.addContainer}>
             <AddButton onClick={() => console.log("clicked")} />
           </div>
