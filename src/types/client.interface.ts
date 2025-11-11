@@ -1,10 +1,11 @@
 import { Address } from "./address.interface";
 
-export interface Customer {
-  fullName: string;
+export interface Client {
+  name: string;
   email: string;
   phone: string;
   document: string;
   birthDate: Date;
   address: Address
+  id: number;
 }
