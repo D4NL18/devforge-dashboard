@@ -1,10 +1,16 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { transactionStore } from "./store";
 import Input from "Components/Input";
 import Select from "Components/Select";
 import styles from "./index.module.scss";
-import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
 
-export default function TransactionRegistration() {
+function TransactionRegistration() {
+  const { createTransaction, fetchData } = transactionStore;
+
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [cashFlowValue, setCashFlowValue] = useState("");
@@ -17,37 +23,32 @@ export default function TransactionRegistration() {
 
   const [description, setDescription] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-  if (!flowType) {
-    alert("Selecione o tipo de fluxo.");
-    return;
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!flowType || !dreCategory || !balanceCategory) {
+      alert("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    const payload = {
+      title,
+      transactionDate: new Date(date),
+      dfcValue: parseFloat(cashFlowValue),
+      transactionType: flowType,
+      dreValue: parseFloat(dreValue),
+      dreType: dreCategory,
+      balanceCategory,
+      transactionDetails: description,
+    };
+
+    await createTransaction(payload as any);
+    alert("Transação cadastrada com sucesso!");
   }
-
-  if (!dreCategory) {
-    alert("Selecione a categoria DRE.");
-    return;
-  }
-
-  if (!balanceCategory) {
-    alert("Selecione a categoria do Balanço.");
-    return;
-  }
-
-  const newTransaction = {
-    title,
-    date: new Date(date),
-    cashFlowValue,
-    flowType,
-    dreValue,
-    dreCategory,
-    balanceCategory,
-    description,
-  };
-
-  console.log("Transação cadastrada:", newTransaction);
-}
 
   return (
     <form className={styles.transactionForm} onSubmit={handleSubmit}>
@@ -153,3 +154,5 @@ export default function TransactionRegistration() {
     </form>
   );
 }
+
+export default observer(TransactionRegistration);

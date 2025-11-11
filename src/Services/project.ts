@@ -1,12 +1,12 @@
 import api from "./api";
 import { Project } from "types/project.interface";
 
-let url = "/project"
+let url = "/project";
 
 const projectService = {
   async getAll(): Promise<Project[]> {
-    const response = await api.get(`${url}`);
-    return response.data;
+    const response = await api.get(`${url}?limit=999&page=1`);
+    return response.data.datas;
   },
 
   async getById(id: string): Promise<Project> {
