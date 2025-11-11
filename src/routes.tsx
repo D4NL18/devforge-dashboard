@@ -20,10 +20,10 @@ const AppRoutes = () => {
       <Navbar />
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/customer-register" element={<CustomerRegistration />} />
-          <Route path="/user-register" element={<UserRegistration />} />
+          <Route path="/register/client" element={<CustomerRegistration />} />
+          <Route path="/register/user" element={<UserRegistration />} />
           <Route
-            path="/transaction-register"
+            path="/register/transaction"
             element={<TransactionRegistration />}
           />
           <Route path="/project-register" element={<ProjectRegistration />} />
