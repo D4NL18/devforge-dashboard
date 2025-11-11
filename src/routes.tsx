@@ -10,26 +10,33 @@ import CustomerRegistration from "Pages/CustomerRegistration";
 import UserRegistration from "Pages/UserRegistration";
 import TransactionRegistration from "Pages/TransactionRegistration";
 import ProjectRegistration from "Pages/ProjectRegistration";
+import "./resources/globals.scss";
+import Navbar from "Components/Navbar";
 
 const AppRoutes = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/customer-register" element={<CustomerRegistration />} />
-        <Route path="/user-register" element={<UserRegistration />} />
-        <Route path="/transaction-register" element={<TransactionRegistration />} />
-        <Route path="/project-register" element={<ProjectRegistration />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />n
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/components" element={<ComponentsPage />} />
-        <Route path="/not-implemented" element={<NotImplemented />} />
-        
-        {/* Rota 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <main>
+      <BrowserRouter>
+      <Navbar />
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/customer-register" element={<CustomerRegistration />} />
+          <Route path="/user-register" element={<UserRegistration />} />
+          <Route
+            path="/transaction-register"
+            element={<TransactionRegistration />}
+          />
+          <Route path="/project-register" element={<ProjectRegistration />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />n
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/components" element={<ComponentsPage />} />
+          <Route path="/not-implemented" element={<NotImplemented />} />
+          {/* Rota 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </main>
   );
 };
 

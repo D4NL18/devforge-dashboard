@@ -55,7 +55,7 @@ const ProfitByProject = [
 export default function Home() {
   return (
     <div className={styles.homeContainer}>
-      <main className={styles.mainContent}>
+      <div className={styles.mainContent}>
         <section className={styles.logoSection}>
           <img
             src="/assets/DevForge-logo-removebg.png"
@@ -115,7 +115,7 @@ export default function Home() {
             ></Chart>
           </div>
         </section>
-      </main>
+      </div>
     </div>
   );
 }
