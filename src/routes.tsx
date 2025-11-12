@@ -12,28 +12,35 @@ import TransactionRegistration from "Pages/TransactionRegistration";
 import ProjectRegistration from "Pages/ProjectRegistration";
 import TransactionDashboard from "Pages/TransactionDashboard";
 import ClientsDashboard from "Pages/ClientsDashboard";
+import "./resources/globals.scss";
+import Navbar from "Components/Navbar";
 
 const AppRoutes = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/dashboard/transaction" element={<TransactionDashboard />} />
-        <Route path="/dashboard/clients" element={<ClientsDashboard />} />
-        <Route path="/customer-register" element={<CustomerRegistration />} />
-        <Route path="/user-register" element={<UserRegistration />} />
-        <Route path="/transaction-register" element={<TransactionRegistration />} />
-        <Route path="/project-register" element={<ProjectRegistration />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />n
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/components" element={<ComponentsPage />} />
-        <Route path="/not-implemented" element={<NotImplemented />} />
-        
-        {/* Rota 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <main>
+      <BrowserRouter>
+      <Navbar />
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register/client" element={<CustomerRegistration />} />
+          <Route path="/register/user" element={<UserRegistration />} />
+          <Route
+            path="/register/transaction"
+            element={<TransactionRegistration />}
+          />
+          <Route path="/project-register" element={<ProjectRegistration />} />
+          <Route path="/dashboard/clients" element={<ClientsDashboard />} />
+          <Route path="/dashboard/transactions" element={<TransactionDashboard />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />n
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/components" element={<ComponentsPage />} />
+          <Route path="/not-implemented" element={<NotImplemented />} />
+          {/* Rota 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </main>
   );
 };
 
