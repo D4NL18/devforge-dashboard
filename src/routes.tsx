@@ -28,7 +28,7 @@ const AppRoutes = () => {
             element={<TransactionRegistration />}
           />
           <Route path="/project-register" element={<ProjectRegistration />} />
-          <Route path="/dashboard/transaction" element={<TransactionDashboard />} />
+          <Route path="/dashboard/transactions" element={<TransactionDashboard />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />n
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Home />} />
