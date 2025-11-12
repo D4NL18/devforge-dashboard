@@ -35,3 +35,16 @@
         color: #ebc351;
     }
 }
+
+@media (max-width: 1440px) {
+    .cardInfo {
+        width: 300px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 767px) {
+    .cardInfo {
+        width: 80%;
+    }
+}

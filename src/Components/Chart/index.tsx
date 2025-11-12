@@ -108,11 +108,13 @@ export default function Chart({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        maxWidth: "800px",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%"
       }}
     >
       {title && (
-        <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>{title}</h2>
+        <h2 style={{ textAlign: "center", marginBottom: "1rem", color: "white" }}>{title}</h2>
       )}
       <ResponsiveContainer width="100%" height={300}>
         {chartContent}
