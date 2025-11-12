@@ -11,6 +11,7 @@ import UserRegistration from "Pages/UserRegistration";
 import TransactionRegistration from "Pages/TransactionRegistration";
 import ProjectRegistration from "Pages/ProjectRegistration";
 import TransactionDashboard from "Pages/TransactionDashboard";
+import ClientsDashboard from "Pages/ClientsDashboard";
 import "./resources/globals.scss";
 import Navbar from "Components/Navbar";
 
@@ -28,6 +29,7 @@ const AppRoutes = () => {
             element={<TransactionRegistration />}
           />
           <Route path="/project-register" element={<ProjectRegistration />} />
+          <Route path="/dashboard/clients" element={<ClientsDashboard />} />
           <Route path="/dashboard/transactions" element={<TransactionDashboard />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />n
           <Route path="/reset-password" element={<ResetPassword />} />
