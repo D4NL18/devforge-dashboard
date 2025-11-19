@@ -23,6 +23,8 @@ function TransactionRegistration() {
 
   const [description, setDescription] = useState("");
 
+  const [category, setCategory] = useState("");
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -30,7 +32,7 @@ function TransactionRegistration() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!flowType || !dreCategory || !balanceCategory) {
+    if (!flowType || !dreCategory || !balanceCategory || !category) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
@@ -84,6 +86,18 @@ function TransactionRegistration() {
             onSubmit={(value) =>
               setFlowType(value[0] === "Entrada" ? "entrada" : "saida")
             }
+          />
+          <Select
+            placeholder="Categoria da Transação"
+            options={[
+              "Recursos Humanos",
+              "Infraestrutura e Equipamentos",
+              "Projetos",
+              "Administrativo e Financeiro",
+              "Marketing e Comercial",
+              "Pesquisa e Inovação",
+            ]}
+            onSubmit={(value) => setCategory(value[0])}
           />
         </div>
       </section>
