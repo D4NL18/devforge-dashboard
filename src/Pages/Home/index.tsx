@@ -3,6 +3,10 @@ import Navbar from "../../Components/Navbar";
 import Select from "Components/Select";
 import Chart from "Components/Chart";
 import CardInfo from "Components/CardInfo";
+import { homeStore } from "./store";
+import { useEffect, useState } from "react";
+import { Graph } from "types/graph.interface";
+import { toJS } from "mobx";
 
 const years = [
   "2025",
@@ -33,26 +37,47 @@ const months = [
   "Dezembro",
 ];
 
-const ExpendsByArea = [
-  { name: "Desenvolvimento", value: 4000 },
-  { name: "Marketing", value: 3000 },
-  { name: "Vendas", value: 2000 },
-  { name: "Recursos Humanos", value: 2780 },
-];
-
-const RevenuesByProject = [
-  { name: "Projeto A", Valor: 5000 },
-  { name: "Projeto B", Valor: 3000 },
-  { name: "Projeto C", Valor: 2000 },
-];
-
-const ProfitByProject = [
-  { name: "Projeto A", Valor: 2000 },
-  { name: "Projeto B", Valor: 1500 },
-  { name: "Projeto C", Valor: 1000 },
-];
-
 export default function Home() {
+  const [revenue, setRevenue] = useState<any>(null);
+  const [currentBalance, setCurrentBalance] = useState<string>("0,00");
+  const [costBySegment, setCostBySegment] = useState<Graph[]>([]);
+  const [revenueByProject, setRevenueByProject] = useState<Graph[]>([]);
+  const [profitByProject, setProfitByProject] = useState<Graph[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await homeStore.fetchRevenue();
+      setRevenue(toJS(homeStore.revenue));
+
+      await homeStore.fetchCurrentBalance();
+      setCurrentBalance(homeStore.currentBalance);
+
+      await homeStore.fetchCostBySegment();
+      setCostBySegment(toJS(homeStore.costBySegment));
+
+      await homeStore.fetchRevenueByProject();
+      setRevenueByProject(toJS(homeStore.revenueByProject));
+
+      await homeStore.fetchProfitByProject();
+      setProfitByProject(toJS(homeStore.profitByProject));
+    };
+
+    fetchData();
+  }, []);
+
+  const getFormattedValue = (defaultValue: any) => {
+    if (defaultValue && !Array.isArray(defaultValue)) {
+      const val = Number(defaultValue.value);
+      if (!isNaN(val)) {
+        return val.toFixed(2).replace(".", ",");
+      }
+    }
+    return "0,00";
+  };
+
+  const safeRevenue = { value: getFormattedValue(revenue) };
+  const safeCurrentBalance = currentBalance || "0,00";
+
   return (
     <div className={styles.homeContainer}>
       <div className={styles.mainContent}>
@@ -82,15 +107,21 @@ export default function Home() {
               />
             </div>
             <div className={styles.infoCardBox}>
-              <CardInfo title="Faturamento" value="4321,99"></CardInfo>
-              <CardInfo title="Caixa Atual" value="15432,10"></CardInfo>
+              <CardInfo
+                title="Faturamento"
+                value={`R$ ${safeRevenue.value}`}
+              ></CardInfo>
+              <CardInfo
+                title="Caixa Atual"
+                value={`R$ ${safeCurrentBalance}`}
+              ></CardInfo>
             </div>
           </div>
           <div className={styles.chartContainer}>
             <Chart
               type="pie"
               title="Gastos por Setor"
-              data={ExpendsByArea}
+              data={costBySegment}
               dataKey="value"
               nameKey="name"
             ></Chart>
@@ -99,8 +130,8 @@ export default function Home() {
             <Chart
               title="Faturamento por Projeto"
               type="bar"
-              data={RevenuesByProject}
-              dataKey="Valor"
+              data={revenueByProject}
+              dataKey="value"
               nameKey="name"
             ></Chart>
           </div>
@@ -109,8 +140,8 @@ export default function Home() {
             <Chart
               title="Lucro por Projeto"
               type="bar"
-              data={ProfitByProject}
-              dataKey="Valor"
+              data={profitByProject}
+              dataKey="value"
               nameKey="name"
             ></Chart>
           </div>
