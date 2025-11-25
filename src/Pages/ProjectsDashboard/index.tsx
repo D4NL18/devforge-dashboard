@@ -5,13 +5,23 @@ import PaginatedTable, { TableRowBase } from "Components/PaginatedTable";
 import RangeInput from "Components/RangeInput";
 import AddButton from "Components/AddButton";
 import Searchbar from "Components/Searchbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { projectsStore } from "./store";
+import { toJS } from "mobx";
+import { Graph } from "types/graph.interface";
 
 export default function ProjectsDashboard() {
   const [revenueMin, setRevenueMin] = useState(0);
   const [revenueMax, setRevenueMax] = useState(10000);
   const [prizeMin, setPrizeMin] = useState(0);
   const [prizeMax, setPrizeMax] = useState(10);
+
+  const [marginByProject, setMarginByProject] = useState<Graph[]>([]);
+  const [marginByProjectType, setMarginByProjectType] = useState<Graph[]>([]);
+  const [revenueByProject, setRevenueByProject] = useState<Graph[]>([]);
+  const [profitByProject, setProfitByProject] = useState<Graph[]>([]);
+  const [revenueByProjectType, setRevenueByProjectType] = useState<Graph[]>([]);
+  const [profitByProjectType, setProfitByProjectType] = useState<Graph[]>([]);
 
   const years = [
     "2025",
@@ -27,50 +37,80 @@ export default function ProjectsDashboard() {
     "2015",
   ];
 
-  const margemPorProjeto = [
-    { name: "Landing XP", valor: 32000 },
-    { name: "AppGo", valor: 28000 },
-    { name: "DataDash", valor: 41000 },
-    { name: "ShopEase", valor: 35000 },
-    { name: "HealthTrack", valor: 26000 },
-    { name: "EduPortal", valor: 39000 },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      await projectsStore.fetchMarginByProject();
 
-  const margemPorTipo = [
-    { name: "Landing Page", valor: 31000 },
-    { name: "Mobile", valor: 27000 },
-    { name: "Dashboard", valor: 40000 },
-  ];
+      const rawMarginByProject = toJS(projectsStore.marginByProject);
+      const formattedMarginByProject: Graph[] = rawMarginByProject.map(
+        (item: Graph) => ({
+          name: item.name,
+          value: Number(item.value ? item.value.toFixed(2) : 0),
+        })
+      );
+      setMarginByProject(formattedMarginByProject);
 
-  const faturamentoPorProjeto = [
-    { name: "Landing XP", valor: 120000 },
-    { name: "AppGo", valor: 95000 },
-    { name: "DataDash", valor: 160000 },
-    { name: "ShopEase", valor: 135000 },
-    { name: "HealthTrack", valor: 102000 },
-    { name: "EduPortal", valor: 145000 },
-  ];
+      await projectsStore.fetchMarginByProjectType();
 
-  const lucroPorProjeto = [
-    { name: "Landing XP", valor: 40000 },
-    { name: "AppGo", valor: 35000 },
-    { name: "DataDash", valor: 60000 },
-    { name: "ShopEase", valor: 48000 },
-    { name: "HealthTrack", valor: 32000 },
-    { name: "EduPortal", valor: 52000 },
-  ];
+      const rawMarginByProjectType = toJS(projectsStore.marginByProjectType);
+      const formattedMarginByProjectType: Graph[] = rawMarginByProjectType.map(
+        (item: Graph) => ({
+          name: item.name,
+          value: Number(item.value ? item.value.toFixed(2) : 0),
+        })
+      );
+      setMarginByProjectType(formattedMarginByProjectType);
 
-  const lucroPorTipo = [
-    { name: "Landing Page", valor: 38000 },
-    { name: "Mobile", valor: 42000 },
-    { name: "Dashboard", valor: 56000 },
-  ];
+      await projectsStore.fetchRevenueByProject();
 
-  const faturamentoPorTipo = [
-    { name: "Landing Page", valor: 115000 },
-    { name: "Mobile", valor: 98000 },
-    { name: "Dashboard", valor: 155000 },
-  ];
+      const rawRevenueByProject = toJS(projectsStore.revenueByProject);
+      const formattedRevenueByProject: Graph[] = rawRevenueByProject.map(
+        (item: Graph) => ({
+          name: item.name,
+          value: Number(item.value ? item.value.toFixed(2) : 0),
+        })
+      );
+      setRevenueByProject(formattedRevenueByProject);
+
+      await projectsStore.fetchProfitByProject();
+
+      const rawProfitByProject = toJS(projectsStore.profitByProject);
+      const formattedProfitByProject: Graph[] = rawProfitByProject.map(
+        (item: Graph) => ({
+          name: item.name,
+          value: Number(item.value ? item.value.toFixed(2) : 0),
+        })
+      );
+      setProfitByProject(formattedProfitByProject);
+
+      await projectsStore.fetchRevenueByProjectType();
+
+      const rawRevenueByProjectType = toJS(projectsStore.revenueByProjectType);
+      const formattedRevenueByProjectType: Graph[] = rawRevenueByProjectType.map(
+        (item: Graph) => ({
+          name: item.name,
+          value: Number(item.value ? item.value.toFixed(2) : 0),
+        })
+      );
+      setRevenueByProjectType(formattedRevenueByProjectType);
+
+      await projectsStore.fetchProfitByProjectType();
+
+      const rawProfitByProjectType = toJS(projectsStore.profitByProjectType);
+      const formattedProfitByProjectType: Graph[] = rawProfitByProjectType.map(
+        (item: Graph) => ({
+          name: item.name,
+          value: Number(item.value ? item.value.toFixed(2) : 0),
+        })
+      );
+      setProfitByProjectType(formattedProfitByProjectType);
+
+    };
+
+    
+
+    fetchData();
+  }, []);
 
   const projectTypeDiversification = [
     { name: "Customer 1", value: 32 },
@@ -153,10 +193,10 @@ export default function ProjectsDashboard() {
         <div className={styles.chartColumn}>
           <Chart
             type="bar"
-            data={margemPorProjeto}
-            dataKey="valor"
+            data={marginByProject}
+            dataKey="value"
             nameKey="name"
-            title="Margem por Projeto"
+            title="Margem por Projeto (%)"
           />
           <Chart
             type="pie"
@@ -169,8 +209,8 @@ export default function ProjectsDashboard() {
           />
           <Chart
             type="bar"
-            data={lucroPorTipo}
-            dataKey="valor"
+            data={profitByProjectType}
+            dataKey="value"
             nameKey="name"
             title="Lucro por Tipo de Projeto"
           />
@@ -178,29 +218,29 @@ export default function ProjectsDashboard() {
         <div className={styles.chartColumn}>
           <Chart
             type="bar"
-            data={margemPorTipo}
-            dataKey="valor"
+            data={marginByProjectType}
+            dataKey="value"
             nameKey="name"
-            title="Margem por Tipo de Projeto"
+            title="Margem por Tipo de Projeto (%)"
           />
           <Chart
             type="bar"
-            data={faturamentoPorProjeto}
-            dataKey="valor"
+            data={revenueByProject}
+            dataKey="value"
             nameKey="name"
             title="Faturamento por Projeto"
           />
           <Chart
             type="bar"
-            data={lucroPorProjeto}
-            dataKey="valor"
+            data={profitByProject}
+            dataKey="value"
             nameKey="name"
             title="Lucro por Projeto"
           />
           <Chart
             type="bar"
-            data={faturamentoPorTipo}
-            dataKey="valor"
+            data={revenueByProjectType}
+            dataKey="value"
             nameKey="name"
             title="Faturamento por Tipo de Projeto"
           />
