@@ -8,20 +8,13 @@ import Searchbar from "Components/Searchbar";
 import { useEffect, useState } from "react";
 import { projectsStore } from "./store";
 import { toJS } from "mobx";
+import { observer } from "mobx-react-lite";
 import { Graph } from "types/graph.interface";
+import { ProjectType } from "types/projectType.interface";
+import { useNavigate } from "react-router-dom";
 
-export default function ProjectsDashboard() {
-  const [revenueMin, setRevenueMin] = useState(0);
-  const [revenueMax, setRevenueMax] = useState(10000);
-  const [prizeMin, setPrizeMin] = useState(0);
-  const [prizeMax, setPrizeMax] = useState(10);
-
-  const [marginByProject, setMarginByProject] = useState<Graph[]>([]);
-  const [marginByProjectType, setMarginByProjectType] = useState<Graph[]>([]);
-  const [revenueByProject, setRevenueByProject] = useState<Graph[]>([]);
-  const [profitByProject, setProfitByProject] = useState<Graph[]>([]);
-  const [revenueByProjectType, setRevenueByProjectType] = useState<Graph[]>([]);
-  const [profitByProjectType, setProfitByProjectType] = useState<Graph[]>([]);
+const ProjectsDashboard = observer(() => {
+  const { filters, projectsList } = projectsStore;
 
   const years = [
     "2025",
@@ -37,11 +30,26 @@ export default function ProjectsDashboard() {
     "2015",
   ];
 
+  const [marginByProject, setMarginByProject] = useState<Graph[]>([]);
+  const [marginByProjectType, setMarginByProjectType] = useState<Graph[]>([]);
+  const [revenueByProject, setRevenueByProject] = useState<Graph[]>([]);
+  const [profitByProject, setProfitByProject] = useState<Graph[]>([]);
+  const [revenueByProjectType, setRevenueByProjectType] = useState<Graph[]>([]);
+  const [profitByProjectType, setProfitByProjectType] = useState<Graph[]>([]);
+  const [projectDiversificationByType, setProjectDiversificationByType] =
+    useState<Graph[]>([]);
+
+  const [projectTypeOptions, setProjectTypeOptions] = useState<string[]>([]);
+  const [fullProjectTypes, setFullProjectTypes] = useState<ProjectType[]>([]);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
+    projectsStore.fetchProjects();
+
     const fetchData = async () => {
       await projectsStore.fetchMarginByProject();
-
-      const rawMarginByProject = toJS(projectsStore.marginByProject);
+      const rawMarginByProject = toJS(projectsStore.marginByProject) || [];
       const formattedMarginByProject: Graph[] = rawMarginByProject.map(
         (item: Graph) => ({
           name: item.name,
@@ -51,8 +59,8 @@ export default function ProjectsDashboard() {
       setMarginByProject(formattedMarginByProject);
 
       await projectsStore.fetchMarginByProjectType();
-
-      const rawMarginByProjectType = toJS(projectsStore.marginByProjectType);
+      const rawMarginByProjectType =
+        toJS(projectsStore.marginByProjectType) || [];
       const formattedMarginByProjectType: Graph[] = rawMarginByProjectType.map(
         (item: Graph) => ({
           name: item.name,
@@ -62,8 +70,7 @@ export default function ProjectsDashboard() {
       setMarginByProjectType(formattedMarginByProjectType);
 
       await projectsStore.fetchRevenueByProject();
-
-      const rawRevenueByProject = toJS(projectsStore.revenueByProject);
+      const rawRevenueByProject = toJS(projectsStore.revenueByProject) || [];
       const formattedRevenueByProject: Graph[] = rawRevenueByProject.map(
         (item: Graph) => ({
           name: item.name,
@@ -73,8 +80,7 @@ export default function ProjectsDashboard() {
       setRevenueByProject(formattedRevenueByProject);
 
       await projectsStore.fetchProfitByProject();
-
-      const rawProfitByProject = toJS(projectsStore.profitByProject);
+      const rawProfitByProject = toJS(projectsStore.profitByProject) || [];
       const formattedProfitByProject: Graph[] = rawProfitByProject.map(
         (item: Graph) => ({
           name: item.name,
@@ -84,19 +90,18 @@ export default function ProjectsDashboard() {
       setProfitByProject(formattedProfitByProject);
 
       await projectsStore.fetchRevenueByProjectType();
-
-      const rawRevenueByProjectType = toJS(projectsStore.revenueByProjectType);
-      const formattedRevenueByProjectType: Graph[] = rawRevenueByProjectType.map(
-        (item: Graph) => ({
+      const rawRevenueByProjectType =
+        toJS(projectsStore.revenueByProjectType) || [];
+      const formattedRevenueByProjectType: Graph[] =
+        rawRevenueByProjectType.map((item: Graph) => ({
           name: item.name,
           value: Number(item.value ? item.value.toFixed(2) : 0),
-        })
-      );
+        }));
       setRevenueByProjectType(formattedRevenueByProjectType);
 
       await projectsStore.fetchProfitByProjectType();
-
-      const rawProfitByProjectType = toJS(projectsStore.profitByProjectType);
+      const rawProfitByProjectType =
+        toJS(projectsStore.profitByProjectType) || [];
       const formattedProfitByProjectType: Graph[] = rawProfitByProjectType.map(
         (item: Graph) => ({
           name: item.name,
@@ -105,77 +110,69 @@ export default function ProjectsDashboard() {
       );
       setProfitByProjectType(formattedProfitByProjectType);
 
-    };
+      await projectsStore.fetchProjectDiversificationByType();
+      const rawProjectDiversificationByType =
+        toJS(projectsStore.projectDiversificationByType) || [];
+      const ProjectDiversificationByType: Graph[] =
+        rawProjectDiversificationByType.map((item: Graph) => ({
+          name: item.name,
+          value: Number(item.value ? item.value.toFixed(2) : 0),
+        }));
+      setProjectDiversificationByType(ProjectDiversificationByType);
 
-    
+      await projectsStore.fetchAllProjectTypes();
+      const types = toJS(projectsStore.allProjectTypes) || [];
+
+      setFullProjectTypes(types);
+      setProjectTypeOptions(types.map((pt) => pt.description));
+    };
 
     fetchData();
   }, []);
 
-  const projectTypeDiversification = [
-    { name: "Customer 1", value: 32 },
-    { name: "Customer 2", value: 27 },
-    { name: "Customer 3", value: 18 },
-    { name: "Customer 4", value: 23 },
-  ];
-
   type ProjectRow = TableRowBase & {
+    id: number;
     projeto: string;
     tipoProjeto: string;
     faturamento: string;
-    prazo: number;
+    prazo: string;
   };
 
-  const projectsData: ProjectRow[] = [
-    {
-      projeto: 'Project "TecnoParts"',
-      tipoProjeto: "Landing Page",
-      faturamento: "R$ XX,XX",
-      prazo: 8,
-    },
-    {
-      projeto: "Instagram ADs",
-      tipoProjeto: "Dashboard",
-      faturamento: "R$ XX,XX",
-      prazo: 8,
-    },
-    {
-      projeto: 'Project "TecnoParts"',
-      tipoProjeto: "Landing Page",
-      faturamento: "R$ XX,XX",
-      prazo: 8,
-    },
-    {
-      projeto: "Instagram ADs",
-      tipoProjeto: "Dashboard",
-      faturamento: "R$ XX,XX",
-      prazo: 8,
-    },
-    {
-      projeto: 'Project "TecnoParts"',
-      tipoProjeto: "Landing Page",
-      faturamento: "R$ XX,XX",
-      prazo: 8,
-    },
-    {
-      projeto: "Instagram ADs",
-      tipoProjeto: "Dashboard",
-      faturamento: "R$ XX,XX",
-      prazo: 8,
-    },
-    {
-      projeto: 'Project "TecnoParts"',
-      tipoProjeto: "Landing Page",
-      faturamento: "R$ XX,XX",
-      prazo: 8,
-    },
-    {
-      projeto: "Instagram ADs",
-      tipoProjeto: "Dashboard",
-      faturamento: "R$ XX,XX",
-      prazo: 8,
-    },
-  ];
+  const tableData: ProjectRow[] = (projectsList || []).map((p) => ({
+    id: p.id,
+    projeto: p.name,
+    tipoProjeto: p.projectTypeDescription,
+    faturamento: `R$ ${p.projectBudgetTotalPrice?.toFixed(2) || "0.00"}`,
+    prazo: new Date(p.endDate).toLocaleDateString(),
+  }));
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    projectsStore.setFilter("name", e.target.value);
+  };
+
+  const handleTypeSubmit = (selectedValues: string[]) => {
+    if (selectedValues.length > 0) {
+      const selectedName = selectedValues[0];
+
+      const matchedType = fullProjectTypes.find(
+        (type) => type.description === selectedName
+      );
+
+      if (matchedType) {
+        projectsStore.setFilter("type", matchedType.id);
+      }
+    } else {
+      projectsStore.setFilter("type", undefined);
+    }
+  };
+
+  const handleRevenueMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    projectsStore.setFilter("revenueMin", Number(e.target.value));
+  };
+
+  const handleRevenueMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    projectsStore.setFilter("revenueMax", Number(e.target.value));
+  };
 
   return (
     <div className={styles.projectsDashboardContainer}>
@@ -189,6 +186,7 @@ export default function ProjectsDashboard() {
           placeholder="Filtrar por: Ano"
         />
       </section>
+
       <section className={styles.chartsSection}>
         <div className={styles.chartColumn}>
           <Chart
@@ -200,10 +198,10 @@ export default function ProjectsDashboard() {
           />
           <Chart
             type="pie"
-            data={projectTypeDiversification}
+            data={projectDiversificationByType}
             dataKey="value"
             nameKey="name"
-            title="Diversificação por Tipo de Projeto"
+            title="Diversificação por Tipo de Projeto (%)"
             colors={["#233662", "#6C72D3", "#63B3ED", "#C8A2C8"]}
             height={500}
           />
@@ -246,51 +244,69 @@ export default function ProjectsDashboard() {
           />
         </div>
       </section>
+
       <section className={styles.tableSection}>
         <div className={styles.tableFiltersContainer}>
-          <Searchbar placeholder="Buscar nome do projeto..." />
+          <Searchbar
+            placeholder="Buscar nome do projeto..."
+            value={filters.name}
+            onChange={handleSearchChange}
+          />
+
           <Select
             placeholder="Filtrar por: Tipo"
-            options={["Landing Page", "Dashboard", "Mobile App"]}
+            options={projectTypeOptions}
+            onSubmit={handleTypeSubmit}
+            selectAll
+            multiple
           />
+
           <div className={styles.rangeContainerProjects}>
             <RangeInput
-              valueMin={revenueMin}
-              valueMax={revenueMax}
-              onChangeMin={(e) => setRevenueMin(Number(e.target.value))}
-              onChangeMax={(e) => setRevenueMax(Number(e.target.value))}
+              valueMin={filters.revenueMin}
+              valueMax={filters.revenueMax}
+              onChangeMin={handleRevenueMinChange}
+              onChangeMax={handleRevenueMaxChange}
             />
           </div>
+
           <div className={styles.rangeContainerProjects}>
             <RangeInput
-              valueMin={prizeMin}
-              valueMax={prizeMax}
-              onChangeMin={(e) => setPrizeMin(Number(e.target.value))}
-              onChangeMax={(e) => setPrizeMax(Number(e.target.value))}
+              valueMin={0}
+              valueMax={10}
+              onChangeMin={() => {}}
+              onChangeMax={() => {}}
             />
           </div>
+
           <div className={styles.addContainer}>
-            <AddButton onClick={() => console.log("clicked")} />
+            <AddButton onClick={() => navigate("/register/project")} />{" "}
           </div>
         </div>
 
         <div className={styles.tableContentContainer}>
-          <PaginatedTable
-            data={projectsData}
-            columns={[
-              { key: "projeto", label: "Projeto" },
-              { key: "tipoProjeto", label: "Tipo de Projeto" },
-              { key: "faturamento", label: "Faturamento" },
-              { key: "prazo", label: "Prazo" },
-            ]}
-            rowsPerPage={8}
-            edit
-            delete
-            onEdit={(row) => console.log("Editar:", row)}
-            onDelete={(row) => console.log("Excluir:", row)}
-          />
+          {projectsStore.isLoadingTable ? (
+            <p>Carregando projetos...</p>
+          ) : (
+            <PaginatedTable
+              data={tableData}
+              columns={[
+                { key: "projeto", label: "Projeto" },
+                { key: "tipoProjeto", label: "Tipo de Projeto" },
+                { key: "faturamento", label: "Faturamento" },
+                { key: "prazo", label: "Prazo" },
+              ]}
+              rowsPerPage={filters.limit}
+              edit
+              delete
+              onEdit={(row) => console.log("Editar:", row)}
+              onDelete={(row) => console.log("Excluir:", row)}
+            />
+          )}
         </div>
       </section>
     </div>
   );
-}
+});
+
+export default ProjectsDashboard;

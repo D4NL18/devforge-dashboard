@@ -26,3 +26,30 @@ export interface Project {
   totalValue: number;
   description: string;
 }
+
+export interface ProjectFilterParams {
+  page?: number;
+  limit?: number;
+  type?: number;
+  name?: string;
+  revenue?: number;
+  minRevenue?: number; 
+  maxRevenue?: number;
+}
+
+export interface ProjectResponse {
+  id: number;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  projectTypeDescription: string;
+  clientName: string;
+  projectBudgetTotalPrice: number;
+}
+export interface PaginatedResponse<T> {
+  datas: T[];
+  countResponseItens: number;
+  totalResponseItens: number;
+}
