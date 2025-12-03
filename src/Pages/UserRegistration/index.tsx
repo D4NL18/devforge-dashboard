@@ -42,7 +42,7 @@ export default function UserRegistration() {
     }
 
     const payload = {
-      fullName,
+      fullname: fullName,
       userName,
       email,
       phone,
@@ -50,7 +50,7 @@ export default function UserRegistration() {
       birthDate: new Date(birthDate),
       password,
       role,
-      cep: address.cep,
+      code: address.cep,
       city: address.city,
       state: address.state,
       country: address.country,
