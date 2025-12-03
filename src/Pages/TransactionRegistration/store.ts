@@ -5,8 +5,8 @@ import projectService from "../../Services/project"; // Para buscar a lista de p
 // import { Project } from "types/project.interface";
 
 export class TransactionStore {
-  transactions: any[] = []; // Substituir 'any' pelo tipo 'Transaction'
-  projects: any[] = []; // Substituir 'any' pelo tipo 'Project'
+  transactions: any[] = [];
+  projects: any[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -14,7 +14,6 @@ export class TransactionStore {
 
   fetchData = async () => {
     try {
-      // Busca dados necessários para os dropdowns, como projetos
       const projects = await projectService.getAll();
 
       runInAction(() => {
@@ -31,6 +30,7 @@ export class TransactionStore {
     try {
       const newTransaction = await transactionService.create(transaction);
       runInAction(() => {
+        alert("Transação cadastrada com sucesso!");
         this.transactions.push(newTransaction);
       });
     } catch (error: any) {

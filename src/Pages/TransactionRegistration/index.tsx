@@ -25,6 +25,8 @@ function TransactionRegistration() {
 
   const [category, setCategory] = useState("");
 
+  const [project, setProject] = useState<string | null >(null);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -36,21 +38,29 @@ function TransactionRegistration() {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
-
+    
+    const selectedProjectObj = transactionStore.projects.find(p => p.name === project);
+    
     const payload = {
       title,
       transactionDate: new Date(date),
-      dfcValue: parseFloat(cashFlowValue),
+      transactionAmount: parseFloat(cashFlowValue),
       transactionType: flowType,
       dreValue: parseFloat(dreValue),
       dreType: dreCategory,
-      balanceCategory,
+      balanceType: balanceCategory,
       transactionDetails: description,
+      category,
+      projectId: selectedProjectObj ? selectedProjectObj.id : null
     };
 
     await createTransaction(payload as any);
-    alert("Transação cadastrada com sucesso!");
   }
+
+  const projectOptions = transactionStore.projects.map((proj) => ({
+    label: proj.name,
+    value: proj.id
+  }));
 
   return (
     <form className={styles.transactionForm} onSubmit={handleSubmit}>
@@ -99,6 +109,13 @@ function TransactionRegistration() {
             ]}
             onSubmit={(value) => setCategory(value[0])}
           />
+          {category === "Projetos" &&
+          <Select
+            placeholder="Projeto Associado"
+            options={projectOptions.map((proj) => proj.label)}
+            onSubmit={(value) => setProject(value[0])}
+          />
+          }
         </div>
       </section>
 
