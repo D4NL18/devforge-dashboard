@@ -42,7 +42,9 @@ export class ProjectStore {
       runInAction(() => {
         this.projects.push(newProject);
       });
+      alert("Projeto cadastrado com sucesso!");
     } catch (error: any) {
+      alert("Erro ao criar projeto.");
       console.error("Erro ao criar projeto:", error.message);
     }
   };

@@ -55,25 +55,23 @@ function ProjectRegistration() {
 
     const payload = {
       name: projectName,
-      status,
+      status: status == "Em andamento" ? "pending" : status == "Concluído" ? "completed" : status == "Rejeitado" ? "rejected" : "",
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       description,
       projectTypeId: projectType.id,
       clientId: client.id,
-      priority,
+      priority: priority === "Alta" ? "high" : priority === "Média" ? "medium" : "low",
       estimation: new Date(estimate),
-      complexity,
+      complexity: complexity ===  "Alta" ? "complex" : complexity === "Média" ? "moderate" : "simple",
       totalPrice: totalValue,
       installmentCount:
         installments === "À vista" ? 1 : Number(installments.replace("x", "")),
-      statusBudget: status,
       notes: description,
       paymentMethodId: paymentMethod.id,
     };
 
     await createProject(payload as any);
-    alert("Projeto cadastrado com sucesso!");
   }
 
   return (
@@ -125,7 +123,7 @@ function ProjectRegistration() {
 
           <Select
             placeholder="Status"
-            options={["Em andamento", "Concluído", "Pausado", "Cancelado"]}
+            options={["Em andamento", "Concluído", "Rejeitado"]}
             onSubmit={(value) => setStatus(value[0])}
           />
         </div>
