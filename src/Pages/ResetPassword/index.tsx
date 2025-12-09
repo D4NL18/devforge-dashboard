@@ -1,3 +1,4 @@
+import Input from "Components/Input";
 import styles from "./index.module.scss";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,30 +25,24 @@ const ResetPassword = () => {
   return (
     <div className={styles.background}>
       <div className={styles.card}>
-        <h2>Redefinir Senha</h2>
-        <input
+        <p>Atualize sua senha</p>
+        <Input
           type="password"
           placeholder="Nova senha"
           value={newPassword}
-          onChange={e => setNewPassword(e.target.value)}
+          onChange={(e) => setNewPassword(e.target.value)}
         />
-        <input
+        <Input
           type="password"
           placeholder="Confirme a nova senha"
           value={confirmPassword}
-          onChange={e => setConfirmPassword(e.target.value)}
+          onChange={(e) => setConfirmPassword(e.target.value)}
         />
-        <button
-          className={styles.loginButton}
-          onClick={handleReset}
-        >
+        <button className={styles.loginButton} onClick={handleReset}>
           Confirmar
         </button>
-        <button
-          className={styles.linkButton}
-          onClick={() => navigate("/")}
-        >
-          Voltar ao login
+        <button className={styles.linkButton} onClick={() => navigate("/")}>
+          Voltar
         </button>
       </div>
     </div>
