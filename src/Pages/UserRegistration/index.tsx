@@ -47,7 +47,7 @@ export default function UserRegistration() {
       email,
       phone,
       cpf,
-      birthDate: new Date(birthDate),
+      birthdate: new Date(birthDate),
       password,
       role,
       code: address.cep,
