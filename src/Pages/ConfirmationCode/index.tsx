@@ -1,37 +1,36 @@
-import { useState } from "react";
 import styles from "./index.module.scss";
-import Input from "Components/Input";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import { resetPasswordStore } from "../ForgotPassword/store";
 
-const ConfirmationCode = () => {
-  const [code, setCode] = useState("");
+const ConfirmationCode = observer(() => {
   const navigate = useNavigate();
 
-  const handleRecover = () => {
-    if (code) {
-      navigate("/reset-password");
-    }
-  };
+  if (!resetPasswordStore.emailSentSuccess) {
+    return <Navigate to="/forgot-password" replace />;
+  }
 
   return (
     <div className={styles.background}>
       <div className={styles.card}>
-        <p>Confirme o código recebido</p>
-        <Input
-          type="text"
-          placeholder="Código"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-        />
-        <button className={styles.loginButton} onClick={handleRecover}>
-          Enviar Código
-        </button>
-        <button className={styles.linkButton} onClick={() => navigate("/")}>
-          Voltar
+        <h2>Email Enviado!</h2>
+        <p style={{ margin: "20px 0", textAlign: "center", color: "#555" }}>
+          Verifique sua caixa de entrada. Enviamos um link especial para você redefinir sua senha.
+        </p>
+        
+        <p style={{ fontSize: "12px", color: "#999" }}>
+          O link expira em 1 hora.
+        </p>
+
+        <button
+          className={styles.loginButton}
+          onClick={() => navigate("/")}
+        >
+          Voltar para Login
         </button>
       </div>
     </div>
   );
-};
+});
 
 export default ConfirmationCode;
