@@ -2,9 +2,9 @@
 
 .tableContainer {
   min-width: 500px;
-  max-width: 900px;
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
+  color: white;
 }
 
 .tableWrapper {
@@ -124,4 +124,12 @@
 
 .iconCell {
   text-align: center;
+}
+
+
+@media (max-width: 768px) {
+  .tableContainer {
+    min-width: 0;
+    width: 100%;
+  }
 }
