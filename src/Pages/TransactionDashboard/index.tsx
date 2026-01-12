@@ -7,10 +7,14 @@ import Searchbar from "Components/Searchbar";
 import RangeInput from "Components/RangeInput";
 import { useState } from "react";
 import AddButton from "Components/AddButton";
+import { useNavigate } from "react-router-dom";
 
 export default function TransactionDashboard() {
   const [valueMin, setValueMin] = useState(0);
   const [valueMax, setValueMax] = useState(10000);
+
+  const navigate = useNavigate();
+
 
   const caixaMinimo = 1500;
   const caixaAtual = 1400;
@@ -329,7 +333,7 @@ export default function TransactionDashboard() {
             ></RangeInput>
             <Select placeholder="Any" options={["In", "Out"]}></Select>
           <div className={styles.addContainer}>
-            <AddButton onClick={() => console.log("clicked")}></AddButton>
+            <AddButton onClick={() => navigate("/register/transaction")}></AddButton>
           </div>
         </div>
         <PaginatedTable
