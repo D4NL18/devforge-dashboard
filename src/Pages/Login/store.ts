@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import authService from "Services/auth";
-import { LoginPayload } from "types/login.interface";
+import { LoginPayload, TokenResponse } from "types/login.interface";
 
 export class LoginStore {
   email = "";
@@ -33,9 +33,11 @@ export class LoginStore {
 
       const data = await authService.login(payload);
 
+      const accessTokenData: TokenResponse = data.datas
+
       runInAction(() => {
-        localStorage.setItem("token", data.access_token);
-        localStorage.setItem("refresh_token", data.refresh_token);
+        localStorage.setItem("token", accessTokenData.access_token);
+        localStorage.setItem("refresh_token", accessTokenData.refresh_token);
         
         this.isLoading = false;
       });
