@@ -11,15 +11,6 @@ import { toJS } from "mobx";
 const years = [
   "2025",
   "2024",
-  "2023",
-  "2022",
-  "2021",
-  "2020",
-  "2019",
-  "2018",
-  "2017",
-  "2016",
-  "2015",
 ];
 
 const months = [
@@ -43,27 +34,52 @@ export default function Home() {
   const [costBySegment, setCostBySegment] = useState<Graph[]>([]);
   const [revenueByProject, setRevenueByProject] = useState<Graph[]>([]);
   const [profitByProject, setProfitByProject] = useState<Graph[]>([]);
+  const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
+  const [selectedMonth, setSelectedMonth] = useState<number | undefined>(undefined);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchData = async () => {
-      await homeStore.fetchRevenue();
+      await homeStore.fetchRevenue(selectedYear, selectedMonth);
       setRevenue(toJS(homeStore.revenue));
 
-      await homeStore.fetchCurrentBalance();
+      await homeStore.fetchCurrentBalance(selectedYear, selectedMonth);
       setCurrentBalance(homeStore.currentBalance);
 
-      await homeStore.fetchCostBySegment();
+      await homeStore.fetchCostBySegment(selectedYear, selectedMonth);
       setCostBySegment(toJS(homeStore.costBySegment));
 
-      await homeStore.fetchRevenueByProject();
+      await homeStore.fetchRevenueByProject(selectedYear, selectedMonth);
       setRevenueByProject(toJS(homeStore.revenueByProject));
 
-      await homeStore.fetchProfitByProject();
+      await homeStore.fetchProfitByProject(selectedYear, selectedMonth);
       setProfitByProject(toJS(homeStore.profitByProject));
     };
 
     fetchData();
-  }, []);
+  }, [selectedYear, selectedMonth]);
+
+  const getMonthNumber = (monthName: string): number | undefined => {
+    const index = months.indexOf(monthName);
+    return index !== -1 ? index + 1 : undefined;
+  };
+
+  const handleYearChange = (value: string | string[]) => {
+    const yearValue = Array.isArray(value) ? value[0] : value;
+    if (yearValue) {
+        setSelectedYear(Number(yearValue));
+    } else {
+        setSelectedYear(undefined);
+    }
+  };
+
+  const handleMonthChange = (value: string | string[]) => {
+    const monthValue = Array.isArray(value) ? value[0] : value;
+    if (monthValue) {
+        setSelectedMonth(getMonthNumber(monthValue));
+    } else {
+        setSelectedMonth(undefined);
+    }
+  };
 
   const getFormattedValue = (defaultValue: any) => {
     if (defaultValue && !Array.isArray(defaultValue)) {
@@ -93,17 +109,13 @@ export default function Home() {
             <div className={styles.filterContainer}>
               <Select
                 options={years}
-                selectAll
-                multiple
-                hasSearch
                 placeholder="Filtrar por: Ano"
+                onSubmit={handleYearChange}
               />
               <Select
                 options={months}
-                selectAll
-                multiple
-                hasSearch
                 placeholder="Filtrar por: Mês"
+                onSubmit={handleMonthChange}
               />
             </div>
             <div className={styles.infoCardBox}>

@@ -13,9 +13,9 @@ export class HomeStore {
   revenueByProject!: Graph[];
   profitByProject!: Graph[];
 
-  async fetchRevenue() {
+  async fetchRevenue(year?: number, month?: number) {
     try {
-      const data = await homeService.getRevenue();
+      const data = await homeService.getRevenue(year, month);
       runInAction(() => {
         this.revenue = data;
       });
@@ -26,9 +26,9 @@ export class HomeStore {
     }
   }
 
-  async fetchCurrentBalance() {
+  async fetchCurrentBalance(year?: number, month?: number) {
     try {
-      const data = await homeService.getCurrentBalance();
+      const data = await homeService.getCurrentBalance(year, month);
       runInAction(() => {
         this.currentBalance = data;
       });
@@ -39,9 +39,9 @@ export class HomeStore {
     }
   }
 
-  async fetchCostBySegment() {
+  async fetchCostBySegment(year?: number, month?: number) {
     try {
-      const data = await homeService.getCostBySegment();
+      const data = await homeService.getCostBySegment(year, month);
       runInAction(() => {
         this.costBySegment = data;
       });
@@ -52,9 +52,9 @@ export class HomeStore {
     }
   }
 
-  async fetchRevenueByProject() {
+  async fetchRevenueByProject(year?: number, month?: number) {
     try {
-      const data = await homeService.getRevenueByProject();
+      const data = await homeService.getRevenueByProject(year, month);
       runInAction(() => {
         this.revenueByProject = data;
       });
@@ -65,9 +65,9 @@ export class HomeStore {
     }
   }
 
-  async fetchProfitByProject() {
+  async fetchProfitByProject(year?: number, month?: number) {
     try {
-      const data = await homeService.getProfitByProject();
+      const data = await homeService.getProfitByProject(year, month);
       runInAction(() => {
         this.profitByProject = data;
       });
