@@ -45,7 +45,7 @@ function TransactionRegistration() {
       title,
       transactionDate: new Date(date),
       transactionAmount: parseFloat(cashFlowValue),
-      transactionType: flowType,
+      transactionType: flowType === "entrada" ? "in" : "out",
       dreValue: parseFloat(dreValue),
       dreType: dreCategory,
       balanceType: balanceCategory,
