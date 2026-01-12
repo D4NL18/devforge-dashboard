@@ -10,24 +10,33 @@ const api: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000, // 10 segundos de timeout
+  timeout: 10000,
 });
 
-// Interceptador de requisições
 api.interceptors.request.use(
   (config) => {
-    // Exemplo: inserir token futuramente
-    // const token = localStorage.getItem("token");
-    // if (token) config.headers.Authorization = `Bearer ${token}`;
+    const token = localStorage.getItem("token");
+    
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Interceptador de respostas
 api.interceptors.response.use(
-  (response) => response,
+  (response) => response, 
   (error) => {
+    if (error.response && error.response.status === 401) {
+      console.error("Sessão expirada ou inválida.");
+      
+      localStorage.removeItem("token");
+      localStorage.removeItem("refresh_token");
+
+      window.location.href = "/";
+    }
+    
     console.error("Erro na requisição API:", error);
     return Promise.reject(error);
   }
