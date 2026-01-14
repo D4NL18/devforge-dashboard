@@ -29,13 +29,15 @@ export class ProjectsDashboardStore {
     type: undefined as number | undefined,
     revenueMin: 0,
     revenueMax: 10000,
+    year: undefined as number | undefined, 
   };
 
   debounceTimer: any = null;
 
+
   async fetchMarginByProject() {
     try {
-      const data = await projectsService.getMarginByProject();
+      const data = await projectsService.getMarginByProject(this.filters.year);
       runInAction(() => {
         this.marginByProject = data || []; 
       });
@@ -49,7 +51,7 @@ export class ProjectsDashboardStore {
 
   async fetchMarginByProjectType() {
     try {
-      const data = await projectsService.getMarginByProjectType();
+      const data = await projectsService.getMarginByProjectType(this.filters.year);
       runInAction(() => {
         this.marginByProjectType = data || [];
       });
@@ -63,7 +65,7 @@ export class ProjectsDashboardStore {
 
   async fetchRevenueByProject() {
     try {
-      const data = await projectsService.getRevenueByProject();
+      const data = await projectsService.getRevenueByProject(this.filters.year);
       runInAction(() => {
         this.revenueByProject = data || [];
       });
@@ -77,7 +79,7 @@ export class ProjectsDashboardStore {
 
   async fetchProfitByProject() {
     try {
-      const data = await projectsService.getProfitByProject();
+      const data = await projectsService.getProfitByProject(this.filters.year);
       runInAction(() => {
         this.profitByProject = data || [];
       });
@@ -91,7 +93,7 @@ export class ProjectsDashboardStore {
 
   async fetchRevenueByProjectType() {
     try {
-      const data = await projectsService.getRevenueByProjectType();
+      const data = await projectsService.getRevenueByProjectType(this.filters.year);
       const safeData = data || []; 
       const adaptedData: Graph[] = safeData.map((item: any) => ({
         name: item.type || "Unknown",
@@ -111,7 +113,7 @@ export class ProjectsDashboardStore {
 
   async fetchProfitByProjectType() {
     try {
-      const data = await projectsService.getProfitByProjectType();
+      const data = await projectsService.getProfitByProjectType(this.filters.year);
       runInAction(() => {
         this.profitByProjectType = data || [];
       });
@@ -125,7 +127,7 @@ export class ProjectsDashboardStore {
 
   async fetchProjectDiversificationByType() {
     try {
-      const data = await projectsService.getProjectDiversificationByType();
+      const data = await projectsService.getProjectDiversificationByType(this.filters.year);
       runInAction(() => {
         this.projectDiversificationByType = data || [];
       });
@@ -159,6 +161,7 @@ export class ProjectsDashboardStore {
         limit: this.filters.limit,
         name: this.filters.name,
         type: this.filters.type,
+        year: this.filters.year
       };
 
       const response = await projectsService.findAll(params);

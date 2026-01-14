@@ -35,6 +35,7 @@ export interface ProjectFilterParams {
   revenue?: number;
   minRevenue?: number; 
   maxRevenue?: number;
+  year?: number;
 }
 
 export interface ProjectResponse {

@@ -8,38 +8,54 @@ const projectUrl = "/project";
 
 const projectsService = {
 
-  async getMarginByProject(): Promise<Graph[]> {
-    const res = await api.get(`${url}/get-margin-by-project`);
+
+  async getMarginByProject(year?: number): Promise<Graph[]> {
+    const res = await api.get(`${url}/get-margin-by-project`, {
+        params: { year }
+    });
     return res.data.datas || [];
   },
 
-  async getMarginByProjectType(): Promise<Graph[]> {
-    const res = await api.get(`${url}/get-margin-by-type`);
+  async getMarginByProjectType(year?: number): Promise<Graph[]> {
+    const res = await api.get(`${url}/get-margin-by-type`, {
+        params: { year }
+    });
     return res.data.datas || [];
   },
 
-  async getRevenueByProject(): Promise<Graph[]> {
-    const res = await api.get(`${url}/get-revenue-by-project`);
+  async getRevenueByProject(year?: number): Promise<Graph[]> {
+    const res = await api.get(`${url}/get-revenue-by-project`, {
+        params: { year }
+    });
     return res.data.datas || [];
   },
 
-  async getProfitByProject(): Promise<Graph[]> {
-    const res = await api.get(`${url}/get-profit-by-project`);
+  async getProfitByProject(year?: number): Promise<Graph[]> {
+    const res = await api.get(`${url}/get-profit-by-project`, {
+        params: { year }
+    });
     return res.data.datas || [];
   },
 
-  async getRevenueByProjectType(): Promise<Graph[]> {
-    const res = await api.get(`${url}/get-revenue-by-type`);
+  async getRevenueByProjectType(year?: number): Promise<Graph[]> {
+     // Atenção: Validar se este endpoint existe no backend com suporte a filtro
+    const res = await api.get(`${url}/get-revenue-by-type`, {
+        params: { year }
+    });
     return res.data.datas || [];
   },
 
-  async getProfitByProjectType(): Promise<Graph[]> {
-    const res = await api.get(`${url}/get-profit-by-type`);
+  async getProfitByProjectType(year?: number): Promise<Graph[]> {
+    const res = await api.get(`${url}/get-profit-by-type`, {
+        params: { year }
+    });
     return res.data.datas || [];
   },
 
-  async getProjectDiversificationByType(): Promise<Graph[]> {
-    const res = await api.get(`${url}/get-projects-by-type`);
+  async getProjectDiversificationByType(year?: number): Promise<Graph[]> {
+    const res = await api.get(`${url}/get-projects-by-type`, {
+        params: { year }
+    });
     return res.data.datas || [];
   },
 
@@ -55,6 +71,7 @@ const projectsService = {
     if (params.limit) cleanParams.limit = params.limit;
     if (params.name) cleanParams.name = params.name;
     if (params.type) cleanParams.type = params.type;
+    if (params.year) cleanParams.year = params.year;
 
     const res = await api.get(`${projectUrl}`, { params: cleanParams });
     return res.data;

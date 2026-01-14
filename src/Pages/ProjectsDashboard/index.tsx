@@ -19,15 +19,6 @@ const ProjectsDashboard = observer(() => {
   const years = [
     "2025",
     "2024",
-    "2023",
-    "2022",
-    "2021",
-    "2020",
-    "2019",
-    "2018",
-    "2017",
-    "2016",
-    "2015",
   ];
 
   const [marginByProject, setMarginByProject] = useState<Graph[]>([]);
@@ -44,10 +35,7 @@ const ProjectsDashboard = observer(() => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    projectsStore.fetchProjects();
-
-    const fetchData = async () => {
+  const fetchGraphs = async () => {
       await projectsStore.fetchMarginByProject();
       const rawMarginByProject = toJS(projectsStore.marginByProject) || [];
       const formattedMarginByProject: Graph[] = rawMarginByProject.map(
@@ -119,16 +107,24 @@ const ProjectsDashboard = observer(() => {
           value: Number(item.value ? item.value.toFixed(2) : 0),
         }));
       setProjectDiversificationByType(ProjectDiversificationByType);
+  }
 
-      await projectsStore.fetchAllProjectTypes();
-      const types = toJS(projectsStore.allProjectTypes) || [];
-
-      setFullProjectTypes(types);
-      setProjectTypeOptions(types.map((pt) => pt.description));
-    };
-
-    fetchData();
+  useEffect(() => {
+    projectsStore.fetchProjects();
+    
+    const fetchTypes = async () => {
+        await projectsStore.fetchAllProjectTypes();
+        const types = toJS(projectsStore.allProjectTypes) || [];
+        setFullProjectTypes(types);
+        setProjectTypeOptions(types.map((pt) => pt.description));
+    }
+    fetchTypes();
   }, []);
+
+  useEffect(() => {
+    fetchGraphs();
+  }, [filters.year]);
+
 
   type ProjectRow = TableRowBase & {
     id: number;
@@ -148,6 +144,17 @@ const ProjectsDashboard = observer(() => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     projectsStore.setFilter("name", e.target.value);
+  };
+
+  const handleYearSubmit = (selectedValues: string[]) => {
+    if (selectedValues.length > 0) {
+        const selectedYear = Number(selectedValues[0]);
+        if (!isNaN(selectedYear)) {
+             projectsStore.setFilter("year", selectedYear);
+        }
+    } else {
+        projectsStore.setFilter("year", undefined);
+    }
   };
 
   const handleTypeSubmit = (selectedValues: string[]) => {
@@ -180,10 +187,8 @@ const ProjectsDashboard = observer(() => {
       <section className={styles.filterSection}>
         <Select
           options={years}
-          selectAll
-          multiple
-          hasSearch
           placeholder="Filtrar por: Ano"
+          onSubmit={handleYearSubmit}
         />
       </section>
 
