@@ -1,10 +1,11 @@
 import { Address } from "./address.interface";
 
 export interface Customer {
-  fullName: string;
+  name: string;
   email: string;
-  phone: string;
+  cell: string;
+  cpf: string;
   document: string;
-  birthDate: Date;
+  birthday: Date;
   address: Address
 }

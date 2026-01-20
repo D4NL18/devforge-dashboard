@@ -8,12 +8,8 @@ export class CustomerStore {
   }
 
   public customers: Customer[] = [];
-  public loading = false;
-  public error: string | null = null;
 
   async fetchCustomers() {
-    this.loading = true;
-    this.error = null;
     try {
       const data = await clientService.getAll();
       runInAction(() => {
@@ -21,31 +17,23 @@ export class CustomerStore {
       });
     } catch (error: any) {
       runInAction(() => {
-        this.error = error.message;
+        console.log(error);
       });
     } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
+      runInAction(() => {});
     }
   }
 
   async createCustomer(customer: Customer) {
-    this.loading = true;
-    this.error = null;
     try {
-      const newCustomer = await clientService.create(customer);
+      const newCustomer: Customer = await clientService.create(customer);
       runInAction(() => {
         this.customers.push(newCustomer);
       });
+      alert("Cliente cadastrado com sucesso!");
     } catch (error: any) {
-      runInAction(() => {
-        this.error = error.message;
-      });
-    } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
+      alert("Erro ao criar cliente.");
+      console.error("Erro ao criar cliente:", error.message);
     }
   }
 }

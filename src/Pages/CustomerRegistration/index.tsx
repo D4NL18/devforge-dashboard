@@ -1,3 +1,5 @@
+"use client";
+
 import Input from "Components/Input";
 import styles from "./index.module.scss";
 import { useState } from "react";
@@ -6,7 +8,12 @@ import { Customer } from "types/customer.interface";
 import { Address } from "types/address.interface";
 import AddressForm from "Components/AddressForm";
 
-export default function CustomerRegistration() {
+import { observer } from "mobx-react-lite";
+import { customerStore } from "./store";
+
+function CustomerRegistration() {
+  const { createCustomer } = customerStore;
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,19 +29,25 @@ export default function CustomerRegistration() {
     complement: "",
   });
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     const newCustomer: Customer = {
-      fullName,
+      name: fullName,
       email,
-      phone,
-      document,
-      birthDate: new Date(birthDate),
+      cell: phone,
+      cpf: document,
+      document: document,
+      birthday: new Date(birthDate),
       address,
     };
 
-    console.log("Cliente cadastrado:", newCustomer);
+    try {
+      await createCustomer(newCustomer);
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao cadastrar cliente. Tente novamente.");
+    }
   }
 
   return (
@@ -97,3 +110,5 @@ export default function CustomerRegistration() {
     </form>
   );
 }
+
+export default observer(CustomerRegistration);
