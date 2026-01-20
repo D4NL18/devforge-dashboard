@@ -8,6 +8,9 @@ import Select from "Components/Select";
 import CRUDButtons from "Components/CRUD_Buttons";
 import styles from "./index.module.scss";
 import { LuBadgeDollarSign } from "react-icons/lu";
+import { ProjectType } from "types/projectType.interface";
+import { Client } from "types/client.interface";
+import { PaymentMethod } from "types/paymentMethod.interface";
 
 function ProjectRegistration() {
   const {
@@ -19,11 +22,11 @@ function ProjectRegistration() {
   } = projectStore;
 
   const [projectName, setProjectName] = useState("");
-  const [projectType, setProjectType] = useState<any>(null);
+  const [projectType, setProjectType] = useState<ProjectType | null>(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [client, setClient] = useState<any>(null);
-  const [paymentMethod, setPaymentMethod] = useState<any>(null);
+  const [client, setClient] = useState<Client | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
   const [complexity, setComplexity] = useState<"Alta" | "Média" | "Baixa" | "">("");
@@ -55,7 +58,7 @@ function ProjectRegistration() {
 
     const payload = {
       name: projectName,
-      status: status == "Em andamento" ? "pending" : status == "Concluído" ? "completed" : status == "Rejeitado" ? "rejected" : "",
+      status: status == "Em andamento" ? "active" : status == "Concluído" ? "completed" : status == "Rejeitado" ? "cancelled" : "",
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       description,
