@@ -1,7 +1,14 @@
-main {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    margin-top: 100px;
+}
+
+body {
     font-family: 'Inter', sans-serif;
+}
+
+.content-with-header {
+    margin-top: 100px;
+    width: 100%;
 }
