@@ -1,20 +1,19 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import clientService from "../../Services/client";
-import { Customer } from "types/customer.interface";
 import { Client } from "types/client.interface";
 
-export class CustomerStore {
+export class ClientStore {
   constructor() {
     makeAutoObservable(this);
   }
 
-  public customers: Customer[] = [];
+  public clients: Client[] = [];
 
-  async fetchCustomers() {
+  async fetchClients() {
     try {
       const data = await clientService.getAll();
       runInAction(() => {
-        this.customers = data;
+        this.clients = data;
       });
     } catch (error: any) {
       runInAction(() => {
@@ -25,18 +24,19 @@ export class CustomerStore {
     }
   }
 
-  async createCustomer(client: Client) {
+  createClient = async (client: Client) => {
     try {
-      const newCustomer: Client = await clientService.create(client);
+      const newClient = await clientService.create(client);
       runInAction(() => {
-        this.customers.push(newCustomer);
+        console.log(newClient);
+        this.clients.push(newClient);
       });
       alert("Cliente cadastrado com sucesso!");
     } catch (error: any) {
       alert("Erro ao criar cliente.");
       console.error("Erro ao criar cliente:", error.message);
     }
-  }
+  };
 }
 
-export const customerStore = new CustomerStore();
+export const clientStore = new ClientStore();

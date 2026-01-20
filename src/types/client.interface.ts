@@ -7,6 +7,6 @@ export interface Client {
   cpf: string;
   document: string;
   birthday: Date;
-  address: Address
-  id: number;
+  addressRelation?: Address;
+  id?: number;
 }

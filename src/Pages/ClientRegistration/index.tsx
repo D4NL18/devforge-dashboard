@@ -9,10 +9,10 @@ import { Address } from "types/address.interface";
 import AddressForm from "Components/AddressForm";
 
 import { observer } from "mobx-react-lite";
-import { customerStore } from "./store";
+import { clientStore } from "./store";
 
-function CustomerRegistration() {
-  const { createCustomer } = customerStore;
+function ClientRegistration() {
+  const { createClient } = clientStore;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,23 +32,23 @@ function CustomerRegistration() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const newClient: Client = {
+    const payload = {
       name,
       email,
       cell: phone,
       cpf: document,
       document: document,
       birthday: new Date(birthDate),
-      address,
-      id: 0
+      code: address.cep,
+      city: address.city,
+      state: address.state,
+      country: address.country,
+      street: address.street,
+      number: address.number,
+      complement: address.complement,
     };
 
-    try {
-      await createCustomer(newClient);
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao cadastrar cliente. Tente novamente.");
-    }
+    await createClient(payload as any);
   }
 
   return (
@@ -112,4 +112,4 @@ function CustomerRegistration() {
   );
 }
 
-export default observer(CustomerRegistration);
+export default observer(ClientRegistration);
