@@ -1,6 +1,6 @@
 import { Address } from "./address.interface";
 
-export interface Customer {
+export interface Client {
   name: string;
   email: string;
   cell: string;
@@ -8,4 +8,5 @@ export interface Customer {
   document: string;
   birthday: Date;
   address: Address
+  id: number;
 }

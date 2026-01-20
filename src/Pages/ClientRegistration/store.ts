@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import clientService from "../../Services/client";
 import { Customer } from "types/customer.interface";
+import { Client } from "types/client.interface";
 
 export class CustomerStore {
   constructor() {
@@ -24,9 +25,9 @@ export class CustomerStore {
     }
   }
 
-  async createCustomer(customer: Customer) {
+  async createCustomer(client: Client) {
     try {
-      const newCustomer: Customer = await clientService.create(customer);
+      const newCustomer: Client = await clientService.create(client);
       runInAction(() => {
         this.customers.push(newCustomer);
       });

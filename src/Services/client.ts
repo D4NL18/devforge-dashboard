@@ -1,25 +1,25 @@
 import api from "./api";
-import { Customer } from "types/customer.interface";
+import { Client } from "types/client.interface";
 
 const url = "/client"
 
 const clientService = {
-  async getAll(): Promise<Customer[]> {
+  async getAll(): Promise<Client[]> {
     const response = await api.get(`${url}`);
     return response.data.datas
   },
 
-  async getById(id: string): Promise<Customer> {
+  async getById(id: string): Promise<Client> {
     const response = await api.get(`${url}/${id}`);
     return response.data.datas
   },
 
-  async create(client: Customer): Promise<Customer> {
+  async create(client: Client): Promise<Client> {
     const response = await api.post(`${url}`, client);
     return response.data.datas
   },
 
-  async update(id: string, client: Customer): Promise<Customer> {
+  async update(id: string, client: Client): Promise<Client> {
     const response = await api.put(`${url}/${id}`, client);
     return response.data.datas
   },

@@ -4,7 +4,7 @@ import Input from "Components/Input";
 import styles from "./index.module.scss";
 import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
-import { Customer } from "types/customer.interface";
+import { Client } from "types/client.interface";
 import { Address } from "types/address.interface";
 import AddressForm from "Components/AddressForm";
 
@@ -14,7 +14,7 @@ import { customerStore } from "./store";
 function CustomerRegistration() {
   const { createCustomer } = customerStore;
 
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [document, setDocument] = useState("");
@@ -32,18 +32,19 @@ function CustomerRegistration() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const newCustomer: Customer = {
-      name: fullName,
+    const newClient: Client = {
+      name,
       email,
       cell: phone,
       cpf: document,
       document: document,
       birthday: new Date(birthDate),
       address,
+      id: 0
     };
 
     try {
-      await createCustomer(newCustomer);
+      await createCustomer(newClient);
     } catch (error) {
       console.error(error);
       alert("Erro ao cadastrar cliente. Tente novamente.");
@@ -51,7 +52,7 @@ function CustomerRegistration() {
   }
 
   return (
-    <form className={styles.customerForm} onSubmit={handleSubmit}>
+    <form className={styles.clientForm} onSubmit={handleSubmit}>
       <h1>Cadastro de Cliente</h1>
       <section>
         <h2>Informações Pessoais e Profissionais</h2>
@@ -59,9 +60,9 @@ function CustomerRegistration() {
           <Input
             type="text"
             placeholder="Nome Completo"
-            value={fullName}
+            value={name}
             onChange={(e) => {
-              setFullName(e.target.value);
+              setName(e.target.value);
             }}
             required
           />
