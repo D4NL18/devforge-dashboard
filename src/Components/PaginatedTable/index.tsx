@@ -14,7 +14,7 @@ type Column<T> = {
   label: string;
 };
 
-type TableRowBase = {
+export type TableRowBase = {
   bold?: boolean;
   type?: "in" | "out";
 };
