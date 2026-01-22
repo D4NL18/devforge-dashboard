@@ -1,47 +1,66 @@
-// src/pages/Login/index.tsx
 import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { observer } from "mobx-react-lite";
+import Input from "Components/Input";
+import { loginStore } from "./store";
+import { FormEvent } from "react";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login = observer(() => {
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (email && password) {
-      navigate("/home");
+  const handleLogin = async (e?: FormEvent) => {
+    if (e) e.preventDefault();
+
+    if (loginStore.email && loginStore.password) {
+      const success = await loginStore.login();
+
+      if (success) {
+        navigate("/home");
+      }
     }
   };
 
   return (
     <div className={styles.background}>
-      <div className={styles.card}>
-        <h2>Login</h2>
-        <input
+      <img src="/assets/DevForge-logo-removebg.png" alt="Logo" className={styles.logo} />
+      <form className={styles.card} onSubmit={handleLogin}>
+        <Input
           type="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={loginStore.email}
+          onChange={(e) => loginStore.setEmail(e.target.value)}
         />
-        <input
+        <Input
           type="password"
           placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={loginStore.password}
+          onChange={(e) => loginStore.setPassword(e.target.value)}
         />
-        <button className={styles.loginButton} onClick={handleLogin}>
-          Entrar
-        </button>
+        
+        {loginStore.error && (
+          <span style={{ color: "red", fontSize: "14px", marginBottom: "10px", display: "block" }}>
+            {loginStore.error}
+          </span>
+        )}
         <button
+          type="submit"
+          className={styles.loginButton}
+          disabled={loginStore.isLoading}
+        >
+          {loginStore.isLoading ? "Carregando..." : "Entrar"}
+        </button>
+
+        <button
+          type="button"
           className={styles.linkButton}
           onClick={() => navigate("/forgot-password")}
         >
-          Esqueceu a senha?
+          Recuperar Senha
         </button>
-      </div>
+      </form>
+      <div className={styles.inv}></div>
     </div>
   );
-};
+});
 
 export default Login;
