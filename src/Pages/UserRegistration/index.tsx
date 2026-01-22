@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
 import { Address } from "types/address.interface";
-import { User } from "types/user.interface";
+import { userStore } from "./store";
 import Select from "Components/Select";
 import AddressForm from "Components/AddressForm";
 
@@ -16,7 +16,7 @@ export default function UserRegistration() {
   const [birthDate, setBirthDate] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState<"admin" | "user">("user");
+  const [role, setRole] = useState<"admin" | "user" | undefined>(undefined);
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [address, setAddress] = useState<Address>({
@@ -29,33 +29,69 @@ export default function UserRegistration() {
     complement: "",
   });
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!role) {
+      alert("Selecione uma permissão para o usuário.");
+      return;
+    }
     if (passwordError || confirmPasswordError) {
-      console.log("Formulário inválido");
+      alert("Formulário inválido");
       return;
     }
 
-    const newUser: User = {
-      fullName,
+    const payload = {
+      fullname: fullName,
       userName,
       email,
       phone,
       cpf,
-      birthDate: new Date(birthDate),
-      address,
+      birthdate: new Date(birthDate),
       password,
       role,
+      code: address.cep,
+      city: address.city,
+      state: address.state,
+      country: address.country,
+      street: address.street,
+      number: address.number,
+      complement: address.complement,
     };
 
-    console.log("Usuário cadastrado:", newUser);
+    const success = await userStore.createUser(payload);
+
+    if (success) {
+      alert("Usuário cadastrado com sucesso!");
+      resetForm();
+    } else {
+      alert(`Erro ao cadastrar usuário`);
+    }
+  }
+
+  function resetForm() {
+    setFullName("");
+    setUserName("");
+    setEmail("");
+    setPhone("");
+    setCpf("");
+    setBirthDate("");
+    setPassword("");
+    setConfirmPassword("");
+    setRole(undefined);
+    setAddress({
+      cep: "",
+      city: "",
+      state: "",
+      country: "",
+      street: "",
+      number: "",
+      complement: "",
+    });
   }
 
   function validatePassword(value: string) {
-    if (!value) {
-      return;
-    }
+    if (!value) return;
 
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
@@ -160,7 +196,6 @@ export default function UserRegistration() {
 
           <Select
             placeholder="Permissão"
-            defaultValue={1}
             options={["Administrador", "Usuário"]}
             onSubmit={(value) =>
               setRole(value[0] === "Administrador" ? "admin" : "user")
@@ -168,6 +203,7 @@ export default function UserRegistration() {
           />
         </div>
       </section>
+
       <AddressForm onChange={setAddress} />
 
       <div className={styles.buttonContainer}>
