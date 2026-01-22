@@ -36,7 +36,6 @@ const ClientsDashboard = observer(() => {
   ]);
 
   const fetchGraphs = async () => {
-    // As chamadas aqui não precisam de argumentos, pois a Store lê o estado 'filters.years' internamente
     await clientsStore.fetchChurnRevenue();
     const rawChurn = toJS(clientsStore.churnRevenueByMonth) || [];
     setChurnRevenueData(rawChurn.map((item: Graph) => ({
@@ -64,8 +63,6 @@ const ClientsDashboard = observer(() => {
     fetchGraphs();
   }, []);
 
-  // Este useEffect garante que sempre que o filtro de ano mudar na Store,
-  // os gráficos serão recarregados com o novo ano selecionado.
   useEffect(() => {
     fetchGraphs();
   }, [filters.years]);
@@ -91,7 +88,6 @@ const ClientsDashboard = observer(() => {
   };
 
   const handleYearSubmit = (selectedValues: string[]) => {
-    // Atualiza o estado na Store. Isso disparará o useEffect acima devido à mudança no observable.
     clientsStore.setFilter("years", selectedValues);
   };
 

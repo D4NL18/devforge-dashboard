@@ -8,7 +8,6 @@ export class ClientsDashboardStore {
     makeAutoObservable(this);
   }
 
-  // --- ESTADOS (Observables) ---
   churnRevenueByMonth: Graph[] = [];
   cacByMonth: Graph[] = [];
   ltvByMonth: Graph[] = [];
@@ -20,7 +19,6 @@ export class ClientsDashboardStore {
   totalItems: number = 0;
   isLoadingTable: boolean = false;
 
-  // Filtros unificados
   filters = {
     page: 1,
     limit: 8,
@@ -30,23 +28,15 @@ export class ClientsDashboardStore {
     revenueMax: 10000,
     monthsMin: 0,
     monthsMax: 10000,
-    years: [] as string[], // Lista de anos selecionados via Select
+    years: [] as string[],
   };
 
   debounceTimer: any = null;
 
-  // --- ACTIONS ---
-
-  // Refatorado: Agora não recebe argumento, ele lê diretamente do estado (this.filters)
   async fetchChurnRevenue() {
     try {
-      // Lógica de Filtro de Ano:
-      // O componente Select retorna um array de strings.
-      // Para gráficos mensais (Jan-Dez), geralmente filtramos por um ano específico.
-      // Aqui, pegamos o primeiro ano selecionado pelo usuário. Se o array estiver vazio, enviamos undefined.
       const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : undefined;
 
-      // Passamos o ano selecionado para o serviço (assumindo que o serviço aceite este parâmetro opcional)
       const data = await clientService.getChurnRevenueByMonth(selectedYear);
       
       runInAction(() => {
@@ -62,7 +52,6 @@ export class ClientsDashboardStore {
 
   async fetchCac() {
     try {
-      // Aplicamos a mesma lógica de filtro de ano para o CAC
       const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : undefined;
 
       const data = await clientService.getCac(selectedYear);
@@ -79,7 +68,6 @@ export class ClientsDashboardStore {
 
   async fetchLtv() {
     try {
-      // Aplicamos a mesma lógica de filtro de ano para o LTV
       const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : undefined;
 
       const data = await clientService.getClientsLifetimeValueByMonths(selectedYear);
@@ -106,7 +94,7 @@ export class ClientsDashboardStore {
         revenueMax: this.filters.revenueMax,
         monthsMin: this.filters.monthsMin,
         monthsMax: this.filters.monthsMax,
-        years: this.filters.years // Passamos o array completo para a tabela, caso o backend suporte filtro múltiplo
+        years: this.filters.years
       };
 
       const response: any = await clientService.getAll(); 
@@ -134,7 +122,6 @@ export class ClientsDashboardStore {
         return; 
     }
 
-    // Resetamos a página para 1 se mudarmos qualquer filtro que não seja a paginação
     if (key !== 'limit') {
         this.filters.page = 1;
     }
@@ -143,9 +130,6 @@ export class ClientsDashboardStore {
       clearTimeout(this.debounceTimer);
     }
 
-    // O debounce afeta a busca da tabela.
-    // Nota: Para os gráficos, a atualização é controlada pelo useEffect no componente visual
-    // ou poderíamos chamar as funções de gráfico aqui também se quiséssemos "live update" sem useEffect.
     this.debounceTimer = setTimeout(() => {
       this.fetchClients();
     }, 1000);
