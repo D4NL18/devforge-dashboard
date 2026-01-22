@@ -1,11 +1,12 @@
-import { Customer } from "./customer.interface";
+import { Client } from "./client.interface";
 
 export interface Project {
-  projectName: string;
-  category: "Landing Page" | "Mobile" | "Dashboard";
+  id?: number;
+  name: string;
+  status: string;
   startDate: Date;
   endDate: Date;
-  customer: Customer;
+  customer: Client;
   paymentMethod: "Cartão de Crédito" | "Cartão de Débito" | "Boleto" | "PIX";
   complexity: "Alta" | "Média" | "Baixa";
   installments:

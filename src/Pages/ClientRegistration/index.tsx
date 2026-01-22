@@ -2,12 +2,12 @@ import Input from "Components/Input";
 import styles from "./index.module.scss";
 import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
-import { Customer } from "types/customer.interface";
+import { Client } from "types/client.interface";
 import { Address } from "types/address.interface";
 import AddressForm from "Components/AddressForm";
 
-export default function CustomerRegistration() {
-  const [fullName, setFullName] = useState("");
+export default function ClientRegistration() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [document, setDocument] = useState("");
@@ -25,20 +25,21 @@ export default function CustomerRegistration() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const newCustomer: Customer = {
-      fullName,
+    const newClient: Client = {
+      name,
       email,
       phone,
       document,
       birthDate: new Date(birthDate),
       address,
+      id: 0
     };
 
-    console.log("Cliente cadastrado:", newCustomer);
+    console.log("Cliente cadastrado:", newClient);
   }
 
   return (
-    <form className={styles.customerForm} onSubmit={handleSubmit}>
+    <form className={styles.clientForm} onSubmit={handleSubmit}>
       <h1>Cadastro de Cliente</h1>
       <section>
         <h2>Informações Pessoais e Profissionais</h2>
@@ -46,9 +47,9 @@ export default function CustomerRegistration() {
           <Input
             type="text"
             placeholder="Nome Completo"
-            value={fullName}
+            value={name}
             onChange={(e) => {
-              setFullName(e.target.value);
+              setName(e.target.value);
             }}
             required
           />
