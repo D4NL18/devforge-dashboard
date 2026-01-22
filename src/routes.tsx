@@ -13,6 +13,7 @@ import TransactionRegistration from "Pages/TransactionRegistration";
 import ProjectRegistration from "Pages/ProjectRegistration";
 import TransactionDashboard from "Pages/TransactionDashboard";
 import ClientsDashboard from "Pages/ClientsDashboard";
+import ProjectsDashboard from "Pages/ProjectsDashboard";
 import "./resources/globals.scss";
 import Navbar from "Components/Navbar";
 
@@ -52,6 +53,7 @@ const AppRoutes = () => {
             />
             <Route path="/project-register" element={<ProjectRegistration />} />
             <Route path="/dashboard/clients" element={<ClientsDashboard />} />
+            <Route path="/dashboard/projects" element={<ProjectsDashboard />} />
             <Route
               path="/dashboard/transactions"
               element={<TransactionDashboard />}
