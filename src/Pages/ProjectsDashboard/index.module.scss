@@ -1,0 +1,109 @@
+@import "../../resources/colors.scss";
+
+.projectsDashboardContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: $background-color;
+    gap: 2rem;
+    padding: 2rem;
+    overflow: hidden;
+
+    h1 {
+        font-size: 3.5rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        color: white;
+        text-align: center;
+
+        @media (max-width: 768px) {
+            font-size: 3rem;
+        }
+    }
+
+    .filterSection {
+        width: 20%;
+        min-width: 250px;
+    }
+
+    .chartsSection {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: 1fr;
+        }
+
+        .chartColumn {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: 2rem;
+        }
+    }
+
+    .tableSection {
+
+        .tableFiltersContainer {
+            display: grid;
+            gap: 5rem;
+            grid-template-columns: 4fr 3.5fr 2fr 2fr 1fr;
+            width: 100%;
+            align-items: center;
+            margin: 2rem 0;
+
+            @media (max-width: 1440px) {
+                gap: 2rem;
+            }
+
+            @media (max-width: 1024px) {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+
+                .addContainer {
+                    display: flex;
+                    justify-content: flex-end;
+                    grid-column: 2/3;
+                }
+            }
+
+            @media (max-width: 768px) {
+                grid-template-columns: 1fr;
+                .addContainer {
+                    grid-column: auto;
+                }
+            }
+
+            .rangeContainerProjects {
+                display: flex;
+                flex-direction: column;
+                color: white;
+                font-size: 1rem;
+                font-family: 'Inter', sans-serif;
+                font-weight: 500;
+                text-align: center;
+                position: relative;
+
+                @media (max-width: 1024px) {
+                    margin: 2rem 0;
+                    text-align: start;
+                }
+
+                &::before {
+                    position: absolute;
+                    top: -2rem;
+                    left: 0;
+                    width: 100%;
+                    height: 1px;
+                }
+
+                &:nth-of-type(2)::before {
+                    content: 'Filtrar por: Faturamento';
+                }
+
+                &:nth-of-type(3)::before {
+                    content: 'Filtrar por: Prazo';
+                }
+            }
+        }
+    }
+}

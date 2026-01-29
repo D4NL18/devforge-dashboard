@@ -14,6 +14,8 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh_token");
     navigate("/");
   };
 
