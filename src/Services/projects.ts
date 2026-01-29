@@ -1,5 +1,5 @@
 import { Graph } from "../types/graph.interface";
-import { PaginatedResponse, ProjectFilterParams, ProjectResponse } from "types/project.interface";
+import { PaginatedResponse, Project, ProjectFilterParams, ProjectResponse } from "types/project.interface";
 import api from "./api";
 import { ProjectType } from "types/projectType.interface";
 
@@ -7,6 +7,25 @@ const url = "/graph";
 const projectUrl = "/project";
 
 const projectsService = {
+
+  async getById(id: string): Promise<Project> {
+    const response = await api.get(`${projectUrl}/${id}`);
+    return response.data;
+  },
+
+  async create(project: Project): Promise<Project> {
+    const response = await api.post(`${projectUrl}`, project);
+    return response.data;
+  },
+
+  async update(id: string, project: Project): Promise<Project> {
+    const response = await api.put(`${projectUrl}${id}`, project);
+    return response.data;
+  },
+
+  async remove(id: string): Promise<void> {
+    await api.delete(`${projectUrl}/${id}`);
+  },
 
 
   async getMarginByProject(year?: number): Promise<Graph[]> {
@@ -38,7 +57,6 @@ const projectsService = {
   },
 
   async getRevenueByProjectType(year?: number): Promise<Graph[]> {
-     // Atenção: Validar se este endpoint existe no backend com suporte a filtro
     const res = await api.get(`${url}/get-revenue-by-type`, {
         params: { year }
     });

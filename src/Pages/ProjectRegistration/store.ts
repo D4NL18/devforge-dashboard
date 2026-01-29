@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import projectService from "../../Services/project";
+import projectService from "../../Services/projects";
 import clientService from "../../Services/client";
 import projectTypeService from "../../Services/projectType";
 import paymentMethodService from "../../Services/paymentMethod";
