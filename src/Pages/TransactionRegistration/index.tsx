@@ -1,10 +1,16 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { transactionStore } from "./store";
 import Input from "Components/Input";
 import Select from "Components/Select";
 import styles from "./index.module.scss";
-import { useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
 
-export default function TransactionRegistration() {
+function TransactionRegistration() {
+  const { createTransaction, fetchData } = transactionStore;
+
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [cashFlowValue, setCashFlowValue] = useState("");
@@ -17,37 +23,44 @@ export default function TransactionRegistration() {
 
   const [description, setDescription] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
+  const [category, setCategory] = useState("");
 
-  if (!flowType) {
-    alert("Selecione o tipo de fluxo.");
-    return;
+  const [project, setProject] = useState<string | null >(null);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!flowType || !dreCategory || !balanceCategory || !category) {
+      alert("Preencha todos os campos obrigatórios.");
+      return;
+    }
+    
+    const selectedProjectObj = transactionStore.projects.find(p => p.name === project);
+    
+    const payload = {
+      title,
+      transactionDate: new Date(date),
+      transactionAmount: parseFloat(cashFlowValue),
+      transactionType: flowType === "entrada" ? "in" : "out",
+      dreValue: parseFloat(dreValue),
+      dreType: dreCategory,
+      balanceType: balanceCategory,
+      transactionDetails: description,
+      category,
+      projectId: selectedProjectObj ? selectedProjectObj.id : null
+    };
+
+    await createTransaction(payload as any);
   }
 
-  if (!dreCategory) {
-    alert("Selecione a categoria DRE.");
-    return;
-  }
-
-  if (!balanceCategory) {
-    alert("Selecione a categoria do Balanço.");
-    return;
-  }
-
-  const newTransaction = {
-    title,
-    date: new Date(date),
-    cashFlowValue,
-    flowType,
-    dreValue,
-    dreCategory,
-    balanceCategory,
-    description,
-  };
-
-  console.log("Transação cadastrada:", newTransaction);
-}
+  const projectOptions = transactionStore.projects.map((proj) => ({
+    label: proj.name,
+    value: proj.id
+  }));
 
   return (
     <form className={styles.transactionForm} onSubmit={handleSubmit}>
@@ -84,6 +97,25 @@ export default function TransactionRegistration() {
               setFlowType(value[0] === "Entrada" ? "entrada" : "saida")
             }
           />
+          <Select
+            placeholder="Categoria da Transação"
+            options={[
+              "Recursos Humanos",
+              "Infraestrutura e Equipamentos",
+              "Projetos",
+              "Administrativo e Financeiro",
+              "Marketing e Comercial",
+              "Pesquisa e Inovação",
+            ]}
+            onSubmit={(value) => setCategory(value[0])}
+          />
+          {category === "Projetos" &&
+          <Select
+            placeholder="Projeto Associado"
+            options={projectOptions.map((proj) => proj.label)}
+            onSubmit={(value) => setProject(value[0])}
+          />
+          }
         </div>
       </section>
 
@@ -153,3 +185,5 @@ export default function TransactionRegistration() {
     </form>
   );
 }
+
+export default observer(TransactionRegistration);
