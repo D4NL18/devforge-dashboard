@@ -1,8 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import transactionService from "../../Services/transaction";
-import projectService from "../../Services/project"; // Para buscar a lista de projetos
-// import { Transaction } from "types/transaction.interface";
-// import { Project } from "types/project.interface";
+import projectService from "../../Services/projects";
 
 export class TransactionStore {
   transactions: any[] = [];

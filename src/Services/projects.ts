@@ -13,6 +13,11 @@ const projectsService = {
     return response.data;
   },
 
+  async getAll(): Promise<Project[]> {
+    const response = await api.get(`${projectUrl}`);
+    return response.data;
+  },
+
   async create(project: Project): Promise<Project> {
     const response = await api.post(`${projectUrl}`, project);
     return response.data;

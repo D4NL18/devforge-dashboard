@@ -1,33 +1,61 @@
 import api from "./api";
-// Assumindo que o DTO/tipo esteja disponível em "types"
-// import { Transaction } from "types/transaction.interface";
-// import { CreateTransactionDTO } in "types/transaction.dto";
 
-// Na ausência dos tipos, 'any' será usado para a replicação da estrutura
-let url = "/transaction"; // Endpoint inferido para transações
+let url = "/transaction";
 
 const transactionService = {
-  async getAll(): Promise<any[]> {
-    const response = await api.get(`${url}`);
+  async getDreMetrics() {
+    const response = await api.get(`${url}/get-dre-metrics`);
+    return response.data.datas;
+  },
+
+  async getBalanceSheet() {
+    const response = await api.get(`${url}/get-balance-sheet`);
+    console.log("getBalanceSheet", response.data.datas)
+    return response.data.datas;
+  },
+
+  async getCashFlow(params: any) {
+    const cleanParams = Object.fromEntries(
+      Object.entries(params).filter(([_, v]) => v != null && v !== "")
+    );
+
+    const response = await api.get(`${url}/get-cash-flow-values`, { params: cleanParams });
+    console.log("getCashFlow", response.data.datas)
+    return response.data.datas;
+  },
+
+  async getRevenue(year?: number, month?: number) {
+    const response = await api.get(`/graph/card/get-revenue`, { params: { year, month } });
+    return response.data.datas;
+  },
+
+  async getCurrentBalance(year?: number, month?: number) {
+    const response = await api.get(`/graph/card/get-current-balance`, { params: { year, month } });
+    return response.data.datas;
+  },
+
+  async getCostBySegment(year?: number, month?: number) {
+    const response = await api.get(`/graph/get-cost-by-segment`, { params: { year, month } });
+    console.log("getCostBySegment", response.data)
     return response.data;
   },
 
-  async getById(id: string): Promise<any> {
+  async getById(id: number) {
     const response = await api.get(`${url}/${id}`);
-    return response.data;
+    return response.data.datas;
   },
 
-  async create(transaction: any): Promise<any> {
+  async create(transaction: any) {
     const response = await api.post(`${url}`, transaction);
-    return response.data;
+    return response.data.datas;
   },
 
-  async update(id: string, transaction: any): Promise<any> {
-    const response = await api.put(`${url}${id}`, transaction);
-    return response.data;
+  async update(id: number, transaction: any) {
+    const response = await api.put(`${url}/${id}`, transaction);
+    return response.data.datas;
   },
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number) {
     await api.delete(`${url}/${id}`);
   },
 };
