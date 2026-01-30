@@ -10,19 +10,36 @@ import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { transactionStore, CashFlowRow } from "./store";
 import { useNavigate } from "react-router-dom";
+import { toJS } from "mobx";
 
 const TransactionDashboard = observer(() => {
-  const { filters, cashFlowList, dreData, balanceSheetData, revenue, currentBalance, minCash, costBySegment, isLoadingTable } = transactionStore;
+  const {
+    filters,
+    cashFlowList,
+    dreData,
+    balanceSheetData,
+    revenue,
+    currentBalance,
+    minCash,
+    costBySegment,
+    isLoadingTable,
+  } = transactionStore;
   const navigate = useNavigate();
 
   const years = ["2026", "2025", "2024"];
   const months = [
-    { label: "Janeiro", value: 1 }, { label: "Fevereiro", value: 2 },
-    { label: "Março", value: 3 }, { label: "Abril", value: 4 },
-    { label: "Maio", value: 5 }, { label: "Junho", value: 6 },
-    { label: "Julho", value: 7 }, { label: "Agosto", value: 8 },
-    { label: "Setembro", value: 9 }, { label: "Outubro", value: 10 },
-    { label: "Novembro", value: 11 }, { label: "Dezembro", value: 12 }
+    { label: "Janeiro", value: 1 },
+    { label: "Fevereiro", value: 2 },
+    { label: "Março", value: 3 },
+    { label: "Abril", value: 4 },
+    { label: "Maio", value: 5 },
+    { label: "Junho", value: 6 },
+    { label: "Julho", value: 7 },
+    { label: "Agosto", value: 8 },
+    { label: "Setembro", value: 9 },
+    { label: "Outubro", value: 10 },
+    { label: "Novembro", value: 11 },
+    { label: "Dezembro", value: 12 },
   ];
 
   useEffect(() => {
@@ -34,57 +51,70 @@ const TransactionDashboard = observer(() => {
   }, []);
 
   const handleYearSubmit = (vals: string[]) => {
-    transactionStore.setFilter("year", vals.length ? Number(vals[0]) : undefined);
+    transactionStore.setFilter(
+      "year",
+      vals.length ? Number(vals[0]) : undefined,
+    );
   };
 
   const handleMonthSubmit = (vals: string[]) => {
     if (vals.length) {
-      const selected = months.find(m => m.label === vals[0]);
+      const selected = months.find((m) => m.label === vals[0]);
       transactionStore.setFilter("month", selected?.value);
     } else {
       transactionStore.setFilter("month", undefined);
     }
   };
 
-  // --- CORREÇÃO DO MAPEAMENTO DO FLUXO DE CAIXA ---
   const tableData: CashFlowRow[] = (cashFlowList || []).map((item, index) => ({
-    id: item.id || index, // Backend não enviou ID no log, usamos index como fallback
+    id: item.id || index,
     titulo: item.title,
     categoria: item.category,
-    valor: `R$ ${item.value?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+    valor: `R$ ${item.value?.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
     type: (item.type === "in" ? "in" : "out") as "in" | "out",
   }));
 
   return (
     <div className={styles.transactionDashboardContainer}>
       <h1>Transações</h1>
-      
+
       <section className={styles.mainInfoSection}>
         <div className={styles.filters}>
           <div className={styles.filterSelectContainer}>
-            <Select placeholder="Filtrar por: Ano" options={years} onSubmit={handleYearSubmit} />
+            <Select
+              placeholder="Filtrar por: Ano"
+              options={years}
+              onSubmit={handleYearSubmit}
+            />
           </div>
           <div className={styles.filterSelectContainer}>
-            <Select placeholder="Filtrar por: Mês" options={months.map(m => m.label)} onSubmit={handleMonthSubmit} />
+            <Select
+              placeholder="Filtrar por: Mês"
+              options={months.map((m) => m.label)}
+              onSubmit={handleMonthSubmit}
+            />
           </div>
         </div>
 
         <div className={styles.infos}>
           <div className={styles.cardInfoBox}>
             <CardInfo title="Caixa Mínimo" value={`R$ ${minCash.toFixed(2)}`} />
-            <CardInfo 
-              title="Caixa Atual" 
-              value={`R$ ${currentBalance.toFixed(2)}`} 
-              hasWarning={currentBalance < minCash} 
+            <CardInfo
+              title="Caixa Atual"
+              value={`R$ ${currentBalance.toFixed(2)}`}
+              hasWarning={currentBalance < minCash}
             />
             <CardInfo title="Faturamento" value={`R$ ${revenue.toFixed(2)}`} />
-            <CardInfo title="Lucro" value={`R$ ${(revenue * 0.15).toFixed(2)}`} />
+            <CardInfo
+              title="Lucro"
+              value={`R$ ${(revenue * 0.15).toFixed(2)}`}
+            />
           </div>
           <div className={styles.pieChartBox}>
             <Chart
               type="pie"
               title="Gastos por Setor"
-              data={costBySegment || []}
+              data={toJS(costBySegment) || []}
               dataKey="value"
               nameKey="name"
             />
@@ -120,12 +150,12 @@ const TransactionDashboard = observer(() => {
       <section className={styles.cashFlowSection}>
         <h2>Fluxo de Caixa</h2>
         <div className={styles.filterContainer}>
-          <Searchbar 
-            placeholder="Buscar título..." 
-            value={filters.name} 
-            onChange={(e) => transactionStore.setFilter("name", e.target.value)} 
+          <Searchbar
+            placeholder="Buscar título..."
+            value={filters.name}
+            onChange={(e) => transactionStore.setFilter("name", e.target.value)}
           />
-          
+
           <Select
             placeholder="Filtrar por: Categoria"
             options={["Marketing", "Projetos", "Equipamentos", "Impostos"]}
@@ -135,14 +165,20 @@ const TransactionDashboard = observer(() => {
           <RangeInput
             valueMin={filters.revenueMin}
             valueMax={filters.revenueMax}
-            onChangeMin={(e) => transactionStore.setFilter("revenueMin", Number(e.target.value))}
-            onChangeMax={(e) => transactionStore.setFilter("revenueMax", Number(e.target.value))}
+            onChangeMin={(e) =>
+              transactionStore.setFilter("revenueMin", Number(e.target.value))
+            }
+            onChangeMax={(e) =>
+              transactionStore.setFilter("revenueMax", Number(e.target.value))
+            }
           />
 
-          <Select 
-            placeholder="Tipo" 
-            options={["CREDIT", "DEBIT"]} 
-            onSubmit={(vals) => transactionStore.setFilter("balanceType", vals[0])}
+          <Select
+            placeholder="Tipo"
+            options={["CREDIT", "DEBIT"]}
+            onSubmit={(vals) =>
+              transactionStore.setFilter("balanceType", vals[0])
+            }
           />
 
           <div className={styles.addContainer}>

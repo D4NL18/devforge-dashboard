@@ -10,7 +10,6 @@ const transactionService = {
 
   async getBalanceSheet() {
     const response = await api.get(`${url}/get-balance-sheet`);
-    console.log("getBalanceSheet", response.data.datas)
     return response.data.datas;
   },
 
@@ -20,7 +19,6 @@ const transactionService = {
     );
 
     const response = await api.get(`${url}/get-cash-flow-values`, { params: cleanParams });
-    console.log("getCashFlow", response.data.datas)
     return response.data.datas;
   },
 
@@ -36,9 +34,8 @@ const transactionService = {
 
   async getCostBySegment(year?: number, month?: number) {
     const response = await api.get(`/graph/get-cost-by-segment`, { params: { year, month } });
-    console.log("getCostBySegment", response.data)
-    return response.data;
-  },
+    return response.data.datas;
+},
 
   async getById(id: number) {
     const response = await api.get(`${url}/${id}`);

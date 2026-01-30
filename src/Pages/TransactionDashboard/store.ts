@@ -151,9 +151,8 @@ export class TransactionStore {
         balanceType: this.filters.balanceType,
         year: this.filters.year,
         month: this.filters.month,
+        name: this.filters.name,
       };
-
-      if (this.filters.name) params.title = this.filters.name;
 
       const response = await transactionService.getCashFlow(params);
       
