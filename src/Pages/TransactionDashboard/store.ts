@@ -34,8 +34,8 @@ export class TransactionStore {
     balanceType: undefined as string | undefined,
     year: undefined as number | undefined,
     month: undefined as number | undefined,
-    revenueMin: 0,
-    revenueMax: 10000,
+    minValue: 0,
+    maxValue: 10000,
   };
 
   debounceTimer: any = null;
@@ -152,6 +152,8 @@ export class TransactionStore {
         year: this.filters.year,
         month: this.filters.month,
         name: this.filters.name,
+        minValue: this.filters.minValue,
+        maxValue: this.filters.maxValue,
       };
 
       const response = await transactionService.getCashFlow(params);

@@ -163,21 +163,21 @@ const TransactionDashboard = observer(() => {
           />
 
           <RangeInput
-            valueMin={filters.revenueMin}
-            valueMax={filters.revenueMax}
+            valueMin={filters.minValue}
+            valueMax={filters.maxValue}
             onChangeMin={(e) =>
-              transactionStore.setFilter("revenueMin", Number(e.target.value))
+              transactionStore.setFilter("minValue", Number(e.target.value))
             }
             onChangeMax={(e) =>
-              transactionStore.setFilter("revenueMax", Number(e.target.value))
+              transactionStore.setFilter("maxValue", Number(e.target.value))
             }
           />
 
           <Select
             placeholder="Tipo"
-            options={["CREDIT", "DEBIT"]}
+            options={["Entrada", "Saida"]}
             onSubmit={(vals) =>
-              transactionStore.setFilter("balanceType", vals[0])
+              transactionStore.setFilter("balanceType", vals[0] === "Entrada" ? "in" :  vals[0] ==="Saida" ? "out" : undefined)
             }
           />
 
