@@ -38,25 +38,24 @@ const Select = ({
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   
   const isFirstRender = useRef(true);
+  const onSubmitRef = useRef(onSubmit);
 
-  // Sincroniza valor inicial
+  useEffect(() => {
+    onSubmitRef.current = onSubmit;
+  }, [onSubmit]);
+
   useEffect(() => {
     if (defaultValue !== undefined) {
-      if (multiple) {
-        const arr = (defaultValue as number[])
-          .filter((i) => i >= 0 && i < options.length)
-          .map((i) => options[i]);
-        setSelected(arr);
-      } else {
-        const i = defaultValue as number;
-        if (i >= 0 && i < options.length) {
-          setSelected([options[i]]);
-        }
+      const newSelected = multiple
+        ? (defaultValue as number[]).map((i) => options[i]).filter(Boolean)
+        : [options[defaultValue as number]].filter(Boolean);
+
+      if (JSON.stringify(newSelected) !== JSON.stringify(selected)) {
+        setSelected(newSelected);
       }
     }
   }, [defaultValue, multiple, options]);
 
-  // Auto-Submit com Debounce de 1s
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -64,12 +63,11 @@ const Select = ({
     }
 
     const timer = setTimeout(() => {
-      onSubmit?.(selected);
-      // Removido: setIsOpen(false) para manter o menu aberto
-    }, 1000);
+      onSubmitRef.current?.(selected);
+    }, 1500); 
 
     return () => clearTimeout(timer);
-  }, [selected, onSubmit]);
+  }, [selected]);
 
   const filteredOptions = options.filter((option) =>
     option.toLowerCase().includes(search.toLowerCase())
