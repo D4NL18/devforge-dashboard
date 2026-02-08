@@ -181,6 +181,16 @@ const ProjectsDashboard = observer(() => {
     projectsStore.setFilter("revenueMax", Number(e.target.value));
   };
 
+  const handleDelete = (row: ProjectRow) => {
+    if (window.confirm(`Tem certeza que deseja excluir o projeto "${row.projeto}"?`)) {
+      projectsStore.deleteProject(row.id);
+    }
+  };
+
+  const handleEdit = (row: ProjectRow) => {
+    navigate(`/register/project/${row.id}`);
+  };
+
   return (
     <div className={styles.projectsDashboardContainer}>
       <h1>Projetos</h1>
@@ -304,8 +314,8 @@ const ProjectsDashboard = observer(() => {
               rowsPerPage={filters.limit}
               edit
               delete
-              onEdit={(row) => console.log("Editar:", row)}
-              onDelete={(row) => console.log("Excluir:", row)}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           )}
         </div>

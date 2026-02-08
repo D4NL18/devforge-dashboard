@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import projectsService from "Services/projects";
 import { Graph } from "types/graph.interface";
-import { ProjectResponse } from "types/project.interface"; 
+import { ProjectResponse } from "types/project.interface";
 import { ProjectType } from "types/projectType.interface";
 
 export class ProjectsDashboardStore {
@@ -18,28 +18,27 @@ export class ProjectsDashboardStore {
   projectDiversificationByType: Graph[] = [];
   allProjectTypes: ProjectType[] = [];
 
-  projectsList: ProjectResponse[] = []; 
-  totalItems: number = 0; 
+  projectsList: ProjectResponse[] = [];
+  totalItems: number = 0;
   isLoadingTable: boolean = false;
-  
+
   filters = {
-    page: 1, 
-    limit: 8, 
+    page: 1,
+    limit: 8,
     name: "",
     type: undefined as number | undefined,
     revenueMin: 0,
     revenueMax: 10000,
-    year: undefined as number | undefined, 
+    year: undefined as number | undefined,
   };
 
   debounceTimer: any = null;
-
 
   async fetchMarginByProject() {
     try {
       const data = await projectsService.getMarginByProject(this.filters.year);
       runInAction(() => {
-        this.marginByProject = data || []; 
+        this.marginByProject = data || [];
       });
     } catch (error: any) {
       runInAction(() => {
@@ -51,7 +50,9 @@ export class ProjectsDashboardStore {
 
   async fetchMarginByProjectType() {
     try {
-      const data = await projectsService.getMarginByProjectType(this.filters.year);
+      const data = await projectsService.getMarginByProjectType(
+        this.filters.year,
+      );
       runInAction(() => {
         this.marginByProjectType = data || [];
       });
@@ -93,8 +94,10 @@ export class ProjectsDashboardStore {
 
   async fetchRevenueByProjectType() {
     try {
-      const data = await projectsService.getRevenueByProjectType(this.filters.year);
-      const safeData = data || []; 
+      const data = await projectsService.getRevenueByProjectType(
+        this.filters.year,
+      );
+      const safeData = data || [];
       const adaptedData: Graph[] = safeData.map((item: any) => ({
         name: item.type || "Unknown",
         value: item.revenue || 0,
@@ -113,7 +116,9 @@ export class ProjectsDashboardStore {
 
   async fetchProfitByProjectType() {
     try {
-      const data = await projectsService.getProfitByProjectType(this.filters.year);
+      const data = await projectsService.getProfitByProjectType(
+        this.filters.year,
+      );
       runInAction(() => {
         this.profitByProjectType = data || [];
       });
@@ -127,7 +132,9 @@ export class ProjectsDashboardStore {
 
   async fetchProjectDiversificationByType() {
     try {
-      const data = await projectsService.getProjectDiversificationByType(this.filters.year);
+      const data = await projectsService.getProjectDiversificationByType(
+        this.filters.year,
+      );
       runInAction(() => {
         this.projectDiversificationByType = data || [];
       });
@@ -161,13 +168,13 @@ export class ProjectsDashboardStore {
         limit: this.filters.limit,
         name: this.filters.name,
         type: this.filters.type,
-        year: this.filters.year
+        year: this.filters.year,
       };
 
       const response = await projectsService.findAll(params);
 
       runInAction(() => {
-        this.projectsList = response?.datas || []; 
+        this.projectsList = response?.datas || [];
         this.totalItems = response?.totalResponseItens || 0;
         this.isLoadingTable = false;
       });
@@ -181,16 +188,41 @@ export class ProjectsDashboardStore {
     }
   }
 
+  async deleteProject(id: number) {
+    try {
+      await projectsService.delete(id);
+
+      await this.fetchProjects();
+
+      this.fetchGraphs();
+
+      alert("Projeto excluído com sucesso!");
+    } catch (error: any) {
+      console.error("Erro ao excluir projeto:", error);
+      alert("Não foi possível excluir o projeto.");
+    }
+  }
+
+  async fetchGraphs() {
+    await this.fetchMarginByProject();
+    await this.fetchMarginByProjectType();
+    await this.fetchRevenueByProject();
+    await this.fetchProfitByProject();
+    await this.fetchRevenueByProjectType();
+    await this.fetchProfitByProjectType();
+    await this.fetchProjectDiversificationByType();
+  }
+
   setFilter(key: keyof typeof this.filters, value: any) {
     (this.filters as any)[key] = value;
 
-    if (key === 'page') {
-        this.fetchProjects();
-        return; 
+    if (key === "page") {
+      this.fetchProjects();
+      return;
     }
 
-    if (key !== 'limit') {
-        this.filters.page = 1;
+    if (key !== "limit") {
+      this.filters.page = 1;
     }
 
     if (this.debounceTimer) {
@@ -203,7 +235,7 @@ export class ProjectsDashboardStore {
   }
 
   setPage(pageIndex: number) {
-      this.setFilter('page', pageIndex + 1); 
+    this.setFilter("page", pageIndex + 1);
   }
 }
 

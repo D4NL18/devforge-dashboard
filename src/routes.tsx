@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import Login from "../src/Pages/Login";
 import ForgotPassword from "../src/Pages/ForgotPassword";
 import ConfirmationCode from "../src/Pages/ConfirmationCode";
@@ -44,14 +50,15 @@ const AppRoutes = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route element={<PrivateRoute />}>
-            <Route element={<MainLayout />}>
+          <Route element={<MainLayout />}>
             <Route path="/register/client" element={<ClientRegistration />} />
             <Route path="/register/user" element={<UserRegistration />} />
             <Route
               path="/register/transaction"
               element={<TransactionRegistration />}
             />
-            <Route path="/project-register" element={<ProjectRegistration />} />
+            <Route path="/register/project" element={<ProjectRegistration />} />
+            <Route path="/register/project/:id" element={<ProjectRegistration />} />
             <Route path="/dashboard/clients" element={<ClientsDashboard />} />
             <Route path="/dashboard/projects" element={<ProjectsDashboard />} />
             <Route
@@ -63,7 +70,6 @@ const AppRoutes = () => {
             <Route path="/not-implemented" element={<NotImplemented />} />
             <Route path="*" element={<NotFound />} />
           </Route>
-        
         </Route>
       </Routes>
     </BrowserRouter>
