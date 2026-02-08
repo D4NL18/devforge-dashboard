@@ -3,13 +3,13 @@ import api from "./api";
 let url = "/transaction";
 
 const transactionService = {
-  async getDreMetrics() {
-    const response = await api.get(`${url}/get-dre-metrics`);
+  async getDreMetrics(year?: number, month?: number) {
+    const response = await api.get(`${url}/get-dre-metrics`, { params: { year, month } });
     return response.data.datas;
   },
 
-  async getBalanceSheet() {
-    const response = await api.get(`${url}/get-balance-sheet`);
+  async getBalanceSheet(year?: number, month?: number) {
+    const response = await api.get(`${url}/get-balance-sheet`, { params: { year, month } });
     return response.data.datas;
   },
 
@@ -35,7 +35,7 @@ const transactionService = {
   async getCostBySegment(year?: number, month?: number) {
     const response = await api.get(`/graph/get-cost-by-segment`, { params: { year, month } });
     return response.data.datas;
-},
+  },
 
   async getById(id: number) {
     const response = await api.get(`${url}/${id}`);

@@ -42,7 +42,7 @@ export class TransactionStore {
 
   async fetchDreMetrics() {
     try {
-      const data = await transactionService.getDreMetrics();
+      const data = await transactionService.getDreMetrics(this.filters.year, this.filters.month);
       runInAction(() => { 
         this.dreData = Array.isArray(data) ? data : []; 
       });
@@ -51,10 +51,11 @@ export class TransactionStore {
       runInAction(() => { this.dreData = []; });
     }
   }
+  
 
   async fetchBalanceSheet() {
     try {
-      const data = await transactionService.getBalanceSheet();
+      const data = await transactionService.getBalanceSheet(this.filters.year, this.filters.month);
       
       runInAction(() => {
         if (!Array.isArray(data)) {

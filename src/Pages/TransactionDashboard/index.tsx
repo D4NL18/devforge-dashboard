@@ -158,7 +158,14 @@ const TransactionDashboard = observer(() => {
 
           <Select
             placeholder="Filtrar por: Categoria"
-            options={["Marketing", "Projetos", "Equipamentos", "Impostos"]}
+            options={[
+              "Recursos Humanos",
+              "Infraestrutura e Equipamentos",
+              "Projetos",
+              "Administrativo e Financeiro",
+              "Marketing e Comercial",
+              "Pesquisa e Inovação",
+            ]}
             onSubmit={(vals) => transactionStore.setFilter("category", vals[0])}
           />
 
@@ -177,7 +184,14 @@ const TransactionDashboard = observer(() => {
             placeholder="Tipo"
             options={["Entrada", "Saida"]}
             onSubmit={(vals) =>
-              transactionStore.setFilter("balanceType", vals[0] === "Entrada" ? "in" :  vals[0] ==="Saida" ? "out" : undefined)
+              transactionStore.setFilter(
+                "balanceType",
+                vals[0] === "Entrada"
+                  ? "in"
+                  : vals[0] === "Saida"
+                    ? "out"
+                    : undefined,
+              )
             }
           />
 
