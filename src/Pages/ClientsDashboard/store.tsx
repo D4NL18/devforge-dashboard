@@ -35,7 +35,7 @@ export class ClientsDashboardStore {
 
   async fetchChurnRevenue() {
     try {
-      const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : undefined;
+      const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : new Date().getFullYear();
 
       const data = await clientService.getChurnRevenueByMonth(selectedYear);
       
@@ -52,7 +52,7 @@ export class ClientsDashboardStore {
 
   async fetchCac() {
     try {
-      const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : undefined;
+      const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : new Date().getFullYear();
 
       const data = await clientService.getCac(selectedYear);
       runInAction(() => {
@@ -68,7 +68,7 @@ export class ClientsDashboardStore {
 
   async fetchLtv() {
     try {
-      const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : undefined;
+      const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : new Date().getFullYear();
 
       const data = await clientService.getClientsLifetimeValueByMonths(selectedYear);
       runInAction(() => {
