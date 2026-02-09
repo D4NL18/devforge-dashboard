@@ -23,17 +23,8 @@ const ClientsDashboard = observer(() => {
   const [churnRevenueData, setChurnRevenueData] = useState<Graph[]>([]);
   const [cacData, setCacData] = useState<Graph[]>([]);
   const [ltvData, setLtvData] = useState<Graph[]>([]);
-  
-  const [clientDiversificationData] = useState<Graph[]>([
-    { name: "Cliente A", value: 32 },
-    { name: "Cliente B", value: 27 },
-    { name: "Cliente C", value: 23 },
-    { name: "Cliente D", value: 18 },
-  ]);
-  const [delinquencyData] = useState<Graph[]>([
-    { name: "Em atraso", value: 32 },
-    { name: "Em dia", value: 68 },
-  ]);
+  const [clientDiversificationData, setClientDiversificationData] = useState<Graph[]>([]);
+  const [delinquencyRateData, setDelinquencyRateData] = useState<Graph[]>([]);
 
   const fetchGraphs = async () => {
     await clientsStore.fetchChurnRevenue();
@@ -53,6 +44,18 @@ const ClientsDashboard = observer(() => {
     await clientsStore.fetchLtv();
     const rawLtv = toJS(clientsStore.ltvByMonth) || [];
     setLtvData(rawLtv.map((item: Graph) => ({
+        name: item.name,
+        value: Number(item.value ? item.value.toFixed(2) : 0),
+    })));
+    await clientsStore.fetchClientDiversification();
+    const rawDiversification = toJS(clientsStore.clientDiversification) || [];
+    setClientDiversificationData(rawDiversification.map((item: Graph) => ({
+        name: item.name,
+        value: Number(item.value ? item.value.toFixed(2) : 0),
+    })));
+    await clientsStore.fetchDelinquencyRate();
+    const rawDelinquency = toJS(clientsStore.delinquencyRate) || [];
+    setDelinquencyRateData(rawDelinquency.map((item: Graph) => ({
         name: item.name,
         value: Number(item.value ? item.value.toFixed(2) : 0),
     })));
@@ -139,7 +142,7 @@ const ClientsDashboard = observer(() => {
           />
           <Chart
             type="pie"
-            data={delinquencyData}
+            data={delinquencyRateData}
             dataKey="value"
             nameKey="name"
             title="Taxa de Inadimplência"

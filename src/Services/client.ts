@@ -1,6 +1,7 @@
 import api from "./api";
 import { Client } from "types/client.interface";
 import { Graph } from "../types/graph.interface";
+import { get } from "mobx";
 
 const clientUrl = "/client";
 const graphUrl = "/graph";
@@ -51,6 +52,16 @@ const clientService = {
     const response = await api.get(`${graphUrl}/get-cac`, {
       params: { year },
     });
+    return response.data.datas;
+  },
+
+  async getClientDiversification(): Promise<Graph[]> {
+    const response = await api.get(`${graphUrl}/get-client-profit-diversification`);
+    return response.data.datas;
+  },
+
+  async getDelinquencyRate(): Promise<Graph[]> {
+    const response = await api.get(`${graphUrl}/get-delinquency`);
     return response.data.datas;
   },
 };

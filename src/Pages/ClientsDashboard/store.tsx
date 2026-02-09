@@ -82,6 +82,38 @@ export class ClientsDashboardStore {
     }
   }
 
+  async fetchClientDiversification() {
+    try {
+      const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : new Date().getFullYear();
+
+      const data = await clientService.getClientDiversification();
+      runInAction(() => {
+        this.clientDiversification = data || [];
+      });
+    } catch (error: any) {
+      runInAction(() => {
+        console.error("Failed to fetch client diversification:", error.message);
+        this.clientDiversification = [];
+      });
+    }
+  }
+
+  async fetchDelinquencyRate() {
+    try {
+      const selectedYear = this.filters.years.length > 0 ? Number(this.filters.years[0]) : new Date().getFullYear();
+
+      const data = await clientService.getDelinquencyRate();
+      runInAction(() => {
+        this.delinquencyRate = data || [];
+      });
+    } catch (error: any) {
+      runInAction(() => {
+        console.error("Failed to fetch delinquency rate:", error.message);
+        this.delinquencyRate = [];
+      });
+    }
+  }
+
   async fetchClients() {
     this.isLoadingTable = true;
     try {
