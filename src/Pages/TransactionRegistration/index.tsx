@@ -7,9 +7,22 @@ import Input from "Components/Input";
 import Select from "Components/Select";
 import styles from "./index.module.scss";
 import CRUDButtons from "Components/CRUD_Buttons";
+import { useParams, useNavigate } from "react-router-dom";
 
 function TransactionRegistration() {
-  const { createTransaction, fetchData } = transactionStore;
+  const {
+    createTransaction,
+    fetchData,
+    fetchTransactionById,
+    updateTransaction,
+    currentTransaction,
+    clearCurrentTransaction,
+    projects
+  } = transactionStore;
+
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const isEditing = !!id;
 
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
@@ -25,11 +38,46 @@ function TransactionRegistration() {
 
   const [category, setCategory] = useState("");
 
-  const [project, setProject] = useState<string | null >(null);
+  const [project, setProject] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    if (id) {
+      fetchTransactionById(Number(id));
+    }
+    return () => {
+      clearCurrentTransaction();
+    };
+  }, [id, fetchTransactionById, clearCurrentTransaction]);
+
+  useEffect(() => {
+    if (currentTransaction && isEditing) {
+      setTitle(currentTransaction.title || "");
+
+      if (currentTransaction.transactionDate)
+        setDate(new Date(currentTransaction.transactionDate).toISOString().split("T")[0]);
+
+      setCashFlowValue(String(currentTransaction.transactionAmount || ""));
+      setFlowType(currentTransaction.transactionType === "in" ? "entrada" : currentTransaction.transactionType === "out" ? "saida" : "");
+      
+      setDreValue(String(currentTransaction.dreValue || ""));
+      setDreCategory(currentTransaction.dreType || "");
+      
+      setBalanceCategory(currentTransaction.balanceType || "");
+      
+      setDescription(currentTransaction.transactionDetails || "");
+      
+      setCategory(currentTransaction.category || "");
+
+      if (projects.length > 0 && currentTransaction.projectId) {
+        const foundProject = projects.find((p) => p.id === currentTransaction.projectId);
+        if (foundProject) setProject(foundProject.name);
+      }
+    }
+  }, [currentTransaction, isEditing, projects]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,7 +87,7 @@ function TransactionRegistration() {
       return;
     }
     
-    const selectedProjectObj = transactionStore.projects.find(p => p.name === project);
+    const selectedProjectObj = projects.find(p => p.name === project);
     
     const payload = {
       title,
@@ -54,17 +102,27 @@ function TransactionRegistration() {
       projectId: selectedProjectObj ? selectedProjectObj.id : null
     };
 
-    await createTransaction(payload as any);
+    try {
+      if (isEditing && id) {
+        await updateTransaction(Number(id), payload as any);
+        navigate(-1);
+      } else {
+        await createTransaction(payload as any);
+        navigate(-1);
+      }
+    } catch (error) {
+      console.error("Erro ao salvar:", error);
+    }
   }
 
-  const projectOptions = transactionStore.projects.map((proj) => ({
+  const projectOptions = projects.map((proj) => ({
     label: proj.name,
     value: proj.id
   }));
 
   return (
     <form className={styles.transactionForm} onSubmit={handleSubmit}>
-      <h1>Cadastro de Transação</h1>
+      <h1>{isEditing ? "Editar Transação" : "Cadastro de Transação"}</h1>
 
       <section>
         <h2>Informações da Transação</h2>
@@ -91,14 +149,14 @@ function TransactionRegistration() {
             required
           />
           <Select
-            placeholder="Tipo de Fluxo"
+            placeholder={flowType === "entrada" ? "Entrada" : flowType === "saida" ? "Saída" : "Tipo de Fluxo"}
             options={["Entrada", "Saída"]}
             onSubmit={(value) =>
               setFlowType(value[0] === "Entrada" ? "entrada" : "saida")
             }
           />
           <Select
-            placeholder="Categoria da Transação"
+            placeholder={category || "Categoria da Transação"}
             options={[
               "Recursos Humanos",
               "Infraestrutura e Equipamentos",
@@ -111,7 +169,7 @@ function TransactionRegistration() {
           />
           {category === "Projetos" &&
           <Select
-            placeholder="Projeto Associado"
+            placeholder={project || "Projeto Associado"}
             options={projectOptions.map((proj) => proj.label)}
             onSubmit={(value) => setProject(value[0])}
           />
@@ -130,7 +188,7 @@ function TransactionRegistration() {
             required
           />
           <Select
-            placeholder="Categoria DRE"
+            placeholder={dreCategory || "Categoria DRE"}
             options={[
               "Receitas Brutas",
               "Imposto sobre Receita",
@@ -149,7 +207,7 @@ function TransactionRegistration() {
         <h2>Informações Balanço Patrimonial</h2>
         <div className={styles.inputContainer}>
           <Select
-            placeholder="Categoria do Balanço"
+            placeholder={balanceCategory || "Categoria do Balanço"}
             options={[
               "Contas a receber",
               "Imobilizado",
@@ -180,7 +238,7 @@ function TransactionRegistration() {
       </section>
 
       <div className={styles.buttonContainer}>
-        <CRUDButtons onCancel={() => console.log("Cancelado")} />
+        <CRUDButtons onCancel={() => navigate(-1)} />
       </div>
     </form>
   );

@@ -67,12 +67,31 @@ const TransactionDashboard = observer(() => {
   };
 
   const tableData: CashFlowRow[] = (cashFlowList || []).map((item, index) => ({
-    id: item.id || index,
+    // EXPLICAÇÃO DA CORREÇÃO:
+    // Antes estava: id: item.id || index
+    // 1. Removemos o operador lógico OU (||) e a variável 'index'.
+    // 2. Agora o código confia estritamente no valor de 'item.id' retornado pela API.
+    // 3. O uso de fallback para index mascara problemas no backend (se o id não vier) 
+    //    e corrompe ações de CRUD como Editar e Deletar, pois você passaria a linha 
+    //    da tabela (0, 1, 2...) para a API no lugar do ID do banco de dados (ex: 45, 92...).
+    // Obs: Se o seu backend retornar o ID com outro nome de propriedade, como 'transactionId'
+    // ou '_id', basta alterar 'item.id' para 'item.transactionId' ou 'item._id'.
+    id: item.id, 
     titulo: item.title,
     categoria: item.category,
     valor: `R$ ${item.value?.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
     type: (item.type === "in" ? "in" : "out") as "in" | "out",
   }));
+
+  const handleDelete = (row: CashFlowRow) => {
+    if (window.confirm(`Tem certeza que deseja excluir a transação "${row.titulo}"?`)) {
+      transactionStore.deleteTransaction(row.id);
+    }
+  };
+
+  const handleEdit = (row: CashFlowRow) => {
+    navigate(`/register/transaction/${row.id}`);
+  };
 
   return (
     <div className={styles.transactionDashboardContainer}>
@@ -214,8 +233,8 @@ const TransactionDashboard = observer(() => {
             rowsPerPage={filters.limit}
             edit
             delete
-            onEdit={(row) => navigate(`/edit/transaction/${row.id}`)}
-            onDelete={(row) => transactionStore.remove(row.id)}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
           />
         )}
       </section>

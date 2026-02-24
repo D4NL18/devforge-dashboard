@@ -173,13 +173,15 @@ export class TransactionStore {
     }
   }
 
-  async remove(id: number) {
+  async deleteTransaction(id: number) {
     try {
       await transactionService.remove(id);
-      this.fetchCashFlow();
-      this.fetchCardMetrics();
-    } catch (error) {
-      console.error("Erro ao deletar:", error);
+      await this.fetchCashFlow();
+      await this.fetchCardMetrics();
+      alert("Transação excluída com sucesso!");
+    } catch (error: any) {
+      console.error("Erro ao excluir transação:", error);
+      alert("Não foi possível excluir a transação.");
     }
   }
 

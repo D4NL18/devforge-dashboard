@@ -6,6 +6,9 @@ export class TransactionStore {
   transactions: any[] = [];
   projects: any[] = [];
 
+  currentTransaction: any | null = null;
+  isLoading: boolean = false;
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -24,6 +27,27 @@ export class TransactionStore {
     }
   };
 
+  fetchTransactionById = async (id: number) => {
+    this.isLoading = true;
+    try {
+      const data = await transactionService.getById(id);
+      runInAction(() => {
+        this.currentTransaction = data;
+        this.isLoading = false;
+      });
+    } catch (error: any) {
+      runInAction(() => {
+        console.error("Erro ao buscar transação:", error);
+        this.currentTransaction = null;
+        this.isLoading = false;
+      });
+    }
+  };
+
+  clearCurrentTransaction = () => {
+    this.currentTransaction = null;
+  };
+
   createTransaction = async (transaction: any) => {
     try {
       const newTransaction = await transactionService.create(transaction);
@@ -32,7 +56,18 @@ export class TransactionStore {
         this.transactions.push(newTransaction);
       });
     } catch (error: any) {
+      alert("Erro ao criar transação.");
       console.error("Erro ao criar transação:", error.message);
+    }
+  };
+
+  updateTransaction = async (id: number, transaction: any) => {
+    try {
+      await transactionService.update(id, transaction);
+      alert("Transação atualizada com sucesso!");
+    } catch (error: any) {
+      alert("Erro ao atualizar transação.");
+      console.error("Erro ao atualizar:", error);
     }
   };
 }
