@@ -3,9 +3,10 @@ import { Address } from "./address.interface";
 export interface Client {
   name: string;
   email: string;
-  phone: string;
+  cell: string;
+  cpf: string;
   document: string;
-  birthDate: Date;
-  address: Address
-  id: number;
+  birthday: Date;
+  addressRelation?: Address;
+  id?: number;
 }

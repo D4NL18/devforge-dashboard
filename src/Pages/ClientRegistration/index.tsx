@@ -1,3 +1,5 @@
+"use client";
+
 import Input from "Components/Input";
 import styles from "./index.module.scss";
 import { useState } from "react";
@@ -6,7 +8,12 @@ import { Client } from "types/client.interface";
 import { Address } from "types/address.interface";
 import AddressForm from "Components/AddressForm";
 
-export default function ClientRegistration() {
+import { observer } from "mobx-react-lite";
+import { clientStore } from "./store";
+
+function ClientRegistration() {
+  const { createClient } = clientStore;
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,20 +29,26 @@ export default function ClientRegistration() {
     complement: "",
   });
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const newClient: Client = {
+    const payload = {
       name,
       email,
-      phone,
-      document,
-      birthDate: new Date(birthDate),
-      address,
-      id: 0
+      cell: phone,
+      cpf: document,
+      document: document,
+      birthday: new Date(birthDate),
+      code: address.cep,
+      city: address.city,
+      state: address.state,
+      country: address.country,
+      street: address.street,
+      number: address.number,
+      complement: address.complement,
     };
 
-    console.log("Cliente cadastrado:", newClient);
+    await createClient(payload as any);
   }
 
   return (
@@ -98,3 +111,5 @@ export default function ClientRegistration() {
     </form>
   );
 }
+
+export default observer(ClientRegistration);
