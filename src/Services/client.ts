@@ -30,7 +30,7 @@ const clientService = {
     return response.data.datas;
   },
 
-  async remove(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     await api.delete(`${clientUrl}/${id}`);
   },
 

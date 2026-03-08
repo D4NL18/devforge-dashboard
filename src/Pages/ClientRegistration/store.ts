@@ -8,6 +8,8 @@ export class ClientStore {
   }
 
   public clients: Client[] = [];
+  public currentClient: any | null = null;
+  public isLoading: boolean = false;
 
   async fetchClients() {
     try {
@@ -24,6 +26,27 @@ export class ClientStore {
     }
   }
 
+  fetchClientById = async (id: string) => {
+    this.isLoading = true;
+    try {
+      const data = await clientService.getById(id);
+      runInAction(() => {
+        this.currentClient = data;
+        this.isLoading = false;
+      });
+    } catch (error: any) {
+      runInAction(() => {
+        console.error("Erro ao buscar cliente:", error);
+        this.currentClient = null;
+        this.isLoading = false;
+      });
+    }
+  };
+
+  clearCurrentClient = () => {
+    this.currentClient = null;
+  };
+
   createClient = async (client: Client) => {
     try {
       const newClient = await clientService.create(client);
@@ -35,6 +58,16 @@ export class ClientStore {
     } catch (error: any) {
       alert("Erro ao criar cliente.");
       console.error("Erro ao criar cliente:", error.message);
+    }
+  };
+
+  updateClient = async (id: string, client: Client) => {
+    try {
+      await clientService.update(id, client);
+      alert("Cliente atualizado com sucesso!");
+    } catch (error: any) {
+      alert("Erro ao atualizar cliente.");
+      console.error("Erro ao atualizar:", error);
     }
   };
 }

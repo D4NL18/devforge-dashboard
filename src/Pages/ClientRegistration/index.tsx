@@ -1,18 +1,25 @@
-"use client";
-
 import Input from "Components/Input";
 import styles from "./index.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CRUDButtons from "Components/CRUD_Buttons";
-import { Client } from "types/client.interface";
 import { Address } from "types/address.interface";
 import AddressForm from "Components/AddressForm";
-
 import { observer } from "mobx-react-lite";
 import { clientStore } from "./store";
+import { useNavigate, useParams } from "react-router-dom";
 
 function ClientRegistration() {
-  const { createClient } = clientStore;
+  const {
+    createClient,
+    fetchClientById,
+    updateClient,
+    currentClient,
+    clearCurrentClient,
+  } = clientStore;
+
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const isEditing = !!id;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,6 +35,38 @@ function ClientRegistration() {
     number: "",
     complement: "",
   });
+
+  useEffect(() => {
+    if (id) {
+      fetchClientById(id);
+    }
+    return () => {
+      clearCurrentClient();
+    };
+  }, [id, fetchClientById, clearCurrentClient]);
+
+  useEffect(() => {
+    if (currentClient && isEditing) {
+      setName(currentClient.name || "");
+      setEmail(currentClient.email || "");
+      setPhone(currentClient.cell || "");
+      setDocument(currentClient.document || currentClient.cpf || "");
+      
+      if (currentClient.birthday) {
+        setBirthDate(new Date(currentClient.birthday).toISOString().split("T")[0]);
+      }
+
+      setAddress({
+        cep: currentClient.code || "",
+        city: currentClient.city || "",
+        state: currentClient.state || "",
+        country: currentClient.country || "",
+        street: currentClient.street || "",
+        number: currentClient.number || "",
+        complement: currentClient.complement || "",
+      });
+    }
+  }, [currentClient, isEditing]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,12 +87,22 @@ function ClientRegistration() {
       complement: address.complement,
     };
 
-    await createClient(payload as any);
+    try {
+      if (isEditing && id) {
+        await updateClient(id, payload as any);
+        navigate(-1);
+      } else {
+        await createClient(payload as any);
+        navigate(-1);
+      }
+    } catch (error) {
+      console.error("Erro ao salvar:", error);
+    }
   }
 
   return (
     <form className={styles.clientForm} onSubmit={handleSubmit}>
-      <h1>Cadastro de Cliente</h1>
+      <h1>{isEditing ? "Editar Cliente" : "Cadastro de Cliente"}</h1>
       <section>
         <h2>Informações Pessoais e Profissionais</h2>
         <div className={styles.inputContainer}>
@@ -106,7 +155,7 @@ function ClientRegistration() {
       </section>
       <AddressForm onChange={setAddress} />
       <div className={styles.buttonContainer}>
-        <CRUDButtons onCancel={() => console.log("Cancelado")} />
+        <CRUDButtons onCancel={() => navigate(-1)} />
       </div>
     </form>
   );

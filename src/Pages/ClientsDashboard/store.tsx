@@ -146,6 +146,24 @@ export class ClientsDashboardStore {
     }
   }
 
+  async deleteClient(id: string) {
+    try {
+      await clientService.delete(id);
+      await this.fetchClients();
+      
+      this.fetchChurnRevenue();
+      this.fetchCac();
+      this.fetchLtv();
+      this.fetchClientDiversification();
+      this.fetchDelinquencyRate();
+      
+      alert("Cliente excluído com sucesso!");
+    } catch (error: any) {
+      console.error("Erro ao excluir cliente:", error);
+      alert("Não foi possível excluir o cliente.");
+    }
+  }
+
   setFilter(key: keyof typeof this.filters, value: any) {
     (this.filters as any)[key] = value;
 

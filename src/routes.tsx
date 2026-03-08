@@ -46,6 +46,7 @@ const AppRoutes = () => {
         <Route element={<PrivateRoute />}>
             <Route element={<MainLayout />}>
             <Route path="/register/client" element={<ClientRegistration />} />
+            <Route path="/register/client/:id" element={<ClientRegistration />} />
             <Route path="/register/user" element={<UserRegistration />} />
             <Route
               path="/register/transaction"

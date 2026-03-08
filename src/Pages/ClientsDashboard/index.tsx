@@ -118,6 +118,16 @@ const ClientsDashboard = observer(() => {
     clientsStore.setFilter("monthsMax", Number(e.target.value));
   };
 
+  const handleDelete = (row: ClientRow) => {
+    if (window.confirm(`Tem certeza que deseja excluir o cliente "${row.cliente}"?`)) {
+      clientsStore.deleteClient(row.id);
+    }
+  };
+
+  const handleEdit = (row: ClientRow) => {
+    navigate(`/register/client/${row.id}`);
+  };
+
   return (
     <div className={styles.clientsDashboardContainer}>
       <h1>Clientes</h1>
@@ -208,7 +218,7 @@ const ClientsDashboard = observer(() => {
           </div>
           
           <div className={styles.addContainer}>
-            <AddButton onClick={() => console.log("clicked")} />
+            <AddButton onClick={() => navigate("/register/client")} />
           </div>
         </div>
 
@@ -227,8 +237,8 @@ const ClientsDashboard = observer(() => {
                 rowsPerPage={filters.limit}
                 edit
                 delete
-                onEdit={(row) => console.log("Editar:", row)}
-                onDelete={(row) => console.log("Excluir:", row)}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
             />
           )}
         </div>
