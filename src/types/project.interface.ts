@@ -23,7 +23,6 @@ export interface Project {
     | "11x"
     | "12x";
   priority: "Alta" | "Média" | "Baixa";
-  estimate: string;
   totalValue: number;
   description: string;
 }
@@ -49,6 +48,10 @@ export interface ProjectResponse {
   projectTypeDescription: string;
   clientName: string;
   projectBudgetTotalPrice: number;
+  paymentMethodId?: number;
+  complexity?: "Alta" | "Média" | "Baixa";
+  priority?: "Alta" | "Média" | "Baixa";
+  installmentCount?: number;
 }
 export interface PaginatedResponse<T> {
   datas: T[];

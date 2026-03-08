@@ -10,7 +10,6 @@ import { ProjectType } from "types/projectType.interface";
 import { Client } from "types/client.interface";
 import { PaymentMethod } from "types/paymentMethod.interface";
 import { useParams, useNavigate } from "react-router-dom";
-import { Project } from "types/project.interface";
 
 function ProjectRegistration() {
   const {
@@ -34,19 +33,13 @@ function ProjectRegistration() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [client, setClient] = useState<Client | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
-    null,
-  );
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
 
-  const [complexity, setComplexity] = useState<"Alta" | "Média" | "Baixa" | "">(
-    "",
-  );
+  const [complexity, setComplexity] = useState<"Alta" | "Média" | "Baixa" | "">("");
   const [installments, setInstallments] = useState<string>("");
   const [priority, setPriority] = useState<"Alta" | "Média" | "Baixa" | "">("");
-
-  const [estimate, setEstimate] = useState("");
   const [totalValue, setTotalValue] = useState<number>(0);
 
   useEffect(() => {
@@ -65,85 +58,73 @@ function ProjectRegistration() {
   useEffect(() => {
     if (currentProject && isEditing) {
       setProjectName(currentProject.name || "");
-
-      if (currentProject.startDate)
-        setStartDate(
-          new Date(currentProject.startDate).toISOString().split("T")[0],
-        );
-      if (currentProject.endDate)
-        setEndDate(
-          new Date(currentProject.endDate).toISOString().split("T")[0],
-        );
-
-      if (currentProject.startDate)
-        setEstimate(
-          new Date(currentProject.startDate).toISOString().split("T")[0],
-        );
-
       setDescription(currentProject.description || "");
-
       setTotalValue(currentProject.projectBudgetTotalPrice || 0);
+
+      if (currentProject.startDate) {
+        setStartDate(new Date(currentProject.startDate).toISOString().split("T")[0]);
+      }
+      if (currentProject.endDate) {
+        setEndDate(new Date(currentProject.endDate).toISOString().split("T")[0]);
+      }
 
       setStatus(currentProject.status || "");
 
       if (clients.length > 0 && currentProject.clientName) {
-        const foundClient = clients.find(
-          (c) => c.name === currentProject.clientName,
-        );
-        if (foundClient) setClient(foundClient);
+        setClient(clients.find((c) => c.name === currentProject.clientName) || null);
       }
 
       if (projectTypes.length > 0 && currentProject.projectTypeDescription) {
-        const foundType = projectTypes.find(
-          (t) => t.description === currentProject.projectTypeDescription,
-        );
-        if (foundType) setProjectType(foundType);
+        setProjectType(projectTypes.find((t) => t.description === currentProject.projectTypeDescription) || null);
+      }
+
+      if (paymentMethods.length > 0 && currentProject.paymentMethodId) {
+        setPaymentMethod(paymentMethods.find((p) => p.id === currentProject.paymentMethodId) || null);
+      }
+
+      setComplexity((currentProject.complexity as any) || "");
+      setPriority((currentProject.priority as any) || "");
+
+      if (currentProject.installmentCount) {
+        setInstallments(currentProject.installmentCount === 1 ? "À vista" : `${currentProject.installmentCount}x`);
       }
     }
-  }, [currentProject, isEditing, clients, projectTypes]);
+  }, [currentProject, isEditing, clients, projectTypes, paymentMethods]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (
-      !projectType ||
-      !client ||
-      !paymentMethod ||
-      !complexity ||
-      !installments ||
-      !priority ||
-      !estimate ||
-      !totalValue
-    ) {
-      alert("Preencha todos os campos obrigatórios.");
-      return;
-    }
+    const statusMap: Record<string, string> = {
+      "Em andamento": "active",
+      "Concluído": "completed",
+      "Pendente": "pending",
+      "Rejeitado": "cancelled",
+    };
 
-    const payload: Project = {
+    const basePayload = {
       name: projectName,
-      status: status,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
       description: description,
-      customer: client,
-      paymentMethod: paymentMethod.name as
-        | "Cartão de Crédito"
-        | "Cartão de Débito"
-        | "Boleto"
-        | "PIX",
-      complexity: complexity as "Alta" | "Média" | "Baixa",
-      priority: priority as "Alta" | "Média" | "Baixa",
-      estimate: estimate,
-      totalValue: totalValue,
-      installments: installments as any,
+      status: statusMap[status] || "active",
+      startDate: startDate,
+      endDate: endDate,
+      clientId: client?.id,
+      projectTypeId: projectType?.id,
     };
 
     try {
       if (isEditing && id) {
-        await updateProject(Number(id), payload);
+        await updateProject(Number(id), basePayload as any);
         navigate(-1);
       } else {
-        await createProject(payload);
+        const createPayload = {
+          ...basePayload,
+          paymentMethodId: paymentMethod?.id,
+          complexity: complexity,
+          priority: priority,
+          installmentCount: installments === "À vista" ? 1 : parseInt(installments.replace("x", "")),
+          totalPrice: totalValue,
+        };
+        await createProject(createPayload as any);
         navigate(-1);
       }
     } catch (error) {
@@ -167,14 +148,10 @@ function ProjectRegistration() {
           />
 
           <Select
-            placeholder={
-              projectType ? projectType.description : "Tipo de Projeto"
-            }
+            placeholder={projectType ? projectType.description : "Tipo de Projeto"}
             options={projectTypes.map((t) => t.description)}
             onSubmit={(value) =>
-              setProjectType(
-                projectTypes.find((t) => t.description === value[0]) || null,
-              )
+              setProjectType(projectTypes.find((t) => t.description === value[0]) || null)
             }
           />
 
@@ -214,14 +191,10 @@ function ProjectRegistration() {
         <h2>Informações de Pagamento</h2>
         <div className={styles.inputContainer}>
           <Select
-            placeholder={
-              paymentMethod ? paymentMethod.name : "Forma de Pagamento"
-            }
+            placeholder={paymentMethod ? paymentMethod.name : "Forma de Pagamento"}
             options={paymentMethods.map((p) => p.name)}
             onSubmit={(value) =>
-              setPaymentMethod(
-                paymentMethods.find((p) => p.name === value[0]) || null,
-              )
+              setPaymentMethod(paymentMethods.find((p) => p.name === value[0]) || null)
             }
           />
 
@@ -233,20 +206,7 @@ function ProjectRegistration() {
 
           <Select
             placeholder={installments || "Parcelas"}
-            options={[
-              "À vista",
-              "2x",
-              "3x",
-              "4x",
-              "5x",
-              "6x",
-              "7x",
-              "8x",
-              "9x",
-              "10x",
-              "11x",
-              "12x",
-            ]}
+            options={["À vista", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x", "11x", "12x"]}
             onSubmit={(value) => setInstallments(value[0])}
           />
 
@@ -254,14 +214,6 @@ function ProjectRegistration() {
             placeholder={priority || "Prioridade"}
             options={["Alta", "Média", "Baixa"]}
             onSubmit={(value) => setPriority(value[0] as any)}
-          />
-
-          <Input
-            type="date"
-            placeholder="Data da Estimativa"
-            value={estimate}
-            onChange={(e) => setEstimate(e.target.value)}
-            required
           />
 
           <div className={styles.ValueInputContainer}>
