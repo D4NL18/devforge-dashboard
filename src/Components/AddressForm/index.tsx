@@ -12,6 +12,7 @@ export default function AddressForm({
   defaultValue,
   onChange,
 }: AddressFormProps) {
+  const [id, setId] = useState<number | undefined>(defaultValue?.id);
   const [cep, setCep] = useState(defaultValue?.cep || "");
   const [city, setCity] = useState(defaultValue?.city || "");
   const [state, setState] = useState(defaultValue?.state || "");
@@ -21,8 +22,21 @@ export default function AddressForm({
   const [complement, setComplement] = useState(defaultValue?.complement || "");
 
   useEffect(() => {
-    onChange({ cep, city, state, country, street, number, complement });
-  }, [cep, city, state, country, street, number, complement, onChange]);
+    if (defaultValue) {
+      setId(defaultValue.id);
+      setCep(defaultValue.cep || "");
+      setCity(defaultValue.city || "");
+      setState(defaultValue.state || "");
+      setCountry(defaultValue.country || "");
+      setStreet(defaultValue.street || "");
+      setNumber(defaultValue.number || "");
+      setComplement(defaultValue.complement || "");
+    }
+  }, [defaultValue]);
+
+  useEffect(() => {
+    onChange({ id, cep, city, state, country, street, number, complement });
+  }, [id, cep, city, state, country, street, number, complement, onChange]);
 
   return (
     <section className={styles.addressForm}>

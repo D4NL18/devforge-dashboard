@@ -6,4 +6,5 @@ export interface Address {
     street: string;
     number: string;
     complement?: string;
+    id?: number;
 }

@@ -27,6 +27,7 @@ function ClientRegistration() {
   const [document, setDocument] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [address, setAddress] = useState<Address>({
+    id: undefined,
     cep: "",
     city: "",
     state: "",
@@ -56,15 +57,18 @@ function ClientRegistration() {
         setBirthDate(new Date(currentClient.birthday).toISOString().split("T")[0]);
       }
 
-      setAddress({
-        cep: currentClient.code || "",
-        city: currentClient.city || "",
-        state: currentClient.state || "",
-        country: currentClient.country || "",
-        street: currentClient.street || "",
-        number: currentClient.number || "",
-        complement: currentClient.complement || "",
-      });
+      if (currentClient.address) {
+        setAddress({
+          id: currentClient.address.id,
+          cep: currentClient.address.code || "",
+          city: currentClient.address.city || "",
+          state: currentClient.address.state || "",
+          country: currentClient.address.country || "",
+          street: currentClient.address.street || "",
+          number: currentClient.address.number || "",
+          complement: currentClient.address.complement || "",
+        });
+      }
     }
   }, [currentClient, isEditing]);
 
@@ -78,6 +82,7 @@ function ClientRegistration() {
       cpf: document,
       document: document,
       birthday: new Date(birthDate),
+      address: address.id,
       code: address.cep,
       city: address.city,
       state: address.state,
@@ -153,7 +158,9 @@ function ClientRegistration() {
           />
         </div>
       </section>
-      <AddressForm onChange={setAddress} />
+      
+      <AddressForm defaultValue={address} onChange={setAddress} />
+      
       <div className={styles.buttonContainer}>
         <CRUDButtons onCancel={() => navigate(-1)} />
       </div>
