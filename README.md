@@ -14,21 +14,28 @@ Este projeto foi construído utilizando as seguintes tecnologias:
 - **Ícones**: Utiliza [Lucide React](https://lucide.dev/) e [React Icons](https://react-icons.github.io/react-icons/).
 - **[clsx](https://github.com/lukeed/clsx)**: Utilitário para construção de classes CSS de forma condicional.
 
-## 📁 Estrutura de Páginas
+## 🏗️ Arquitetura do Projeto
 
-A aplicação já vem pré-configurada com as seguintes rotas e páginas fundamentais para sistemas administrativos e dashboards:
+A arquitetura do projeto foi desenhada para promover alta coesão, reutilização de código e separação clara de responsabilidades (Separation of Concerns).
 
-- **Autenticação**:
-  - `Login` (`/`)
-  - `Esqueci a Senha` (`/forgot-password`)
-  - `Redefinir Senha` (`/reset-password`)
-- **Painel Principal**:
-  - `Home` (`/home`): Visão geral do dashboard.
-- **Interface e Componentes**:
-  - `Components` (`/components`): Página de demonstração do UI Kit (componentes reutilizáveis da aplicação).
-- **Outras Telas**:
-  - `Not Implemented` (`/not-implemented`): Página para recursos futuros ou em desenvolvimento.
-  - `Not Found` (`*`): Página de erro 404 (Rota não encontrada).
+- **`src/Components/`**: Contém todos os componentes reutilizáveis e "burros" (dumb components) da aplicação, que são orientados a props e não possuem estado global complexo. Isso inclui barras de navegação (`Navbar`), rodapés (`Footer`), tabelas padronizadas (`PaginatedTable`), botões, inputs, modais e cards informativos. Ao centralizar esses elementos, garantimos uma identidade visual consistente em todo o dashboard e facilidade de manutenção.
+- **`src/Pages/`**: Abriga os "smart components" (páginas completas). Cada pasta aqui representa uma tela inteira na aplicação. As páginas consomem os blocos visuais da pasta `Components` e os integram com a lógica de negócios, gerenciamento de rotas e consumo de estado.
+- **`src/types/`**: Contém as definições de tipos e interfaces do TypeScript, essenciais para garantir contratos de dados consistentes entre APIs, componentes e stores do MobX.
+- **`src/resources/`**: Onde residem arquivos de internacionalização ou constantes de texto (`strings.ts`), facilitando a manutenção de textos, labels e mensagens de erro sem precisar alterar a camada visual dos componentes.
+- **Roteamento Centralizado**: A gerência das páginas é feita através do arquivo `routes.tsx`, que centraliza a árvore de navegação usando o `React Router DOM`.
+- **Estado Global**: Gerenciado através do MobX, o que permite criar *stores* reativas focadas nas entidades do domínio, abstraindo as regras de negócio dos componentes React.
+
+## 📁 Objetivo das Páginas
+
+Cada página (rota) da aplicação possui uma responsabilidade bem definida dentro do ecossistema do dashboard:
+
+- **Login (`/`)**: Porta de entrada do sistema. Responsável por coletar as credenciais do usuário, autenticar e estabelecer a sessão de acesso protegido.
+- **Esqueci a Senha (`/forgot-password`)**: Fluxo de recuperação de conta. Permite ao usuário solicitar um e-mail com instruções para recuperar o acesso.
+- **Redefinir Senha (`/reset-password`)**: Tela que processa o token de segurança e permite que o usuário crie uma nova senha de forma segura.
+- **Home (`/home`)**: O painel principal do Dashboard. Apresenta métricas-chave, atalhos rápidos e gráficos em uma visão panorâmica, fornecendo ao usuário um resumo imediato e acionável das informações mais importantes.
+- **Components (`/components`)**: Uma espécie de "Styleguide" ou "Design System" vivo da aplicação. O objetivo desta página é demonstrar e documentar visualmente como os componentes genéricos (como botões, inputs de texto, selects, tabelas e gráficos) funcionam na prática, agilizando o trabalho da equipe de desenvolvimento ao construir novas telas.
+- **Not Implemented (`/not-implemented`)**: Página de *placeholder* amigável. Usada para sinalizar links ou botões de funcionalidades que já estão previstas no layout ou no menu, mas cujo desenvolvimento técnico ainda será feito no futuro.
+- **Not Found (`*`)**: Rota de tratamento de erro (404). Exibe uma mensagem de "Página não encontrada" com opções de retorno seguro para a `Home` sempre que o usuário tentar acessar uma URL inexistente.
 
 ## ⚙️ Como Executar o Projeto
 
