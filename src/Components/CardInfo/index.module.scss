@@ -1,0 +1,50 @@
+.cardInfo {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 16px;
+    max-width: 346px;
+    height: 224px;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter';
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    background-color: white;
+
+    .title {
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin: 0;
+        margin-top: 2.5rem;
+    }
+
+    .value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0;
+        margin-top: 2rem;
+    }
+
+    .icon {
+        position: absolute;
+        top: -1.25rem;
+        right: -1.5rem;
+        font-size: 4rem;
+        color: #ebc351;
+    }
+}
+
+@media (max-width: 1440px) {
+    .cardInfo {
+        width: 300px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 767px) {
+    .cardInfo {
+        width: 80%;
+    }
+}

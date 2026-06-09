@@ -1,0 +1,52 @@
+.addressForm {
+        width: 80%;
+        margin: 2rem 0;
+
+        h2 {
+            color: white;
+            font-size: 2rem;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 2rem;
+            font-weight: 200;
+        }
+
+        .inputContainer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem 3rem;
+
+            .errorMessage {
+                font-size: 0.75rem;
+                color: red;
+                font-family: 'Inter', 'sans-serif';
+                margin-top: 0.25rem;
+            }
+        }
+        .numberComplementContainer {
+            display: grid;
+            grid-template-columns: 1fr 9fr;
+            gap: 2rem 3rem;
+            margin-top: 2rem;
+        }
+        
+    }
+
+
+@media (max-width: 767px) {
+
+    .addressForm {
+        width: 90%;
+
+        .inputContainer {
+            grid-template-columns: 1fr;
+        }
+        .numberComplementContainer {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .buttonContainer {
+        width: 90%;
+        margin: 0;
+    }
+}

@@ -1,0 +1,19 @@
+@import "../../resources/colors.scss";
+
+.addButtonComponent {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: white;
+    border: 0;
+    font-size: 2rem;
+    color: $background-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+}

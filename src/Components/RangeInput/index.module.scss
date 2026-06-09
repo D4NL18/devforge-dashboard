@@ -1,0 +1,12 @@
+.rangeInputContainer {
+    display: flex;
+    width: 252px;
+    gap: 0.25rem;
+    align-items: center;
+
+    .icon {
+        font-size: 2.5rem;
+        color: white;
+        flex-shrink: 0;
+    }
+}

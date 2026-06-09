@@ -1,0 +1,12 @@
+.CRUDButtons {
+    display: flex;
+    gap: 3rem;
+}
+
+@media (max-width: 767px) {
+    .CRUDButtons {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 0;
+    }
+}

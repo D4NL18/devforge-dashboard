@@ -3,33 +3,165 @@ import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 
 import PaginatedTable from "../../Components/PaginatedTable";
+import Button from "Components/Button";
+import CRUDButtons from "Components/CRUD_Buttons";
+import { useNavigate } from "react-router-dom";
+import RangeInput from "Components/RangeInput";
+import { useState } from "react";
+import Input from "Components/Input";
+import Searchbar from "Components/Searchbar";
+import CardInfo from "Components/CardInfo";
+import Select from "Components/Select";
+import Chart from "Components/Chart"
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  type: "in" | "out";
+  bold?: boolean;
+};
+
+const sampleChartData = [
+  { name: "Jan", value: 400 },
+  { name: "Feb", value: 300 },
+  { name: "Mar", value: 500 },
+  { name: "Apr", value: 200 },
+  { name: "May", value: 350 },
+  { name: "Jun", value: 600 },
+];
+
+const pieChartData = [
+  { name: "Chrome", value: 65 },
+  { name: "Firefox", value: 20 },
+  { name: "Edge", value: 10 },
+  { name: "Outros", value: 5 },
+];
+
+let options = [
+  "Option 1",
+  "Option 2",
+  "Option 3",
+  "Option 4",
+  "Option 5",
+  "Option 6",
+  "Option 7",
+  "Option 8",
+  "Option 9",
+  "Option 10 Option 10 Option 10 Option 10 Option 10 Option 10",
+  "Option 11",
+  "Option 12",
+  "Option 13",
+  "Option 14",
+  "Option 15",
+  "Option 16",
+  "Option 17",
+  "Option 18",
+];
 
 const ComponentsPage = () => {
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rangeMin, setRangeMin] = useState(0);
+  const [rangeMax, setRangeMax] = useState(0);
+  const navigate = useNavigate();
   return (
     <div className={styles.container}>
       <Navbar />
-        <h2>📦 Componentes</h2>
+      <h2>📦 Componentes</h2>
+      <Select
+        options={options}
+        hasSearch
+        multiple
+        selectAll
+        // placeholder="Placeholder teste"
+        onSubmit={(values) => console.log("Selecionados:", values)}
+      />
+      {/* <Select options={options}/> */}
 
-        <section>
-          <h3>Tabela de Usuários</h3>
-          <PaginatedTable
-            columns={[
-              { key: "id", label: "ID" },
-              { key: "name", label: "Nome" },
-              { key: "email", label: "Email" }
-            ]}
-            data={[
-              { id: 1, name: "Alice", email: "alice@email.com" },
-              { id: 2, name: "Bob", email: "bob@email.com" },
-              { id: 3, name: "Carol", email: "carol@email.com" },
-              { id: 4, name: "Dan", email: "dan@email.com" },
-              { id: 5, name: "Eve", email: "eve@email.com" },
-              { id: 6, name: "Frank", email: "frank@email.com" }
-            ]}
-            rowsPerPage={4}
-          />
-        </section>
+      <PaginatedTable
+        columns={[
+          { key: "id", label: "ID" },
+          { key: "name", label: "Nome" },
+          { key: "email", label: "Email" },
+        ]}
+        data={[
+          { id: 1, name: "Alice", email: "alice@email.com", bold: true },
+          { id: 2, name: "Bob", email: "bob@email.com" },
+          { id: 3, name: "Carol", email: "carol@email.com" },
+          { id: 4, name: "Dan", email: "dan@email.com" },
+          { id: 5, name: "Eve", email: "eve@email.com" },
+          { id: 6, name: "Frank", email: "frank@email.com", bold: true },
+        ]}
+        rowsPerPage={4}
+      />
+      <PaginatedTable<User>
+        columns={[
+          { key: "id", label: "ID" },
+          { key: "name", label: "Nome" },
+          { key: "email", label: "Email" },
+        ]}
+        data={[
+          { id: 1, name: "Alice", email: "alice@email.com", type: "in" },
+          {
+            id: 2,
+            name: "Bob",
+            email: "bob@email.com",
+            type: "out",
+            bold: true,
+          },
+          { id: 3, name: "Carol", email: "carol@email.com", type: "in" },
+          { id: 4, name: "Dan", email: "dan@email.com", type: "out" },
+          {
+            id: 5,
+            name: "Eve",
+            email: "eve@email.com",
+            type: "in",
+            bold: true,
+          },
+          { id: 6, name: "Frank", email: "frank@email.com", type: "out" },
+        ]}
+        rowsPerPage={4}
+        edit
+        onEdit={(user) => alert(`Editar usuário: ${user.name}`)}
+        delete
+        onDelete={(user) => alert(`Excluir usuário: ${user.name}`)}
+        inOut
+      />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr", // 2 colunas
+          gap: "2rem",
+          marginBottom: "2rem",
+        }}
+      >
+        <Chart
+          type="bar"
+          data={sampleChartData}
+          dataKey="value"
+          nameKey="name"
+          title="Vendas Mensais (Barra)"
+        />
+        <Chart
+          type="pie"
+          data={pieChartData}
+          dataKey="value"
+          nameKey="name"
+          title="Uso de Navegadores (Pizza)"
+        />
+      </div>
+
+      {/* linha única */}
+      <div style={{ marginBottom: "2rem" }}>
+        <Chart
+          type="line"
+          data={sampleChartData}
+          dataKey="value"
+          nameKey="name"
+          title="Tendência de Vendas (Linha)"
+        />
+      </div>
       <Footer />
     </div>
   );
