@@ -25,17 +25,41 @@ A arquitetura do projeto foi desenhada para promover alta coesão, reutilizaçã
 - **Roteamento Centralizado**: A gerência das páginas é feita através do arquivo `routes.tsx`, que centraliza a árvore de navegação usando o `React Router DOM`.
 - **Estado Global**: Gerenciado através do MobX, o que permite criar *stores* reativas focadas nas entidades do domínio, abstraindo as regras de negócio dos componentes React.
 
-## 📁 Objetivo das Páginas
+## 📁 Páginas e Dashboards do Sistema
 
-Cada página (rota) da aplicação possui uma responsabilidade bem definida dentro do ecossistema do dashboard:
+O sistema é composto por diversas telas e dashboards focados em diferentes áreas da gestão empresarial. Abaixo está o detalhamento de cada um deles:
 
-- **Login (`/`)**: Porta de entrada do sistema. Responsável por coletar as credenciais do usuário, autenticar e estabelecer a sessão de acesso protegido.
-- **Esqueci a Senha (`/forgot-password`)**: Fluxo de recuperação de conta. Permite ao usuário solicitar um e-mail com instruções para recuperar o acesso.
-- **Redefinir Senha (`/reset-password`)**: Tela que processa o token de segurança e permite que o usuário crie uma nova senha de forma segura.
-- **Home (`/home`)**: O painel principal do Dashboard. Apresenta métricas-chave, atalhos rápidos e gráficos em uma visão panorâmica, fornecendo ao usuário um resumo imediato e acionável das informações mais importantes.
-- **Components (`/components`)**: Uma espécie de "Styleguide" ou "Design System" vivo da aplicação. O objetivo desta página é demonstrar e documentar visualmente como os componentes genéricos (como botões, inputs de texto, selects, tabelas e gráficos) funcionam na prática, agilizando o trabalho da equipe de desenvolvimento ao construir novas telas.
-- **Not Implemented (`/not-implemented`)**: Página de *placeholder* amigável. Usada para sinalizar links ou botões de funcionalidades que já estão previstas no layout ou no menu, mas cujo desenvolvimento técnico ainda será feito no futuro.
-- **Not Found (`*`)**: Rota de tratamento de erro (404). Exibe uma mensagem de "Página não encontrada" com opções de retorno seguro para a `Home` sempre que o usuário tentar acessar uma URL inexistente.
+### 💰 Dashboard Financeiro de Transações (`/transactions`)
+O coração financeiro do sistema. Ele fornece uma visão clara do fluxo de caixa, lucros e saúde patrimonial.
+- **Cards de Indicadores (KPIs)**: Exibe instantaneamente o Caixa Mínimo, Caixa Atual (com alerta visual em vermelho se o valor estiver abaixo do mínimo), Faturamento Total e Lucro.
+- **Gráficos**:
+  - **Gráfico de Pizza (Gastos por Setor)**: Mostra como as despesas da empresa estão distribuídas (Marketing, Infraestrutura, Projetos, etc).
+- **Tabelas de Relatórios Contábeis (Paginadas)**:
+  - **DRE (Demonstração do Resultado do Exercício)**: Tabela consolidando as métricas de receita e despesa do exercício.
+  - **Balanço Patrimonial**: Comparativo detalhado entre Ativos (Caixa, Contas a Receber, Estoques) e Passivos + Patrimônio Líquido.
+  - **Fluxo de Caixa**: Uma listagem detalhada de todas as entradas e saídas diárias, equipada com uma barra de busca avançada, filtros por categoria (Marketing, Projetos, etc), filtros de valores (Mín/Máx) e edição direta dos registros.
+
+### 👥 Dashboard de Clientes (`/clients`)
+Focado em métricas de retenção, vendas e relacionamento.
+- **Gráficos**:
+  - **Gráficos de Pizza**: Diversificação de Clientes (concentração de receita por cliente) e Taxa de Inadimplência.
+  - **Gráfico de Barras**: Churn de Receita (%) mensal.
+  - **Gráficos de Linha**: Custo de Aquisição de Cliente (CAC) e Lifetime Value (LTV) ao longo dos meses.
+- **Tabela de Clientes**: Lista detalhada dos clientes e seus respectivos projetos ativos, incluindo valor inadimplente e dias de atraso. Permite busca por nome e filtro por tipo de projeto ou range financeiro.
+
+### 📊 Dashboard de Projetos (`/projects`)
+Visão voltada para o acompanhamento da rentabilidade e do andamento de diferentes projetos.
+- **Gráficos**:
+  - **Diversificação**: Gráfico de pizza mostrando os tipos de projeto em andamento.
+  - **Gráficos de Rentabilidade (Barras)**: Faturamento por Projeto, Lucro por Projeto, Margem por Projeto (%), além das mesmas métricas agregadas por *Tipo de Projeto*.
+- **Tabela de Projetos**: Lista de projetos ativos com colunas de Faturamento, Prazo de Entrega e Tipo de Projeto. Inclui integração com a store do MobX para filtragem avançada dinâmica.
+
+### 🔐 Autenticação e Sistema
+- **Login (`/`)**: Autenticação de usuários.
+- **Recuperação de Senha (`/forgot-password` e `/reset-password`)**: Fluxos para redefinir o acesso via token de e-mail.
+- **Home (`/home`)**: Visão geral e atalhos rápidos do sistema.
+- **Components (`/components`)**: Design System vivo que serve como guia de estilos. Demonstra todos os componentes isolados (tabelas, gráficos, selects, inputs de range) funcionando na prática para facilitar a reutilização.
+- **Páginas de Fallback**: `Not Implemented` (para botões em construção) e `Not Found` (erro 404).
 
 ## ⚙️ Como Executar o Projeto
 
